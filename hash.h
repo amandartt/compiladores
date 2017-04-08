@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define HASH_SIZE 20
+#define HASH_SIZE 300
 
 typedef struct hash_struct{
 	int type;

@@ -19,4 +19,5 @@ int main()
 	||
 	char b = " string bem louca co vaias palabras 
 	e blalalblalva";
-
+	
+	int n;
