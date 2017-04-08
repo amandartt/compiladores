@@ -75,7 +75,7 @@ void readFile(int argc, char *argv[]){
 	while(running){
 		token = yylex();
 
-		//if(!running) break;
+		if(!running) break;
 
 		switch(token){
 			case KW_BYTE:		printf("BYTE na linha %d.\n", lineNumber); break;
@@ -99,7 +99,7 @@ void readFile(int argc, char *argv[]){
 			case OPERATOR_AND:	printf("&& na linha %d.\n", lineNumber); break;
 			case OPERATOR_OR:	printf("|| na linha %d.\n", lineNumber); break;
 
-			case TK_IDENTIFIER: printf("IDENTIFICADOR na linha %d.\n", lineNumber); break;
+			case TK_IDENTIFIER: 	printf("IDENTIFICADOR na linha %d.\n", lineNumber); break;
 			case LIT_INTEGER: 	printf("INTEGER na linha %d.\n", lineNumber); break;
 			case LIT_REAL: 		printf("REAL na linha %d.\n", lineNumber); break;
 			case LIT_CHAR: 		printf("CHAR na linha %d.\n", lineNumber); break;
@@ -107,7 +107,7 @@ void readFile(int argc, char *argv[]){
 	
 			case TOKEN_ERROR: 	printf("ERRO na linha %d. %s\n", lineNumber, yytext); break;
 			default:
-								printf("Caractere %s na linha %d.\n", yytext, lineNumber); break;
+						printf("Caractere %s na linha %d.\n", yytext, lineNumber); break;
 		}
 	}
 	hash_print();
