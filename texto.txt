@@ -1,0 +1,22 @@
+int main()
+
+	//isso eh um teste
+
+	int a;
+	int a;
+	int b;
+	a = 3;
+	for  []
+    ; <= 2
+	'A'
+	'a'
+ 	'_'
+	/*
+
+	Comentario com varias linhas
+	*/
+
+	||
+	char b = " string bem louca co vaias palabras 
+	e blalalblalva";
+
