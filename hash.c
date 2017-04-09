@@ -29,8 +29,9 @@ HASH_NODE* hash_insert(int type, char *text){
 		return exist_node;
 	}
 	new_node->type = type;
-	new_node->text = calloc(sizeof(text)+1, sizeof(char));	
+	new_node->text = calloc(strlen(text)+1, sizeof(char));	
 	strcpy(new_node->text, text);
+	//printf("\n\n  %s \n\n", new_node->text);
 	new_node->next = hash_table[address];
 	hash_table[address] = new_node;
 	elements_count++;
@@ -41,7 +42,7 @@ HASH_NODE* hash_insert(int type, char *text){
 int hash_address(char *text){
 	int address = 1;
 	int i;
-	for(i=0; i<sizeof(text); i++){
+	for(i=0; i<strlen(text); i++){
 		address = (address * text[i]) % HASH_SIZE + 1;
 	}
 	
@@ -53,7 +54,7 @@ void hash_print(){
 	int i;	
 	for(i=0; i<HASH_SIZE; i++){
 		for(node=hash_table[i]; node; node=node->next){
-			printf("[Table] Type: %d - Text: %s\n", node->type, node->text);
+			printf("[Table %d] Type: %d - Text: %s\n", i, node->type, node->text);
 		}
 	} 
 }

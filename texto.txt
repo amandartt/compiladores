@@ -16,7 +16,11 @@ float main(){
 	/* esse codigo nao faz sentido nenhum
 	se voce espera qualquer sentido dele
 	escolha outro codigo, porque esse aqui
-	nao foi feito para ter nenhum sentido */
+	nao foi feito para ter nenhum sentido */  "TESTE 2"
+	"TESTE
+			PARA
+					CA
+					E PARA LA";
 
 	short contador_fantastico1;
 
