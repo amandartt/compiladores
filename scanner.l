@@ -7,6 +7,9 @@
 	int lineNumber;
 	int running;
 
+	char buf[1000];
+	char *s;
+
 %}
 
 %x COMMENT
@@ -33,27 +36,27 @@
 "!="					{return OPERATOR_NE;}
 "&&"					{return OPERATOR_AND;}
 "||"					{return OPERATOR_OR;}
-[-,;:/()+*<>=!&$#{}\[\]]	{return yytext[0];}
+[-,;:/()+*<>=!&$#{}\[\]]		{return yytext[0];}
 
-[a-zA-Z_][a-zA-Z_0-9]*	{hash_insert(TK_IDENTIFIER, yytext); return TK_IDENTIFIER;}
+[a-zA-Z_][a-zA-Z_0-9]*			{hash_insert(TK_IDENTIFIER, yytext); return TK_IDENTIFIER;}
 [0-9]+					{hash_insert(LIT_INTEGER, yytext); return LIT_INTEGER;}
-[0-9]+.[0-9]+			{hash_insert(LIT_REAL, yytext); return LIT_REAL;}
-'[-a-zA-Z_]'			{hash_insert(LIT_CHAR, yytext); return LIT_CHAR;}
-"\""					BEGIN(STRING); {hash_insert(LIT_STRING, yytext); return LIT_STRING;}
+[0-9]+.[0-9]+				{hash_insert(LIT_REAL, yytext); return LIT_REAL;}
+'[-a-zA-Z_]'				{hash_insert(LIT_CHAR, yytext); return LIT_CHAR;}
+"\""					{BEGIN(STRING); s = buf; *s++ = *yytext;}
 
-\n						{++lineNumber;}
+\n					{++lineNumber;}
 [ \t]
 "//".*
 "/*"					BEGIN(COMMENT);
-.						{return TOKEN_ERROR;}
+.					{return TOKEN_ERROR;}
 
 <COMMENT>"*/" 			BEGIN(INITIAL);
 <COMMENT>.
 <COMMENT>\n				{++lineNumber;}
 
-<STRING>"\""			BEGIN(INITIAL);
-<STRING>.
-<STRING>\n				{++lineNumber;}
+<STRING>"\""			{*s++ = *yytext; *s = 0; hash_insert(LIT_STRING, buf); return LIT_STRING;}
+<STRING>.			{*s++ = *yytext;}
+<STRING>\n			{++lineNumber; *s++ = '\n';}
 
 %%
 

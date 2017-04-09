@@ -1,23 +1,28 @@
-int main()
-
-	//isso eh um teste
-
-	int a;
-	int a;
-	int b;
-	a = 3;
-	for  []
-    ; <= 2
-	'A'
-	'a'
- 	'_'
-	/*
-
-	Comentario com varias linhas
-	*/
-
-	||
-	char b = " string bem louca co vaias palabras 
-	e blalalblalva";
+float main(){
+	byte b = 3;
+	short sh = 42;
+	long l = 10358245;
+	float f = 3.1415;
+	double d = 3.14159265359;
 	
-	int n;
+	when ((a > 3) || ((sh + l) <= 5)) then (a + 1) else (l - 1); //funcao que nao faz sentido
+
+	while ((d == f) && (sh > 41)) { //teste de precisao de ponto flutuante
+		d = f * 1.35;
+		f = d * 1.35;
+		print 'a';
+	}
+
+	/* esse codigo nao faz sentido nenhum
+	se voce espera qualquer sentido dele
+	escolha outro codigo, porque esse aqui
+	nao foi feito para ter nenhum sentido */
+
+	short contador_fantastico1;
+
+	for (contador_fantastico1 = 0; contador_fantastico1 != (sh / 2); contador_fantastico1 = contador_fantastico1 + 1){
+		b = sh - b;
+		print "uma iteracao maravilhosa foi feita com sucesso!";
+
+	return 0;	
+}
