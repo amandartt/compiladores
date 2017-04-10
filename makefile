@@ -1,5 +1,7 @@
-etapa1: lex.yy.o hash.o
-		gcc -o etapa1 lex.yy.o hash.o
+etapa1: lex.yy.o main.o hash.o
+		gcc -o etapa1 lex.yy.o main.o hash.o
+main.o:	main.c
+		gcc -c main.c
 hash.o: hash.c
 		gcc -c hash.c 
 lex.yy.o: lex.yy.c
