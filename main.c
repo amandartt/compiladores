@@ -1,3 +1,7 @@
+/*TEST BY AMANDA TORBES AND GABRIEL MOITA
+  TO RUN, USE "./etapa1 <arquivo>"
+  [no caso, estamos disponibilizando um arquivo "texto.txt" para teste]*/
+
 #include "lex.yy.h"
 #include "hash.h"
 #include "tokens.h"
