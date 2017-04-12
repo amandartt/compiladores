@@ -9,13 +9,16 @@ HASH_NODE* hash_initialize(){
 	elements_count = 0;
 }
 
-HASH_NODE* hash_find(char *text, int address){
+HASH_NODE* hash_find(char *text){
 	HASH_NODE *node;
-	for(node=hash_table[address]; node; node=node->next){
-		if(strcmp(text, node->text) == 0){
-			return node;
-		}
-	}	
+	int i;
+	for(i=0; i<HASH_SIZE; i++){
+		for(node=hash_table[i]; node; node=node->next){
+			if(strcmp(text, node->text) == 0){
+				return node;
+			}
+		}	
+	}
 	return 0;
 }
 
@@ -25,7 +28,7 @@ HASH_NODE* hash_insert(int type, char *text){
 	HASH_NODE *first_node;
 	int address;
 	address = hash_address(text); 	
-	if(exist_node = hash_find(text, address)){
+	if(exist_node = hash_find(text)){
 		return exist_node;
 	}
 	new_node->type = type;
@@ -42,7 +45,7 @@ HASH_NODE* hash_insert(int type, char *text){
 int hash_address(char *text){
 	int address = 1;
 	int i;
-	for(i=0; i<strlen(text); i++){
+	for(i=0; i<sizeof(text); i++){
 		address = (address * text[i]) % HASH_SIZE + 1;
 	}
 	
