@@ -1,3 +1,5 @@
+// Amanda Torbes e Gabriel Moita
+
 #include "hash.h"
 
 HASH_NODE* hash_initialize(){
