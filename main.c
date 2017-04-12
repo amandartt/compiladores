@@ -13,6 +13,7 @@ void readFile(int argc, char *argv[]){
 	
 	if(argc < 2){
 		fprintf(stderr, "%s", "Missing file name! Command format: ./executable_program <file_name> \n");
+		exit(1);
 	}
 
 	FILE* file = fopen(argv[1], "r");

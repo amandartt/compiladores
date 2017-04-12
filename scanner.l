@@ -57,6 +57,9 @@
 <COMMENT>\n				{++lineNumber;}
 
 <STRING>"\""			{*s++ = *yytext; *s = 0; hash_insert(LIT_STRING, buf); BEGIN(INITIAL);}
+<STRING>\\n				{*s++ = '\n';}
+<STRING>\\t     		{ *s++ = '\t'; }
+<STRING>\\\"			{*s++ = '\"';}
 <STRING>.				{*s++ = *yytext;}
 <STRING>\n				{++lineNumber; *s++ = '\n';}
 
