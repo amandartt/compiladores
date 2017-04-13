@@ -42,7 +42,7 @@
 
 [a-zA-Z_][a-zA-Z_0-9]*	{hash_insert(TK_IDENTIFIER, yytext); return TK_IDENTIFIER;}
 [0-9]+					{hash_insert(LIT_INTEGER, yytext); return LIT_INTEGER;}
-[0-9]+.[0-9]+			{hash_insert(LIT_REAL, yytext); return LIT_REAL;}
+[0-9]+\.[0-9]+			{hash_insert(LIT_REAL, yytext); return LIT_REAL;}
 '.'				{hash_insert(LIT_CHAR, yytext); return LIT_CHAR;}
 "\""					{BEGIN(STRING); s = buf; *s++ = *yytext; return LIT_STRING;}
 
