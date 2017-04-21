@@ -58,7 +58,7 @@ declar_var_globais: 	TK_IDENTIFIER ':' type value
 						| TK_IDENTIFIER ':' declar_vetor
 						;
 
-declar_vetor:			type '[' LIT_INTEGER ']' ':' seq_num
+declar_vetor:			type '[' LIT_INTEGER ']' seq_num
 						| type '[' LIT_INTEGER ']';
 						
 seq_num:				value seq_num
