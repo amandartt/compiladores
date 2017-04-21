@@ -3,7 +3,7 @@
 
 	#include <stdio.h>
 	#include <string.h>
-	#include "tokens.h"
+	#include "y.tab.h"
 	#include "hash.h"
 
 	int lineNumber;
@@ -31,6 +31,7 @@
 "read"					{return KW_READ;}
 "return"				{return KW_RETURN;}
 "print"					{return KW_PRINT;}
+"to"					{return KW_TO;}
 
 "<="					{return OPERATOR_LE;}
 ">="					{return OPERATOR_GE;}

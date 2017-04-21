@@ -11,16 +11,14 @@ HASH_NODE* hash_initialize(){
 	elements_count = 0;
 }
 
-HASH_NODE* hash_find(char *text){
+HASH_NODE* hash_find(char *text, int address){
 	HASH_NODE *node;
-	int i;
-	for(i=0; i<HASH_SIZE; i++){
-		for(node=hash_table[i]; node; node=node->next){
-			if(strcmp(text, node->text) == 0){
-				return node;
-			}
-		}	
-	}
+	for(node=hash_table[address]; node; node=node->next){
+		if(strcmp(text, node->text) == 0){
+			return node;
+		}
+	}	
+	
 	return 0;
 }
 
@@ -30,13 +28,12 @@ HASH_NODE* hash_insert(int type, char *text){
 	HASH_NODE *first_node;
 	int address;
 	address = hash_address(text); 	
-	if(exist_node = hash_find(text)){
+	if(exist_node = hash_find(text, address)){
 		return exist_node;
 	}
 	new_node->type = type;
 	new_node->text = calloc(strlen(text)+1, sizeof(char));	
 	strcpy(new_node->text, text);
-	//printf("\n\n  %s \n\n", new_node->text);
 	new_node->next = hash_table[address];
 	hash_table[address] = new_node;
 	elements_count++;
@@ -47,7 +44,7 @@ HASH_NODE* hash_insert(int type, char *text){
 int hash_address(char *text){
 	int address = 1;
 	int i;
-	for(i=0; i<sizeof(text); i++){
+	for(i=0; i<strlen(text); i++){
 		address = (address * text[i]) % HASH_SIZE + 1;
 	}
 	

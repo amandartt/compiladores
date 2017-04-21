@@ -1,32 +1,41 @@
-float main(){
-	byte b = 3;
-	short sh = 42;
-	long l = 10358245;
-	float f = 3.1415;
-	double d = 3.14159265359;
-	
-	when ((a > 3) || ((sh + l) <= 5)) then (a + 1) else (l - 1); //funcao que nao faz sentido
+// UFRGS - Compiladores - Marcelo Johann - 2016/2
 
-	while ((d == f) && (sh > 41)) { //teste de precisao de ponto flutuante
-		d = f * 1.35;
-		f = d * 1.35;
-		print 'a';
-	}
+byte a:0;
+short i:0;
+float v[10]: 0 0 0 0 0 0 0 0 0 0; 
+bool mat[1000];
+char c: 'x';
 
-	/* esse codigo nao faz sentido nenhum
-	se voce espera qualquer sentido dele
-	escolha outro codigo, porque esse aqui
-	nao foi feito para ter nenhum sentido */  "TESTE 2"
-	"TESTE
-			PARA
-					CA
-					E PARA LA";
+int main()
+  {
+  for (i = 1 to 10)
+    print i " ";
 
-	short contador_fantastico1;
+  print " Digite um numero: \n";
+  read i;
+  for (i<10)
+    {
+    a = incn(a,1);
+    i = i + 1;
+    };
+  print "Incrementado algumas vezes fica " a "\n";
+  if (a==5) then 
+    print "Parou no meio\n";
+  if (a==11) then
+    ;
+  if (a==11) then else
+    ;
+  ;;;
+  {;};
+  };
 
-	for (contador_fantastico1 = 0; contador_fantastico1 != (sh / 2); contador_fantastico1 = contador_fantastico1 + 1){
-		b = sh - b;
-		print "uma iteracao maravilhosa foi feita com sucesso!";
+int incn (int x, int n)
+  {
+  return x+n;
+  };
 
-	return 0;	
-}
+int voidfunc() {;};
+  
+
+
+
