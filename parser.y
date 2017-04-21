@@ -43,7 +43,7 @@
 
 	type: KW_BYTE | KW_SHORT | KW_LONG | KW_FLOAT | KW_DOUBLE ;
 	value: LIT_INTEGER | LIT_REAL | LIT_CHAR ;
-	var_globais: type TK_IDENTIFIER ':' value ';' ;
+	var_globais: TK_IDENTIFIER ':' type value ';' ;
 
 %%
 
