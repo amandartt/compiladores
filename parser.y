@@ -1,7 +1,7 @@
 
 %{
 	#include <stdio.h>	 
-	#include <stdlib.h>		  
+	#include <stdlib.h>		
 
 	int yylex();
 	int getLineNumber(void);
@@ -38,6 +38,10 @@
 %token LIT_STRING    
 
 %token TOKEN_ERROR
+
+%union {
+	struct hash_struct *symbol;
+}
 
 %%
 // Scratch para Gramática lang171 - Compiladores
@@ -186,6 +190,6 @@ value: 					LIT_INTEGER
 %%
 
 void yyerror(const char *s){
-	printf("Linha %d: erro de sintaxe.\n", getLineNumber());
+	printf("Linha %d [erro de sintaxe]: %s.\n", getLineNumber(), s);
 	exit(3);
 }

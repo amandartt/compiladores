@@ -6,6 +6,17 @@
 	#include "y.tab.h"
 	#include "hash.h"
 
+	#define SYMBOL_LIT_INT 1
+	#define SYMBOL_LIT_REAL 2
+	#define SYMBOL_LIT_SHORT 3
+	#define SYMBOL_LIT_LONG 4
+	#define SYMBOL_LIT_BYTE 5
+	#define SYMBOL_LIT_CHAR 6
+	#define SYMBOL_IDENTIFIER 7	
+	#define SYMBOL_LIT_STRING 8	
+
+	extern YYSTYPE yylval;
+
 	int lineNumber;
 	int running;
 
@@ -41,10 +52,10 @@
 "||"					{return OPERATOR_OR;}
 [-,;:/()+*<>=!&$#{}\[\]]	{return yytext[0];}
 
-[a-zA-Z_][a-zA-Z_0-9]*	{hash_insert(TK_IDENTIFIER, yytext); return TK_IDENTIFIER;}
-[0-9]+					{hash_insert(LIT_INTEGER, yytext); return LIT_INTEGER;}
-[0-9]+\.[0-9]+			{hash_insert(LIT_REAL, yytext); return LIT_REAL;}
-'.'				{hash_insert(LIT_CHAR, yytext); return LIT_CHAR;}
+[a-zA-Z_][a-zA-Z_0-9]*	{yylval.symbol = hash_insert(SYMBOL_IDENTIFIER, yytext); return TK_IDENTIFIER;}
+[0-9]+					{yylval.symbol = hash_insert(SYMBOL_LIT_INT, yytext); return LIT_INTEGER;}
+[0-9]+\.[0-9]+			{yylval.symbol = hash_insert(SYMBOL_LIT_REAL, yytext); return LIT_REAL;}
+'.'						{yylval.symbol = hash_insert(SYMBOL_LIT_CHAR, yytext); return LIT_CHAR;}
 "\""					{BEGIN(STRING); s = buf; *s++ = *yytext; return LIT_STRING;}
 
 \n						{++lineNumber;}
@@ -57,7 +68,7 @@
 <COMMENT>.
 <COMMENT>\n				{++lineNumber;}
 
-<STRING>"\""			{*s++ = *yytext; *s = 0; hash_insert(LIT_STRING, buf); BEGIN(INITIAL);}
+<STRING>"\""			{*s++ = *yytext; *s = 0; yylval.symbol = hash_insert(SYMBOL_LIT_STRING, buf); BEGIN(INITIAL);}
 <STRING>\\n				{*s++ = '\n';}
 <STRING>\\t     		{ *s++ = '\t'; }
 <STRING>\\\"			{*s++ = '\"';}
