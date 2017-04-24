@@ -6,7 +6,6 @@
 
 void initMe(void);
 int isRunning(void);
-int getLineNumber(void);
 
 void readFile(int argc, char *argv[]){
 	int token;
@@ -31,5 +30,5 @@ void readFile(int argc, char *argv[]){
 int main(int argc, char *argv[]) {
 	initMe();
 	readFile(argc, argv);
-	return 0;
+	exit(0);
 }
