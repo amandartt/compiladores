@@ -43,6 +43,12 @@
 	struct hash_struct *symbol;
 }
 
+%left OPERATOR_OR OPERATOR_AND 
+%left '<' '>' OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_NE
+%left '-' '+'
+%left '*' '/'
+%right '!'
+
 %%
 // Scratch para Gramática lang171 - Compiladores
 // Amanda e Gabriel
@@ -51,7 +57,6 @@
 program: 				cjto_declar ;
 
 cjto_declar: 			declar ';' cjto_declar
-			 			| declar ';' 
 			 			| 
 			 			;
 
@@ -77,7 +82,6 @@ cabecalho:				type TK_IDENTIFIER '(' list_params ')'
 						;
 
 list_params:			param resto_params
-						| param
 						| 
 						;
 
@@ -128,15 +132,12 @@ controle_fluxo:			KW_WHEN '(' expr ')' KW_THEN comando
 bloco_comandos:			'{' seq_comandos '}'
 						;
 
-seq_comandos:			comando resto_seq_com
+seq_comandos:			comando ';' seq_comandos
+						|
 						;
 
-resto_seq_com:			';' comando resto_seq_com
-						| 
-						;
-
-expr:					expr d_op expr
-						| unary_op expr
+expr:					expr op expr
+						| '!' expr
 						| '(' expr ')'
 						| value
 						| TK_IDENTIFIER
@@ -147,7 +148,6 @@ expr:					expr d_op expr
 chamada_func:			TK_IDENTIFIER '(' list_arg ')';
 
 list_arg:				arg resto_arg
-						| arg
 						| 
 						;
 
@@ -158,7 +158,7 @@ resto_arg:				',' arg resto_arg
 arg:					expr
 						;
 
-d_op:					'+'
+op:					    '+'
 						| '-'
 						| '*'
 						| '/'
@@ -172,9 +172,6 @@ d_op:					'+'
 						| OPERATOR_OR
 						;
 
-unary_op:				'!'
-						| '-'
-						;
 type: 					KW_BYTE 
 						| KW_SHORT 
 						| KW_LONG 
