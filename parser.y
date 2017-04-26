@@ -46,7 +46,7 @@
 %left OPERATOR_OR OPERATOR_AND 
 %left '<' '>' OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_NE
 %left '-' '+'
-%left '*' '/'
+%left '*' '/' ';'
 %right '!'
 
 %%
@@ -136,7 +136,18 @@ seq_comandos:			comando ';' seq_comandos
 						|
 						;
 
-expr:					expr op expr
+expr:					expr '+' expr
+						| expr '-' expr
+						| expr '*' expr
+						| expr '/' expr
+						| expr '>' expr
+						| expr '<' expr
+						| expr OPERATOR_LE expr
+						| expr OPERATOR_GE expr   
+						| expr OPERATOR_EQ expr  
+						| expr OPERATOR_NE expr  
+						| expr OPERATOR_AND expr  
+						| expr OPERATOR_OR expr
 						| '!' expr
 						| '(' expr ')'
 						| value
@@ -147,30 +158,14 @@ expr:					expr op expr
 
 chamada_func:			TK_IDENTIFIER '(' list_arg ')';
 
-list_arg:				arg resto_arg
+list_arg:				expr resto_arg
 						| 
 						;
 
-resto_arg:				',' arg resto_arg
+resto_arg:				',' expr resto_arg
 						|
 						;
 
-arg:					expr
-						;
-
-op:					    '+'
-						| '-'
-						| '*'
-						| '/'
-						| '<'
-						| '>'
-						| OPERATOR_LE   
-						| OPERATOR_GE   
-						| OPERATOR_EQ   
-						| OPERATOR_NE   
-						| OPERATOR_AND  
-						| OPERATOR_OR
-						;
 
 type: 					KW_BYTE 
 						| KW_SHORT 
