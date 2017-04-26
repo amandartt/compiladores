@@ -8,7 +8,6 @@ void initMe(void);
 int isRunning(void);
 
 void readFile(int argc, char *argv[]){
-	int token;
 	
 	if(argc < 2){
 		fprintf(stderr, "%s", "Missing file name! Command format: ./executable_program <file_name> \n");

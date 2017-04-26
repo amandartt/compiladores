@@ -50,7 +50,7 @@
 %right '!'
 
 %%
-// Scratch para Gramática lang171 - Compiladores
+// Gramática lang171 - Compiladores
 // Amanda e Gabriel
 
 
