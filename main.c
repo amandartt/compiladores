@@ -6,7 +6,7 @@
 
 void initMe(void);
 int isRunning(void);
-void yyparse(void);
+int yyparse(void);
 
 void readFile(int argc, char *argv[]){
 	

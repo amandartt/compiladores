@@ -46,7 +46,7 @@
 %left OPERATOR_OR OPERATOR_AND 
 %left '<' '>' OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_NE
 %left '-' '+'
-%left '*' '/' ';'
+%left '*' '/'
 %right '!'
 
 %%
