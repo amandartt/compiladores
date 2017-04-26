@@ -1,4 +1,5 @@
 // UFRGS - Compiladores - Marcelo Johann - 2017/1
+// Incrementado por Amanda Torres e Gabriel Moita
 
 a: short 0;
 i: long 0;
