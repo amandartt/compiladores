@@ -44,10 +44,10 @@
 }
 
 %left OPERATOR_OR OPERATOR_AND 
+%right '!'
 %left '<' '>' OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_NE
 %left '-' '+'
 %left '*' '/'
-%right '!'
 
 %%
 // Gramática lang171 - Compiladores
