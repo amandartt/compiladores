@@ -1,7 +1,10 @@
 
 %{
 	#include <stdio.h>	 
-	#include <stdlib.h>		
+	#include <stdlib.h>	
+	#include "astree.h"	
+	#include "hash.h"	
+	#include "y.tab.h"
 
 	int yylex();
 	int getLineNumber(void);
@@ -31,16 +34,34 @@
 %token OPERATOR_AND  
 %token OPERATOR_OR   
 
-%token TK_IDENTIFIER 
-%token LIT_INTEGER   
-%token LIT_REAL      
-%token LIT_CHAR      
-%token LIT_STRING    
+%token<symbol> TK_IDENTIFIER 
+%token<symbol> LIT_INTEGER   
+%token<symbol> LIT_REAL      
+%token<symbol> LIT_CHAR      
+%token<symbol> LIT_STRING    
 
 %token TOKEN_ERROR
 
+/*%type<astree> cabecalho
+%type<astree> comando
+%type<astree> param
+%type<astree> list_elem
+%type<astree> chamada_func
+%type<astree> list_arg
+%type<astree> resto_list_elem
+%type<astree> controle_fluxo
+%type<astree> bloco_comandos
+%type<astree> atrib
+%type<astree> read
+%type<astree> print
+%type<astree> return
+%type<astree> expr */
+// tem que por todos?? 
+
+
 %union {
-	struct hash_struct *symbol;
+	ASTREE *astree;
+	HASH_NODE *symbol;
 }
 
 %left OPERATOR_OR OPERATOR_AND 
@@ -54,130 +75,130 @@
 // Amanda e Gabriel
 
 
-program: 				cjto_declar ;
+program: cjto_declar ;
 
-cjto_declar: 			declar ';' cjto_declar
-			 			| 
-			 			;
+cjto_declar: declar ';' cjto_declar
+	| 
+	;
 
-declar: 				declar_var_globais 
-						| declar_func 
-						;
+declar: declar_var_globais 
+	| declar_func 
+	;
 
-declar_var_globais: 	TK_IDENTIFIER ':' type value
-						| TK_IDENTIFIER ':' declar_vetor
-						;
+declar_var_globais: TK_IDENTIFIER ':' type value
+	| TK_IDENTIFIER ':' declar_vetor
+	;
 
-declar_vetor:			type '[' LIT_INTEGER ']' seq_num
-						| type '[' LIT_INTEGER ']';
+declar_vetor: type '[' LIT_INTEGER ']' seq_num
+	| type '[' LIT_INTEGER ']';
 						
-seq_num:				value seq_num
-						| value
-						;
+seq_num: value seq_num
+	| value
+	;
 
-declar_func:			cabecalho comando
-						;
+declar_func: cabecalho comando
+	;
 
-cabecalho:				type TK_IDENTIFIER '(' list_params ')'
-						;
+cabecalho: type TK_IDENTIFIER '(' list_params ')'
+	;
 
-list_params:			param resto_params
-						| 
-						;
+list_params: param resto_params
+	| 
+	;
 
-resto_params:			',' param resto_params
-						|
-						;
+resto_params: ',' param resto_params
+	|
+	;
 
-param:					type TK_IDENTIFIER
-						;
+param: type TK_IDENTIFIER
+	;
 
-comando:				bloco_comandos
-						| atrib
-						| controle_fluxo
-						| read
-						| print
-						| return
-						| 
-						;
+comando: bloco_comandos
+	| atrib
+	| controle_fluxo
+	| read
+	| print
+	| return
+	| 
+	;
 						
-atrib:					TK_IDENTIFIER '=' expr
-						| TK_IDENTIFIER '#' expr '=' expr
-						;
+atrib: TK_IDENTIFIER '=' expr
+	| TK_IDENTIFIER '#' expr '=' expr
+	;
 
-read:					KW_READ TK_IDENTIFIER
-						;
+read: KW_READ TK_IDENTIFIER
+	;
 
-print:					KW_PRINT list_elem
-						;
+print: KW_PRINT list_elem
+	;
 
-list_elem:				LIT_STRING resto_list_elem
-						| expr resto_list_elem
-						;
+list_elem: LIT_STRING resto_list_elem
+	| expr resto_list_elem
+	;
 
-resto_list_elem:		LIT_STRING resto_list_elem
-						| expr resto_list_elem
-						| 
-						;
+resto_list_elem: LIT_STRING resto_list_elem
+	| expr resto_list_elem
+	| 
+	;
 
-return:					KW_RETURN expr
-						;
+return:	KW_RETURN expr
+	;
 
-controle_fluxo:			KW_WHEN '(' expr ')' KW_THEN comando
-						| KW_WHEN '(' expr ')' KW_THEN comando KW_ELSE comando
-						| KW_WHILE '(' expr ')' comando
-						| KW_FOR '(' TK_IDENTIFIER '=' expr KW_TO expr ')' comando
-						;
+controle_fluxo:	KW_WHEN '(' expr ')' KW_THEN comando
+	| KW_WHEN '(' expr ')' KW_THEN comando KW_ELSE comando
+	| KW_WHILE '(' expr ')' comando
+	| KW_FOR '(' TK_IDENTIFIER '=' expr KW_TO expr ')' comando
+	;
 
-bloco_comandos:			'{' seq_comandos '}'
-						;
+bloco_comandos:	'{' seq_comandos '}'
+	;
 
-seq_comandos:			comando ';' seq_comandos
-						|
-						;
+seq_comandos: comando ';' seq_comandos
+	|
+	;
 
-expr:					expr '+' expr
-						| expr '-' expr
-						| expr '*' expr
-						| expr '/' expr
-						| expr '>' expr
-						| expr '<' expr
-						| expr OPERATOR_LE expr
-						| expr OPERATOR_GE expr   
-						| expr OPERATOR_EQ expr  
-						| expr OPERATOR_NE expr  
-						| expr OPERATOR_AND expr  
-						| expr OPERATOR_OR expr
-						| '!' expr
-						| '(' expr ')'
-						| value
-						| TK_IDENTIFIER
-						| TK_IDENTIFIER '[' expr ']'
-						| chamada_func
-						;
+expr: expr '+' expr
+	| expr '-' expr
+	| expr '*' expr
+	| expr '/' expr
+	| expr '>' expr
+	| expr '<' expr
+	| expr OPERATOR_LE expr
+	| expr OPERATOR_GE expr   
+	| expr OPERATOR_EQ expr  
+	| expr OPERATOR_NE expr  
+	| expr OPERATOR_AND expr  
+	| expr OPERATOR_OR expr
+	| '!' expr
+	| '(' expr ')'
+	| value
+	| TK_IDENTIFIER
+	| TK_IDENTIFIER '[' expr ']'
+	| chamada_func
+	;
 
-chamada_func:			TK_IDENTIFIER '(' list_arg ')';
+chamada_func: TK_IDENTIFIER '(' list_arg ')';
 
-list_arg:				expr resto_arg
-						| 
-						;
+list_arg: expr resto_arg
+	| 
+	;
 
-resto_arg:				',' expr resto_arg
-						|
-						;
+resto_arg: ',' expr resto_arg
+	|
+	;
 
 
-type: 					KW_BYTE 
-						| KW_SHORT 
-						| KW_LONG 
-						| KW_FLOAT 
-						| KW_DOUBLE 
-						;
+type: KW_BYTE 
+	| KW_SHORT 
+	| KW_LONG 
+	| KW_FLOAT 
+	| KW_DOUBLE 
+	;
 
-value: 					LIT_INTEGER 
-						| LIT_REAL 
-						| LIT_CHAR 
-						;
+value: LIT_INTEGER 
+	| LIT_REAL 
+	| LIT_CHAR 
+	;
 
 %%
 

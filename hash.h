@@ -1,5 +1,8 @@
 // Amanda Torbes e Gabriel Moita
 
+#ifndef HASH_HEADER
+#define HASH_HEADER
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -20,3 +23,5 @@ HASH_NODE* hash_find(char *text, int address);
 HASH_NODE* hash_insert(int type, char *text);
 int hash_address(char *text);
 void hash_print();
+
+#endif

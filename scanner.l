@@ -3,8 +3,10 @@
 
 	#include <stdio.h>
 	#include <string.h>
-	#include "y.tab.h"
+	#include "astree.h"
 	#include "hash.h"
+	#include "y.tab.h"
+	
 
 	#define SYMBOL_LIT_INT 1
 	#define SYMBOL_LIT_REAL 2

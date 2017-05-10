@@ -1,6 +1,7 @@
 // Amanda Torbes e Gabriel Moita
 
 #include "lex.yy.h"
+#include "astree.h"
 #include "hash.h"
 #include "y.tab.h"
 
