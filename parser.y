@@ -2,7 +2,7 @@
 %{
 	#include <stdio.h>	 
 	#include <stdlib.h>	
-	#include "astree.h"	
+	#include "astree.h"
 	#include "hash.h"	
 	#include "y.tab.h"
 
@@ -42,21 +42,35 @@
 
 %token TOKEN_ERROR
 
-/*%type<astree> cabecalho
-%type<astree> comando
-%type<astree> param
-%type<astree> list_elem
-%type<astree> chamada_func
-%type<astree> list_arg
-%type<astree> resto_list_elem
-%type<astree> controle_fluxo
-%type<astree> bloco_comandos
+//%type<astree> program
+//%type<astree> cjto_declar
+//%type<astree> declar
+//%type<astree> declar_var_globais
+//%type<astree> declar_vetor
+//%type<astree> seq_num
+//%type<astree> declar_func
+//%type<astree> cabecalho
+//%type<astree> list_params
+//%type<astree> resto_params
+//%type<astree> param
+//%type<astree> comando
 %type<astree> atrib
-%type<astree> read
-%type<astree> print
-%type<astree> return
-%type<astree> expr */
-// tem que por todos?? 
+//%type<astree> read
+//%type<astree> print
+//%type<astree> list_elem
+//%type<astree> resto_list_elem
+//%type<astree> return
+//%type<astree> controle_fluxo
+//%type<astree> bloco_comandos
+//%type<astree> seq_comandos
+%type<astree> expr
+//%type<astree> chamada_func
+//%type<astree> list_arg
+//%type<astree> resto_arg
+//%type<symbol> type
+%type<symbol> value
+
+//descomentar apenas os que estao feitos
 
 
 %union {
@@ -122,8 +136,8 @@ comando: bloco_comandos
 	| 
 	;
 						
-atrib: TK_IDENTIFIER '=' expr
-	| TK_IDENTIFIER '#' expr '=' expr
+atrib: TK_IDENTIFIER '=' expr					{astreePrint($3,0);printf("\n");}
+	| TK_IDENTIFIER '#' expr '=' expr			{astreePrint($5,0);printf("\n");}
 	;
 
 read: KW_READ TK_IDENTIFIER
@@ -157,24 +171,24 @@ seq_comandos: comando ';' seq_comandos
 	|
 	;
 
-expr: expr '+' expr
-	| expr '-' expr
-	| expr '*' expr
-	| expr '/' expr
-	| expr '>' expr
-	| expr '<' expr
-	| expr OPERATOR_LE expr
-	| expr OPERATOR_GE expr   
-	| expr OPERATOR_EQ expr  
-	| expr OPERATOR_NE expr  
-	| expr OPERATOR_AND expr  
-	| expr OPERATOR_OR expr
-	| '!' expr
-	| '(' expr ')'
-	| value
-	| TK_IDENTIFIER
-	| TK_IDENTIFIER '[' expr ']'
-	| chamada_func
+expr: expr '+' expr								{$$ = astreeCreate(AST_ADD,0,$1,$3,0,0);}
+	| expr '-' expr								{$$ = astreeCreate(AST_SUB,0,$1,$3,0,0);}
+	| expr '*' expr								{$$ = astreeCreate(AST_MUL,0,$1,$3,0,0);}
+	| expr '/' expr								{$$ = astreeCreate(AST_DIV,0,$1,$3,0,0);}
+	| expr '>' expr								{$$ = astreeCreate(AST_LOGIC_G,0,$1,$3,0,0);}
+	| expr '<' expr								{$$ = astreeCreate(AST_LOGIC_L,0,$1,$3,0,0);}
+	| expr OPERATOR_LE expr						{$$ = astreeCreate(AST_LOGIC_LE,0,$1,$3,0,0);}
+	| expr OPERATOR_GE expr						{$$ = astreeCreate(AST_LOGIC_GE,0,$1,$3,0,0);}  
+	| expr OPERATOR_EQ expr						{$$ = astreeCreate(AST_LOGIC_EQ,0,$1,$3,0,0);}  
+	| expr OPERATOR_NE expr						{$$ = astreeCreate(AST_LOGIC_NE,0,$1,$3,0,0);}  
+	| expr OPERATOR_AND expr					{$$ = astreeCreate(AST_LOGIC_AND,0,$1,$3,0,0);}  
+	| expr OPERATOR_OR expr						{$$ = astreeCreate(AST_LOGIC_OR,0,$1,$3,0,0);}
+	| '!' expr									{$$ = astreeCreate(AST_LOGIC_NOT,0,$2,0,0,0);}
+	| '(' expr ')'								{}
+	| value										{$$ = $1;}
+	| TK_IDENTIFIER								{$$ = $1;}
+	| TK_IDENTIFIER '[' expr ']'				{}
+	| chamada_func								{}
 	;
 
 chamada_func: TK_IDENTIFIER '(' list_arg ')';
@@ -195,9 +209,9 @@ type: KW_BYTE
 	| KW_DOUBLE 
 	;
 
-value: LIT_INTEGER 
-	| LIT_REAL 
-	| LIT_CHAR 
+value: LIT_INTEGER 								{$$ = astreeCreate(AST_SYMBOL,$1,0,0,0,0);}
+	| LIT_REAL  								{$$ = astreeCreate(AST_SYMBOL,$1,0,0,0,0);}
+	| LIT_CHAR  								{$$ = astreeCreate(AST_SYMBOL,$1,0,0,0,0);}
 	;
 
 %%

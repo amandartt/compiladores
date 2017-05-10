@@ -52,28 +52,28 @@
 "!="					{return OPERATOR_NE;}
 "&&"					{return OPERATOR_AND;}
 "||"					{return OPERATOR_OR;}
-[-,;:/()+*<>=!&$#{}\[\]]	{return yytext[0];}
+[-,;:/()+*<>=!&$#{}\[\]]		{return yytext[0];}
 
-[a-zA-Z_][a-zA-Z_0-9]*	{yylval.symbol = hash_insert(SYMBOL_IDENTIFIER, yytext); return TK_IDENTIFIER;}
+[a-zA-Z_][a-zA-Z_0-9]*			{yylval.symbol = hash_insert(SYMBOL_IDENTIFIER, yytext); return TK_IDENTIFIER;}
 [0-9]+					{yylval.symbol = hash_insert(SYMBOL_LIT_INT, yytext); return LIT_INTEGER;}
-[0-9]+\.[0-9]+			{yylval.symbol = hash_insert(SYMBOL_LIT_REAL, yytext); return LIT_REAL;}
-'.'						{yylval.symbol = hash_insert(SYMBOL_LIT_CHAR, yytext); return LIT_CHAR;}
+[0-9]+\.[0-9]+				{yylval.symbol = hash_insert(SYMBOL_LIT_REAL, yytext); return LIT_REAL;}
+'.'					{yylval.symbol = hash_insert(SYMBOL_LIT_CHAR, yytext); return LIT_CHAR;}
 "\""					{BEGIN(STRING); s = buf; *s++ = *yytext; return LIT_STRING;}
 
-\n						{++lineNumber;}
+\n					{++lineNumber;}
 [ \t]
 "//".*
 "/*"					BEGIN(COMMENT);
-.						{return TOKEN_ERROR;}
+.					{return TOKEN_ERROR;}
 
-<COMMENT>"*/" 			BEGIN(INITIAL);
+<COMMENT>"*/" 				BEGIN(INITIAL);
 <COMMENT>.
 <COMMENT>\n				{++lineNumber;}
 
-<STRING>"\""			{*s++ = *yytext; *s = 0; yylval.symbol = hash_insert(SYMBOL_LIT_STRING, buf); BEGIN(INITIAL);}
+<STRING>"\""				{*s++ = *yytext; *s = 0; yylval.symbol = hash_insert(SYMBOL_LIT_STRING, buf); BEGIN(INITIAL);}
 <STRING>\\n				{*s++ = '\n';}
-<STRING>\\t     		{ *s++ = '\t'; }
-<STRING>\\\"			{*s++ = '\"';}
+<STRING>\\t     			{ *s++ = '\t'; }
+<STRING>\\\"				{*s++ = '\"';}
 <STRING>.				{*s++ = *yytext;}
 <STRING>\n				{++lineNumber; *s++ = '\n';}
 

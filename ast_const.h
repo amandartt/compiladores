@@ -4,6 +4,9 @@
 *  Constantes utilizadas na AST
 */
 
+#ifndef ASTREE_CONST
+#define ASTREE_CONST
+
 #define MAX_SONS 4
 
 #define AST_SYMBOL 		0
@@ -20,3 +23,5 @@
 #define AST_LOGIC_AND 	11
 #define AST_LOGIC_OR 	12
 #define AST_LOGIC_NOT	13
+
+#endif
