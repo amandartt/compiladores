@@ -53,7 +53,40 @@ void astreePrint(ASTREE* node, int depth){
 		case AST_WHILE: printf("ASTREE_WHILE"); break;
 		case AST_FOR: printf("ASTREE_FOR"); break;
 		case AST_SEQ_CMD: printf("ASTREE_SEQ_CMD"); break;
-		default: printf("ASTREE_?");
+
+		case AST_CJTODEC_ELEM: printf("AST_CJTODEC_ELEM"); break;
+		case AST_DEC_BYTE_VAR_GLOB: printf("AST_DEC_BYTE_VAR_GLOB"); break;
+		case AST_DEC_SHORT_VAR_GLOB: printf("AST_DEC_SHORT_VAR_GLOB"); break;
+		case AST_DEC_LONG_VAR_GLOB: printf("AST_DEC_LONG_VAR_GLOB"); break;
+		case AST_DEC_FLOAT_VAR_GLOB: printf("AST_DEC_FLOAT_VAR_GLOB"); break;
+		case AST_DEC_DOUBLE_VAR_GLOB: printf("AST_DEC_DOUBLE_VAR_GLOB"); break;
+		case AST_DEC_VEC_GLOB: printf("AST_DEC_VEC_GLOB"); break;
+		case AST_DEC_BYTE_VEC_SEQ: printf("AST_DEC_BYTE_VEC_SEQ"); break;
+		case AST_DEC_SHORT_VEC_SEQ: printf("AST_DEC_SHORT_VEC_SEQ"); break;
+		case AST_DEC_LONG_VEC_SEQ: printf("AST_DEC_LONG_VEC_SEQ"); break;
+		case AST_DEC_FLOAT_VEC_SEQ: printf("AST_DEC_FLOAT_VEC_SEQ"); break;
+		case AST_DEC_DOUBLE_VEC_SEQ: printf("AST_DEC_DOUBLE_VEC_SEQ"); break;
+		case AST_DEC_BYTE_VEC: printf("AST_DEC_BYTE_VEC"); break;
+		case AST_DEC_SHORT_VEC: printf("AST_DEC_SHORT_VEC"); break;
+		case AST_DEC_LONG_VEC: printf("AST_DEC_LONG_VEC"); break;
+		case AST_DEC_FLOAT_VEC: printf("AST_DEC_FLOAT_VEC"); break;
+		case AST_DEC_DOUBLE_VEC: printf("AST_DEC_DOUBLE_VEC"); break;
+		case AST_SEQNUM_ELEM: printf("AST_SEQNUM_ELEM"); break;
+		case AST_DEC_FUNC: printf("AST_DEC_FUNC"); break;
+		case AST_BYTE_CABEC: printf("AST_BYTE_CABEC"); break;
+		case AST_SHORT_CABEC: printf("AST_SHORT_CABEC"); break;
+		case AST_LONG_CABEC: printf("AST_LONG_CABEC"); break;
+		case AST_FLOAT_CABEC: printf("AST_FLOAT_CABEC"); break;
+		case AST_DOUBLE_CABEC: printf("AST_DOUBLE_CABEC"); break;
+		case AST_PARAM_ELEM: printf("ASTREE_PARAM_ELEM"); break;
+		case AST_PARAM_BYTE: printf("ASTREE_PARAM_BYTE"); break;
+		case AST_PARAM_SHORT: printf("ASTREE_PARAM_SHORT"); break;
+		case AST_PARAM_LONG: printf("ASTREE_PARAM_LONG"); break;
+		case AST_PARAM_FLOAT: printf("ASTREE_PARAM_FLOAT"); break;
+		case AST_PARAM_DOUBLE: printf("ASTREE_PARAM_DOUBLE"); break;
+
+
+		default: printf("ASTREE_UNDEFINED");
 	}
 
 	if(node->symbol){

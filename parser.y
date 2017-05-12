@@ -42,17 +42,17 @@
 
 %token TOKEN_ERROR
 
-//%type<astree> program
-//%type<astree> cjto_declar
-//%type<astree> declar
-//%type<astree> declar_var_globais
-//%type<astree> declar_vetor
-//%type<astree> seq_num
-//%type<astree> declar_func
-//%type<astree> cabecalho
-//%type<astree> list_params
-//%type<astree> resto_params
-//%type<astree> param
+%type<astree> program
+%type<astree> cjto_declar
+%type<astree> declar
+%type<astree> declar_var_globais
+%type<astree> declar_vetor
+%type<astree> seq_num
+%type<astree> declar_func
+%type<astree> cabecalho
+%type<astree> list_params
+%type<astree> resto_params
+%type<astree> param
 %type<astree> comando
 %type<astree> atrib
 %type<astree> read
@@ -67,10 +67,10 @@
 %type<astree> chamada_func
 %type<astree> list_arg
 %type<astree> resto_arg
-//%type<symbol> type
 %type<symbol> value
 %type<symbol> id
 %type<symbol> str
+%type<symbol> int
 
 //descomentar apenas os que estao feitos
 
@@ -91,43 +91,64 @@
 // Amanda e Gabriel
 
 
-program: cjto_declar 								//{astreePrint($$,0);}
+program: cjto_declar 								{$$ = $1; astreePrint($$,0);}
 	;
 
-cjto_declar: declar ';' cjto_declar					//{$$ = astreeCreate(AST_CJTO_DECLAR,0,$1,$3,0,0);}
-	| 												//{$$ = 0}
+cjto_declar: declar ';' cjto_declar					{$$ = astreeCreate(AST_CJTODEC_ELEM,0,$1,$3,0,0);}
+	| 												{$$ = 0;}
 	;
 
-declar: declar_var_globais							//{$$ = $1} 
-	| declar_func 									//{$$ = $1}
+declar: declar_var_globais							{$$ = $1;} 
+	| declar_func 									{$$ = $1;}
 	;
 
-declar_var_globais: id ':' type value
-	| id ':' declar_vetor
+declar_var_globais: id ':' KW_BYTE value			{$$ = astreeCreate(AST_DEC_BYTE_VAR_GLOB,0,$1,$4,0,0);}
+	| id ':' KW_SHORT value							{$$ = astreeCreate(AST_DEC_SHORT_VAR_GLOB,0,$1,$4,0,0);}
+	| id ':' KW_LONG value							{$$ = astreeCreate(AST_DEC_LONG_VAR_GLOB,0,$1,$4,0,0);}
+	| id ':' KW_FLOAT value							{$$ = astreeCreate(AST_DEC_FLOAT_VAR_GLOB,0,$1,$4,0,0);}
+	| id ':' KW_DOUBLE value						{$$ = astreeCreate(AST_DEC_DOUBLE_VAR_GLOB,0,$1,$4,0,0);}
+	| id ':' declar_vetor							{$$ = astreeCreate(AST_DEC_VEC_GLOB,0,$1,$3,0,0);}
 	;
 
-declar_vetor: type '[' LIT_INTEGER ']' seq_num
-	| type '[' LIT_INTEGER ']';
+declar_vetor: KW_BYTE '[' int ']' seq_num			{$$ = astreeCreate(AST_DEC_BYTE_VEC_SEQ,0,$3,$5,0,0);}
+	| KW_SHORT '[' int ']' seq_num					{$$ = astreeCreate(AST_DEC_SHORT_VEC_SEQ,0,$3,$5,0,0);}
+	| KW_LONG '[' int ']' seq_num					{$$ = astreeCreate(AST_DEC_LONG_VEC_SEQ,0,$3,$5,0,0);}
+	| KW_FLOAT '[' int ']' seq_num					{$$ = astreeCreate(AST_DEC_FLOAT_VEC_SEQ,0,$3,$5,0,0);}
+	| KW_DOUBLE '[' int ']' seq_num					{$$ = astreeCreate(AST_DEC_DOUBLE_VEC_SEQ,0,$3,$5,0,0);}
+	| KW_BYTE '[' int ']'							{$$ = astreeCreate(AST_DEC_BYTE_VEC,0,$3,0,0,0);}
+	| KW_SHORT '[' int ']'							{$$ = astreeCreate(AST_DEC_SHORT_VEC,0,$3,0,0,0);}
+	| KW_LONG '[' int ']'							{$$ = astreeCreate(AST_DEC_LONG_VEC,0,$3,0,0,0);}
+	| KW_FLOAT '[' int ']'							{$$ = astreeCreate(AST_DEC_FLOAT_VEC,0,$3,0,0,0);}
+	| KW_DOUBLE '[' int ']'							{$$ = astreeCreate(AST_DEC_DOUBLE_VEC,0,$3,0,0,0);}
+	;
 						
-seq_num: value seq_num
-	| value
+seq_num: value seq_num								{$$ = astreeCreate(AST_SEQNUM_ELEM,0,$1,$2,0,0);}
+	| value											{$$ = astreeCreate(AST_SEQNUM_ELEM,0,$1,0,0,0);}
 	;
 
-declar_func: cabecalho comando						{astreePrint($2,0);printf("\n");}
+declar_func: cabecalho comando						{$$ = astreeCreate(AST_DEC_FUNC,0,$1,$2,0,0);}
 	;
 
-cabecalho: type id '(' list_params ')'
+cabecalho: KW_BYTE id '(' list_params ')'			{$$ = astreeCreate(AST_BYTE_CABEC,0,$2,$4,0,0);}
+	| KW_SHORT id '(' list_params ')'				{$$ = astreeCreate(AST_SHORT_CABEC,0,$2,$4,0,0);}
+	| KW_LONG id '(' list_params ')'				{$$ = astreeCreate(AST_LONG_CABEC,0,$2,$4,0,0);}
+	| KW_FLOAT id '(' list_params ')'				{$$ = astreeCreate(AST_FLOAT_CABEC,0,$2,$4,0,0);}
+	| KW_DOUBLE id '(' list_params ')'				{$$ = astreeCreate(AST_DOUBLE_CABEC,0,$2,$4,0,0);}
 	;
 
-list_params: param resto_params
-	| 
+list_params: param resto_params						{$$ = astreeCreate(AST_PARAM_ELEM,0,$1,$2,0,0);}
+	| 												{$$ = 0;}
 	;
 
-resto_params: ',' param resto_params
-	|
+resto_params: ',' param resto_params				{$$ = astreeCreate(AST_PARAM_ELEM,0,$2,$3,0,0);}
+	|												{$$ = 0;}
 	;
 
-param: type id
+param: KW_BYTE id									{$$ = astreeCreate(AST_PARAM_BYTE,0,$2,0,0,0);}
+	| KW_SHORT id 									{$$ = astreeCreate(AST_PARAM_SHORT,0,$2,0,0,0);}
+	| KW_LONG id 									{$$ = astreeCreate(AST_PARAM_LONG,0,$2,0,0,0);} 
+	| KW_FLOAT id  									{$$ = astreeCreate(AST_PARAM_FLOAT,0,$2,0,0,0);}
+	| KW_DOUBLE id  								{$$ = astreeCreate(AST_PARAM_DOUBLE,0,$2,0,0,0);}
 	;
 
 comando: bloco_comandos								{$$ = $1;}
@@ -205,14 +226,6 @@ resto_arg: ',' expr resto_arg						{$$ = astreeCreate(AST_LIST_ARG,0,$2,$3,0,0);
 	|												{$$ = 0;}
 	;
 
-
-type: KW_BYTE 
-	| KW_SHORT 
-	| KW_LONG 
-	| KW_FLOAT 
-	| KW_DOUBLE 
-	;
-
 value: LIT_INTEGER 									{$$ = astreeCreate(AST_SYMBOL,$1,0,0,0,0);}
 	| LIT_REAL  									{$$ = astreeCreate(AST_SYMBOL,$1,0,0,0,0);}
 	| LIT_CHAR  									{$$ = astreeCreate(AST_SYMBOL,$1,0,0,0,0);}
@@ -222,6 +235,9 @@ id: TK_IDENTIFIER									{$$ = astreeCreate(AST_SYMBOL,$1,0,0,0,0);}
 	;
 
 str: LIT_STRING										{$$ = astreeCreate(AST_SYMBOL,$1,0,0,0,0);}
+	;
+
+int: LIT_INTEGER									{$$ = astreeCreate(AST_SYMBOL,$1,0,0,0,0);}
 	;
 
 %%
