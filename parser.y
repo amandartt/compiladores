@@ -188,7 +188,7 @@ controle_fluxo:	KW_WHEN '(' expr ')' KW_THEN comando			{$$ = astreeCreate(AST_WH
 	| KW_FOR '(' id '=' expr KW_TO expr ')' comando				{$$ = astreeCreate(AST_FOR,0,$3,$5,$7,$9);}
 	;
 
-bloco_comandos:	'{' seq_comandos '}'				{$$ = $2;}
+bloco_comandos:	'{' seq_comandos '}'				{$$ = astreeCreate(AST_COMMAND_BLOCK,0,$2,0,0,0);}
 	;
 
 seq_comandos: comando ';' seq_comandos				{$$ = astreeCreate(AST_SEQ_CMD,0,$1,$3,0,0);}
@@ -208,7 +208,7 @@ expr: expr '+' expr									{$$ = astreeCreate(AST_ADD,0,$1,$3,0,0);}
 	| expr OPERATOR_AND expr						{$$ = astreeCreate(AST_LOGIC_AND,0,$1,$3,0,0);}  
 	| expr OPERATOR_OR expr							{$$ = astreeCreate(AST_LOGIC_OR,0,$1,$3,0,0);}
 	| '!' expr										{$$ = astreeCreate(AST_LOGIC_NOT,0,$2,0,0,0);}
-	| '(' expr ')'									{$$ = $2;}
+	| '(' expr ')'									{$$ = astreeCreate(AST_PARENTESIS_EXPR,0,$2,0,0,0);}
 	| value											{$$ = $1;}
 	| TK_IDENTIFIER									{$$ = astreeCreate(AST_SYMBOL,$1,0,0,0,0);}
 	| TK_IDENTIFIER '[' expr ']'					{$1 = astreeCreate(AST_SYMBOL,$1,0,0,0,0); $$ = astreeCreate(AST_VECTOR_EXPR,0,$1,$3,0,0);}

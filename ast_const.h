@@ -69,6 +69,9 @@
 #define AST_PARAM_FLOAT			56
 #define AST_PARAM_DOUBLE		57
 
+#define AST_PARENTESIS_EXPR		58
+#define AST_COMMAND_BLOCK		59
+
 
 
 

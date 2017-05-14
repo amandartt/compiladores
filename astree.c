@@ -85,6 +85,9 @@ void astreePrint(ASTREE* node, int depth){
 		case AST_PARAM_FLOAT: printf("ASTREE_PARAM_FLOAT"); break;
 		case AST_PARAM_DOUBLE: printf("ASTREE_PARAM_DOUBLE"); break;
 
+		case AST_PARENTESIS_EXPR: printf("ASTREE_PARENTESIS_EXPR"); break;
+		case AST_COMMAND_BLOCK: printf("ASTREE_COMMAND_BLOCK"); break;
+
 
 		default: printf("ASTREE_UNDEFINED");
 	}
