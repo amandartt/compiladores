@@ -98,3 +98,117 @@ void astreePrint(ASTREE* node, int depth){
 		astreePrint(node->son[i],depth+1);
 }
 
+void astreeProgram(ASTREE* node){
+	if(!node){
+		return;
+	}
+	switch(node->type){
+		case AST_CJTODEC_ELEM:
+			astreeProgram(node->son[0]);
+			printf(";");
+			astreeProgram(node->son[1]);
+			break;
+		case AST_DEC_BYTE_VAR_GLOB: 
+			printf("\n%s: byte %s",node->son[0]->symbol->text, node->son[1]->symbol->text);
+			break;
+		case AST_DEC_SHORT_VAR_GLOB: 
+			printf("\n%s: short %s",node->son[0]->symbol->text, node->son[1]->symbol->text);
+			break;
+		case AST_DEC_LONG_VAR_GLOB: 
+			printf("\n%s: long %s",node->son[0]->symbol->text, node->son[1]->symbol->text);
+			break;
+		case AST_DEC_FLOAT_VAR_GLOB: 
+			printf("\n%s: float %s",node->son[0]->symbol->text, node->son[1]->symbol->text);
+			break;
+		case AST_DEC_VEC_GLOB: 
+			printf("\n%s: ", node->son[0]->symbol->text);
+			astreeProgram(node->son[1]);
+			break;
+		case AST_DEC_BYTE_VEC:
+			printf("byte[%s]", node->son[0]->symbol->text);
+			break;
+		case AST_DEC_SHORT_VEC:
+			printf("short[%s]", node->son[0]->symbol->text);
+			break;
+		case AST_DEC_LONG_VEC:
+			printf("long[%s]", node->son[0]->symbol->text);
+			break;
+		case AST_DEC_FLOAT_VEC:
+			printf("float[%s]", node->son[0]->symbol->text);
+			break;
+		case AST_DEC_BYTE_VEC_SEQ:	
+			printf("byte[%s] ", node->son[0]->symbol->text);
+			astreeProgram(node->son[1]);
+			break;
+		case AST_DEC_SHORT_VEC_SEQ:	
+			printf("short[%s] ", node->son[0]->symbol->text);
+			astreeProgram(node->son[1]);
+			break;
+		case AST_DEC_LONG_VEC_SEQ:	
+			printf("long[%s] ", node->son[0]->symbol->text);
+			astreeProgram(node->son[1]);
+			break;
+		case AST_DEC_FLOAT_VEC_SEQ:	
+			printf("float[%s] ", node->son[0]->symbol->text);
+			astreeProgram(node->son[1]);
+			break;
+		case AST_SEQNUM_ELEM:
+			printf("%s ", node->son[0]->symbol->text);
+			if(node->son[1]){
+				astreeProgram(node->son[1]);
+			}
+			break;
+		case AST_DEC_FUNC:
+			//cabecalho
+			astreeProgram(node->son[0]);
+			printf("{");
+			// comando
+			astreeProgram(node->son[1]);
+			printf("}");
+			break;
+		case AST_BYTE_CABEC:
+			printf("\nbyte %s(", node->son[0]->symbol->text);
+			astreeProgram(node->son[1]);	
+			printf(")");
+			break;
+		case AST_SHORT_CABEC:
+			printf("\nshort %s(", node->son[0]->symbol->text);	
+			astreeProgram(node->son[1]);	
+			printf(")");
+			break;
+		case AST_LONG_CABEC:
+			printf("\nlong %s(", node->son[0]->symbol->text);
+			astreeProgram(node->son[1]);	
+			printf(")");
+			break;
+		case AST_FLOAT_CABEC:
+			printf("\nfloat %s(", node->son[0]->symbol->text);
+			astreeProgram(node->son[1]);	
+			printf(")");
+			break;
+		case AST_PARAM_ELEM:
+			astreeProgram(node->son[0]);			
+			if(node->son[1]){
+				printf(", ");
+				astreeProgram(node->son[1]);
+			}
+			break;
+		
+		case AST_PARAM_BYTE:
+			printf("byte %s", node->son[0]->symbol->text);
+			break;
+		case AST_PARAM_SHORT:
+			printf("short %s", node->son[0]->symbol->text);
+			break;
+		case AST_PARAM_LONG:
+			printf("long %s", node->son[0]->symbol->text);
+			break;
+		case AST_PARAM_FLOAT:
+			printf("float %s", node->son[0]->symbol->text);
+			break;
+		
+	}
+
+
+}
+

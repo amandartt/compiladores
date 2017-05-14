@@ -25,7 +25,7 @@ void readFile(int argc, char *argv[]){
 	yyin = file;
 	yyparse();
 	
-	hash_print();
+	//hash_print();
 }
 
 int main(int argc, char *argv[]) {
