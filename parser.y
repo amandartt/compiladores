@@ -91,7 +91,7 @@
 // Amanda e Gabriel
 
 
-program: cjto_declar 								{$$ = $1; astreePrint($$,0); astreeProgram($$);}
+program: cjto_declar 								{$$ = $1; /*astreePrint($$,0);*/ astreeProgram($$,NULL); /*return $$;*/} //TODO: remove astreeProgram, discover how to return the pointer)
 	;
 
 cjto_declar: declar ';' cjto_declar					{$$ = astreeCreate(AST_CJTODEC_ELEM,0,$1,$3,0,0);}
@@ -210,19 +210,19 @@ expr: expr '+' expr									{$$ = astreeCreate(AST_ADD,0,$1,$3,0,0);}
 	| '!' expr										{$$ = astreeCreate(AST_LOGIC_NOT,0,$2,0,0,0);}
 	| '(' expr ')'									{$$ = astreeCreate(AST_PARENTESIS_EXPR,0,$2,0,0,0);}
 	| value											{$$ = $1;}
-	| TK_IDENTIFIER									{$$ = astreeCreate(AST_SYMBOL,$1,0,0,0,0);}
-	| TK_IDENTIFIER '[' expr ']'					{$1 = astreeCreate(AST_SYMBOL,$1,0,0,0,0); $$ = astreeCreate(AST_VECTOR_EXPR,0,$1,$3,0,0);}
+	| id											{$$ = $1;}
+	| id '[' expr ']'								{$$ = astreeCreate(AST_VECTOR_EXPR,0,$1,$3,0,0);}
 	| chamada_func									{$$ = $1;}
 	;
 
-chamada_func: TK_IDENTIFIER '(' list_arg ')'		{$1 = astreeCreate(AST_SYMBOL,$1,0,0,0,0); $$ = astreeCreate(AST_FUNC_CALL,0,$1,$3,0,0);}
+chamada_func: id '(' list_arg ')'					{$$ = astreeCreate(AST_FUNC_CALL,0,$1,$3,0,0);}
 	;		
 
-list_arg: expr resto_arg							{$$ = astreeCreate(AST_LIST_ARG,0,$1,$2,0,0);}
+list_arg: expr resto_arg							{$$ = astreeCreate(AST_LIST_ARG_BEGIN,0,$1,$2,0,0);}
 	| 												{$$ = 0;}
 	;
 
-resto_arg: ',' expr resto_arg						{$$ = astreeCreate(AST_LIST_ARG,0,$2,$3,0,0);}
+resto_arg: ',' expr resto_arg						{$$ = astreeCreate(AST_LIST_ARG_ELEM,0,$2,$3,0,0);}
 	|												{$$ = 0;}
 	;
 

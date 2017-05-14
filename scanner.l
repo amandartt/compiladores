@@ -58,7 +58,7 @@
 [0-9]+					{yylval.symbol = hash_insert(SYMBOL_LIT_INT, yytext); return LIT_INTEGER;}
 [0-9]+\.[0-9]+				{yylval.symbol = hash_insert(SYMBOL_LIT_REAL, yytext); return LIT_REAL;}
 '.'					{yylval.symbol = hash_insert(SYMBOL_LIT_CHAR, yytext); return LIT_CHAR;}
-"\""					{BEGIN(STRING); s = buf; *s++ = *yytext; return LIT_STRING;}
+"\""					{BEGIN(STRING); s = buf; *s++ = *yytext; /*return LIT_STRING;*/}
 
 \n					{++lineNumber;}
 [ \t]
@@ -70,9 +70,9 @@
 <COMMENT>.
 <COMMENT>\n				{++lineNumber;}
 
-<STRING>"\""				{*s++ = *yytext; *s = 0; yylval.symbol = hash_insert(SYMBOL_LIT_STRING, buf); BEGIN(INITIAL);}
-<STRING>\\n				{*s++ = '\n';}
-<STRING>\\t     			{ *s++ = '\t'; }
+<STRING>"\""		{*s++ = *yytext; *s = 0; yylval.symbol = hash_insert(SYMBOL_LIT_STRING, buf); BEGIN(INITIAL); return LIT_STRING;}
+<STRING>\\n				{*s++ = '\\'; *s++ = 'n';}
+<STRING>\\t     			{*s++ = '\\'; *s++ = 't';}
 <STRING>\\\"				{*s++ = '\"';}
 <STRING>.				{*s++ = *yytext;}
 <STRING>\n				{++lineNumber; *s++ = '\n';}

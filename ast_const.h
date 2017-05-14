@@ -25,7 +25,7 @@
 #define AST_LOGIC_NOT			13
 #define AST_VECTOR_EXPR			14
 #define AST_FUNC_CALL			15
-#define AST_LIST_ARG			16
+#define AST_LIST_ARG_BEGIN		16
 #define AST_ASSIGN				17
 #define AST_VEC_ASSIGN			18
 #define AST_READ				19
@@ -71,6 +71,7 @@
 
 #define AST_PARENTESIS_EXPR		58
 #define AST_COMMAND_BLOCK		59
+#define AST_LIST_ARG_ELEM		60
 
 
 

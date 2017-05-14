@@ -11,19 +11,33 @@ int yyparse(void);
 
 void readFile(int argc, char *argv[]){
 	
-	if(argc < 2){
-		fprintf(stderr, "%s", "Missing file name! Command format: ./executable_program <file_name> \n");
+	if(argc < 3){
+		fprintf(stderr, "%s", "Missing file name! Command format: ./executable_program <input_name> <output_name> \n");
 		exit(1);
 	}
 
-	FILE* file = fopen(argv[1], "r");
-	if(file == NULL){
-		fprintf(stderr, "%s", "Can't open file. \n");
+	FILE* input = fopen(argv[1], "r");
+	if(input == NULL){
+		fprintf(stderr, "%s", "Can't open input file. \n");
 		exit(1);
 	}
 
-	yyin = file;
-	yyparse();
+	yyin = input;
+
+	//ASTREE *astree;
+
+	/*astree = */yyparse(); //howto?
+
+	/*FILE* output = fopen(argv[2], "w+");
+
+	if(output == NULL){
+		fprintf(stderr, "%s", "Can't open output file. \n");
+		exit(1);
+	}
+
+	astreeProgram(astree, output);*/
+
+	
 	
 	//hash_print();
 }
