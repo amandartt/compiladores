@@ -24,20 +24,18 @@ void readFile(int argc, char *argv[]){
 
 	yyin = input;
 
-	//ASTREE *astree;
+	yyparse();
 
-	/*astree = */yyparse(); //howto?
-
-	/*FILE* output = fopen(argv[2], "w+");
+	FILE* output = fopen(argv[2], "w+");
 
 	if(output == NULL){
 		fprintf(stderr, "%s", "Can't open output file. \n");
 		exit(1);
 	}
 
-	astreeProgram(astree, output);*/
+	astreeProgram(ast,output); 
+	fclose(output);
 
-	
 	
 	//hash_print();
 }

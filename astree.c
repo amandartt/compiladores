@@ -335,9 +335,10 @@ void astreeProgram(ASTREE* node, FILE* output){ //TODO: replace all "printf(..."
 		case AST_CABEC:
 			astreeProgram(node->son[0],output);
 			printf(" %s(", node->son[1]->symbol->text);
-			
+			fprintf(output, " %s(", node->son[1]->symbol->text);
 			astreeProgram(node->son[2],output);	
 			printf(")");
+			fprintf(output, ")");
 			break;
 		case AST_PARAM_ELEM:
 			astreeProgram(node->son[0],output);			

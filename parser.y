@@ -92,13 +92,7 @@
 // Amanda e Gabriel
 
 
-program: cjto_declar 								{$$ = $1; /*astreePrint($$,0);*/ 
-													FILE* f = fopen("programa.txt", "w+");
-													if(f == NULL){
-														fprintf(stderr, "%s", "Can't open output file. \n");
-														exit(1);
-													}	
-													astreeProgram($$,f); fclose(f);/*return $$;*/} //TODO: remove astreeProgram, discover how to return the pointer)
+program: cjto_declar 								{$$ = $1; astreePrint($$,0); ast = $$;} 
 	;
 
 cjto_declar: declar ';' cjto_declar					{$$ = astreeCreate(AST_CJTODEC_ELEM,0,$1,$3,0,0);}

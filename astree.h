@@ -12,6 +12,8 @@ typedef struct astree{
 	struct astree *son[MAX_SONS];
 } ASTREE;
 
+ASTREE* ast;
+
 ASTREE* astreeCreate(int type, HASH_NODE *symbol, ASTREE *son1, ASTREE *son2, ASTREE *son3, ASTREE *son4);
 void astreePrint(ASTREE *node, int depth);
 void astreeProgram(ASTREE* node, FILE* output);
