@@ -92,7 +92,7 @@
 // Amanda e Gabriel
 
 
-program: cjto_declar 								{$$ = $1; astreePrint($$,0); ast = $$;} 
+program: cjto_declar 								{$$ = $1; /*astreePrint($$,0);*/ ast = $$;} 
 	;
 
 cjto_declar: declar ';' cjto_declar					{$$ = astreeCreate(AST_CJTODEC_ELEM,0,$1,$3,0,0);}
