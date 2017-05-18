@@ -67,11 +67,11 @@
 %type<astree> chamada_func
 %type<astree> list_arg
 %type<astree> resto_arg
-%type<astree> value
-%type<astree> id
-%type<astree> str
-%type<astree> int
-%type<astree> type
+%type<symbol> value
+%type<symbol> id
+%type<symbol> str
+%type<symbol> int
+%type<symbol> type
 
 //descomentar apenas os que estao feitos
 

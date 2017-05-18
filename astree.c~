@@ -20,7 +20,7 @@ void astreePrint(ASTREE* node, int depth){
 		return;
 	}
 	int c;
-	for(c = 0; c < depth; c++) //identacao
+	for(int c = 0; c < depth; c++) //identacao
 		printf ("| ");
 
 	printf ("ASTREE(");
