@@ -13,9 +13,9 @@
 #define SYMBOL_VEC 10
 #define SYMBOL_FUNC 11
 
-#define DATATYPE_INT 12
-#define DATATYPE_REAL 13
-#define DATATYPE_SHORT 14
-#define DATATYPE_LONG 15
-#define DATATYPE_BYTE 16
-#define DATATYPE_CHAR 17
+#define DATATYPE_BYTE 12 //INT subtype
+#define DATATYPE_SHORT 13 //INT subtype
+#define DATATYPE_LONG 14  //INT subtype
+#define DATATYPE_FLOAT 15 //REAL subtype
+#define DATATYPE_DOUBLE 16 //REAL subtype
+#define DATATYPE_CHAR 17 //INT subtype
