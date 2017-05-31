@@ -5,6 +5,7 @@
 	#include "astree.h"
 	#include "hash.h"	
 	#include "y.tab.h"
+	#include "semantics.h"
 
 	int yylex();
 	int getLineNumber(void);
@@ -98,8 +99,8 @@ declar: declar_var_globais							{$$ = $1;}
 	| declar_func 									{$$ = $1;}
 	;
 
-declar_var_globais: TK_IDENTIFIER ':' type value	{$$ = astreeCreate(AST_DEC_VAR_GLOB,$1,$3,$4,0,0);}
-	| TK_IDENTIFIER ':' declar_vetor				{$$ = astreeCreate(AST_DEC_VEC_GLOB,$1,$3,0,0,0);}
+declar_var_globais: TK_IDENTIFIER ':' type value	{$$ = astreeCreate(AST_DEC_VAR_GLOB,$1,$3,$4,0,0); setDataType($$, AST_DEC_VAR_GLOB);}
+	| TK_IDENTIFIER ':' declar_vetor				{$$ = astreeCreate(AST_DEC_VEC_GLOB,$1,$3,0,0,0); setDataType($$, AST_DEC_VEC_GLOB);}
 	;
 
 declar_vetor: type '[' LIT_INTEGER ']' seq_num		{$$ = astreeCreate(AST_DEC_VEC_SEQ,$3,$1,$5,0,0);}
@@ -114,7 +115,7 @@ seq_num: LIT_INTEGER seq_num						{$$ = astreeCreate(AST_SEQNUM_ELEM,$1,$2,0,0,0
 	| LIT_CHAR										{$$ = astreeCreate(AST_SEQNUM_ELEM,$1,0,0,0,0);}
 	;
 
-declar_func: cabecalho comando						{$$ = astreeCreate(AST_DEC_FUNC,0,$1,$2,0,0);}
+declar_func: cabecalho comando						{$$ = astreeCreate(AST_DEC_FUNC,0,$1,$2,0,0); setDataType($$, AST_DEC_FUNC);}
 	;
 
 cabecalho: type TK_IDENTIFIER '(' list_params ')'	{$$ = astreeCreate(AST_CABEC,$2,$1,$4,0,0);}

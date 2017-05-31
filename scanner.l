@@ -6,16 +6,8 @@
 	#include "astree.h"
 	#include "hash.h"
 	#include "y.tab.h"
-	
+	#include "symbol_defs.h"
 
-	#define SYMBOL_LIT_INT 1
-	#define SYMBOL_LIT_REAL 2
-	#define SYMBOL_LIT_SHORT 3
-	#define SYMBOL_LIT_LONG 4
-	#define SYMBOL_LIT_BYTE 5
-	#define SYMBOL_LIT_CHAR 6
-	#define SYMBOL_IDENTIFIER 7	
-	#define SYMBOL_LIT_STRING 8	
 
 	extern YYSTYPE yylval;
 

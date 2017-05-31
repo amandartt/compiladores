@@ -1,0 +1,21 @@
+// Amanda e Gabriel
+
+#define SYMBOL_LIT_INT 1
+#define SYMBOL_LIT_REAL 2
+#define SYMBOL_LIT_SHORT 3
+#define SYMBOL_LIT_LONG 4
+#define SYMBOL_LIT_BYTE 5
+#define SYMBOL_LIT_CHAR 6
+#define SYMBOL_IDENTIFIER 7	
+#define SYMBOL_LIT_STRING 8
+
+#define SYMBOL_VAR 9
+#define SYMBOL_VEC 10
+#define SYMBOL_FUNC 11
+
+#define DATATYPE_INT 12
+#define DATATYPE_REAL 13
+#define DATATYPE_SHORT 14
+#define DATATYPE_LONG 15
+#define DATATYPE_BYTE 16
+#define DATATYPE_CHAR 17
