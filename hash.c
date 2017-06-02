@@ -56,7 +56,7 @@ void hash_print(){
 	int i;	
 	for(i=0; i<HASH_SIZE; i++){
 		for(node=hash_table[i]; node; node=node->next){
-			printf("[Table] Type: %d - Text: %s\n", node->type, node->text);
+			printf("[Table] Type: %d [DataType %d] - Text: %s\n", node->type, node->dataType, node->text);
 		}
 	} 
 }

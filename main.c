@@ -37,7 +37,7 @@ void readFile(int argc, char *argv[]){
 	fclose(output);
 
 	
-	//hash_print();
+	hash_print();
 }
 
 int main(int argc, char *argv[]) {
