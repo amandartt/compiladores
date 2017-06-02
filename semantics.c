@@ -22,10 +22,19 @@ void semanticSetDeclations(ASTREE *node){
 
 // incompleto
 void setDataType(ASTREE *node, int type){
-	if(node->symbol->type != SYMBOL_IDENTIFIER){
+
+	if (type == AST_DEC_FUNC){
+		if(node->son[0]->symbol->type != SYMBOL_IDENTIFIER){
+		fprintf(stderr,"Erro: variavel %s declarada mais de uma vez.\n", node->son[0]->symbol->text); //exit(4);
+		return;
+		}
+	}
+	else if(node->symbol->type != SYMBOL_IDENTIFIER){
 		fprintf(stderr,"Erro: variavel %s declarada mais de uma vez.\n", node->symbol->text); //exit(4);
 		return;
 	}
+	
+	printf("node %p type %d\n",node,type);
 
 	switch(type){
 		case AST_DEC_VAR_GLOB: 			
@@ -50,13 +59,13 @@ void setDataType(ASTREE *node, int type){
 			}
 			break;
 		case AST_DEC_FUNC:
-			node->symbol->type = SYMBOL_FUNC;
+			node->son[0]->symbol->type = SYMBOL_FUNC;
 			switch(node->son[0]->son[0]->type){
-				case AST_BYTE: node->symbol->dataType = DATATYPE_BYTE; break;
-				case AST_SHORT: node->symbol->dataType = DATATYPE_SHORT; break;
-				case AST_LONG: node->symbol->dataType = DATATYPE_LONG; break;
-				case AST_FLOAT: node->symbol->dataType = DATATYPE_FLOAT; break;
-				case AST_DOUBLE: node->symbol->dataType = DATATYPE_DOUBLE; break;
+				case AST_BYTE: node->son[0]->symbol->dataType = DATATYPE_BYTE; break;
+				case AST_SHORT: node->son[0]->symbol->dataType = DATATYPE_SHORT; break;
+				case AST_LONG: node->son[0]->symbol->dataType = DATATYPE_LONG; break;
+				case AST_FLOAT: node->son[0]->symbol->dataType = DATATYPE_FLOAT; break;
+				case AST_DOUBLE: node->son[0]->symbol->dataType = DATATYPE_DOUBLE; break;
 			}
 			break;
 	}
