@@ -313,7 +313,7 @@ void setAstNodeDataType(ASTREE *node){
 		case AST_LOGIC_G:
 		case AST_LOGIC_OR:
 		case AST_LOGIC_NOT:
-			node->dataType = EXPR_BOOL;
+			node->dataType = DATATYPE_BOOL;
 			break;
 		case AST_ADD:    
 		case AST_SUB: 
@@ -351,7 +351,10 @@ int typeInference(int type1, int type2){
 	}
 	else if(type1 == DATATYPE_BYTE || type2 == DATATYPE_BYTE){
 		return DATATYPE_BYTE;
-	}
+	}else{ 
+		printf("\n\n\n aqui %d %d", type1, type2);
+		return -1;
+	}	
 }
 
 int isBool(ASTREE *node){

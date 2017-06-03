@@ -19,8 +19,11 @@
 #define DATATYPE_FLOAT 15 //REAL subtype
 #define DATATYPE_DOUBLE 16 //REAL subtype
 #define DATATYPE_CHAR 17 //INT subtype
+#define DATATYPE_BOOL 18
 
+/*
 #define EXPR_INT 18 //EXPR_ARIT subtype
 #define EXPR_FLOAT 19 //EXPR_ARIT subtype
 #define EXPR_ARIT 20
 #define EXPR_BOOL 21
+*/
