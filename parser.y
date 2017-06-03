@@ -176,10 +176,10 @@ seq_comandos: comando ';' seq_comandos				{$$ = astreeCreate(AST_SEQ_CMD,0,$1,$3
 	|												{$$ = 0;}
 	;
 
-expr: expr '+' expr									{$$ = astreeCreate(AST_ADD,0,$1,$3,0,0);}
-	| expr '-' expr									{$$ = astreeCreate(AST_SUB,0,$1,$3,0,0);}
-	| expr '*' expr									{$$ = astreeCreate(AST_MUL,0,$1,$3,0,0);}
-	| expr '/' expr									{$$ = astreeCreate(AST_DIV,0,$1,$3,0,0);}
+expr: expr '+' expr									{$$ = astreeCreate(AST_ADD,0,$1,$3,0,0); setAstNodeDataType($$);}
+	| expr '-' expr									{$$ = astreeCreate(AST_SUB,0,$1,$3,0,0); setAstNodeDataType($$);}
+	| expr '*' expr									{$$ = astreeCreate(AST_MUL,0,$1,$3,0,0); setAstNodeDataType($$);}
+	| expr '/' expr									{$$ = astreeCreate(AST_DIV,0,$1,$3,0,0); setAstNodeDataType($$);}
 	| expr '>' expr									{$$ = astreeCreate(AST_LOGIC_G,0,$1,$3,0,0); setAstNodeDataType($$);}
 	| expr '<' expr									{$$ = astreeCreate(AST_LOGIC_L,0,$1,$3,0,0); setAstNodeDataType($$);}
 	| expr OPERATOR_LE expr							{$$ = astreeCreate(AST_LOGIC_LE,0,$1,$3,0,0); setAstNodeDataType($$);}

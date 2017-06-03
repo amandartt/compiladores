@@ -13,5 +13,6 @@ void semanticSetDeclations(ASTREE *node);
 void semanticFullCheck(ASTREE *node);
 void setDataType(ASTREE *node, int type);
 void setAstNodeDataType(ASTREE *node);
+int aritmeticInference(ASTREE *node);
 int typeInference(int type1, int type2);
 int isBool(ASTREE *node);

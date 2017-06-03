@@ -299,10 +299,10 @@ void setAstNodeDataType(ASTREE *node){
 	}
 
 	switch(node->type){
-		case AST_SYMBOL:
+		case AST_SYMBOL:			
 		case AST_VECTOR_EXPR:
-		case AST_FUNC_CALL:
-			node->dataType = node->symbol->dataType;
+		case AST_FUNC_CALL:  // nao tenho  nehuma certeza
+			node->dataType = node->symbol->type;
 			break;
 		case AST_LOGIC_L:
 		case AST_LOGIC_LE:
@@ -315,32 +315,41 @@ void setAstNodeDataType(ASTREE *node){
 		case AST_LOGIC_NOT:
 			node->dataType = EXPR_BOOL;
 			break;
-		case AST_ADD: //TODO break;   
-		case AST_SUB: //TODO break;
-		case AST_MUL: //TODO break;
-		case AST_DIV: //TODO break;
-		case AST_ASSIGN: //TODO break;
-		case AST_VEC_ASSIGN: //TODO break; 
+		case AST_ADD:    
+		case AST_SUB: 
+		case AST_MUL: 
+		case AST_DIV: 
+			node->dataType = aritmeticInference(node);
+			break;
+		case AST_ASSIGN: 
+		case AST_VEC_ASSIGN: 
+			node->dataType = node->symbol->type;
 			break;
 	}
 
 	//printf("type: %d datatype: %d \n", node->type, node->dataType);
 }
 
+int aritmeticInference(ASTREE *node){
+	// eh soh isso ?? 
+	return typeInference(node->son[0]->dataType, node->son[1]->dataType);
+
+}
+
 int typeInference(int type1, int type2){
-	if(type1 == AST_DOUBLE || type2 == AST_DOUBLE){
+	if(type1 == DATATYPE_DOUBLE || type2 == DATATYPE_DOUBLE){
 		return DATATYPE_DOUBLE;
 	}
-	else if(type1 == AST_FLOAT || type2 == AST_FLOAT){
+	else if(type1 == DATATYPE_FLOAT || type2 == DATATYPE_FLOAT){
 		return DATATYPE_FLOAT;
 	}
-	else if(type1 == AST_LONG || type2 == AST_LONG){
+	else if(type1 == DATATYPE_LONG || type2 == DATATYPE_LONG){
 		return DATATYPE_LONG;
 	}
-	else if(type1 == AST_SHORT || type2 == AST_SHORT){
+	else if(type1 == DATATYPE_SHORT || type2 == DATATYPE_SHORT){
 		return DATATYPE_SHORT;
 	}
-	else if(type1 == AST_BYTE || type2 == AST_BYTE){
+	else if(type1 == DATATYPE_BYTE || type2 == DATATYPE_BYTE){
 		return DATATYPE_BYTE;
 	}
 }
