@@ -1,5 +1,9 @@
 #include "semantics.h"
 
+//TODO 
+// lembrar de marcar tipos dos nodos - add na estrutura
+// contar numero de parametros
+
 // avaliacao recursiva da arvore
 void semanticFullCheck(ASTREE *node){
 	if(!node) return;
@@ -9,7 +13,7 @@ void semanticFullCheck(ASTREE *node){
 			//Nothing(?)
 			break;
 		case AST_ADD:
-			//Check expr + define type of the expr
+			//Check expr + define type of the expr				
 			//semanticFullCheck?(node->son[0]);
 			//semanticFullCheck?(node->son[1]);
 			break;
@@ -197,7 +201,7 @@ void semanticFullCheck(ASTREE *node){
 			//semanticFullCheck?(node->son[1]);
 			break;
 		case AST_CABEC:
-			//verify list of params(??? novo campo com lista de parametros??)
+			//verify list of params(??? novo campo com lista de parametros??) nao precisa, apenas numero de parametros
 			//semanticFullCheck?(node->son[0]);
 			//semanticFullCheck?(node->son[1]);	
 			break;
@@ -232,7 +236,7 @@ void semanticFullCheck(ASTREE *node){
 }
 
 
-// completo(?)
+// completo(?) i guess so
 void setDataType(ASTREE *node, int type){
 
 	if (type == AST_DEC_FUNC){
@@ -246,7 +250,10 @@ void setDataType(ASTREE *node, int type){
 		return;
 	}
 	
-	printf("node %p type %d\n",node,type);
+	if(node->symbol)
+		printf("node %s type %d\n",node->symbol->text,type);
+	else
+		printf("node %s type %d\n",node->son[0]->symbol->text,type);
 
 	switch(type){
 		case AST_DEC_VAR_GLOB: 			
@@ -281,6 +288,68 @@ void setDataType(ASTREE *node, int type){
 			}
 			break;
 	}
+}
 
+//TODO
+// FALTAM AS EXP ADD, SUB ETC
+void setAstNodeDataType(ASTREE *node){
+	if(node == NULL){
+		// pode acontecer? é erro? 
+		return;
+	}
 
+	switch(node->type){
+		case AST_SYMBOL:
+		case AST_VECTOR_EXPR:
+		case AST_FUNC_CALL:
+			node->dataType = node->symbol->dataType;
+			break;
+		case AST_LOGIC_L:
+		case AST_LOGIC_LE:
+		case AST_LOGIC_GE:
+		case AST_LOGIC_EQ:
+		case AST_LOGIC_NE:
+		case AST_LOGIC_AND:
+		case AST_LOGIC_G:
+		case AST_LOGIC_OR:
+		case AST_LOGIC_NOT:
+			node->dataType = EXPR_BOOL;
+			break;
+		case AST_ADD: //TODO break;   
+		case AST_SUB: //TODO break;
+		case AST_MUL: //TODO break;
+		case AST_DIV: //TODO break;
+		case AST_ASSIGN: //TODO break;
+		case AST_VEC_ASSIGN: //TODO break; 
+			break;
+	}
+
+	//printf("type: %d datatype: %d \n", node->type, node->dataType);
+}
+
+int typeInference(int type1, int type2){
+	if(type1 == AST_DOUBLE || type2 == AST_DOUBLE){
+		return DATATYPE_DOUBLE;
+	}
+	else if(type1 == AST_FLOAT || type2 == AST_FLOAT){
+		return DATATYPE_FLOAT;
+	}
+	else if(type1 == AST_LONG || type2 == AST_LONG){
+		return DATATYPE_LONG;
+	}
+	else if(type1 == AST_SHORT || type2 == AST_SHORT){
+		return DATATYPE_SHORT;
+	}
+	else if(type1 == AST_BYTE || type2 == AST_BYTE){
+		return DATATYPE_BYTE;
+	}
+}
+
+int isBool(ASTREE *node){
+	if(node->type == AST_LOGIC_L || node->type == AST_LOGIC_LE || node->type == AST_LOGIC_GE || node->type == AST_LOGIC_EQ || 
+	node->type == AST_LOGIC_NE || node->type == AST_LOGIC_AND || node->type == AST_LOGIC_G || node->type == AST_LOGIC_OR ||
+	node->type == AST_LOGIC_NOT){
+		return 1;
+	}
+	return 0;
 }

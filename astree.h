@@ -8,6 +8,7 @@
 
 typedef struct astree{
 	int type;
+	int dataType;
 	HASH_NODE *symbol;
 	struct astree *son[MAX_SONS];
 } ASTREE;
