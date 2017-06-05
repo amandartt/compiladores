@@ -4,6 +4,7 @@
 #include "astree.h"
 #include "hash.h"
 #include "y.tab.h"
+#include "semantics.h"
 
 void initMe(void);
 int isRunning(void);
@@ -25,6 +26,19 @@ void readFile(int argc, char *argv[]){
 	yyin = input;
 
 	yyparse();
+	
+}
+
+int main(int argc, char *argv[]) {
+	semanticErrors = 0;
+	initMe();
+	readFile(argc, argv);
+
+	int numErrors = semanticFullCheck(ast);
+	if(numErrors){
+		fprintf(stderr,"%d erros semanticos.\n", numErrors);
+		exit(4);
+	}
 
 	FILE* output = fopen(argv[2], "w+");
 
@@ -34,14 +48,7 @@ void readFile(int argc, char *argv[]){
 	}
 
 	astreeProgram(ast,output); 
-	fclose(output);
-
-	
-	hash_print();
-}
-
-int main(int argc, char *argv[]) {
-	initMe();
-	readFile(argc, argv);
+	fclose(output);	
+	//hash_print();
 	exit(0);
 }

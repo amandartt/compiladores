@@ -61,15 +61,3 @@ void hash_print(){
 	} 
 }
 
-void hash_ckeck_undeclared(){
-	HASH_NODE *node;
-	int i;	
-	for(i=0; i<HASH_SIZE; i++){
-		for(node=hash_table[i]; node; node=node->next){
-			if(node->type == SYMBOL_IDENTIFIER){
-				//erro variavel nao declarada
-				fprintf(stderr,"Erro: variavel %s nao declarada.\n", node->text); //exit(4);
-			}
-		}
-	} 
-}

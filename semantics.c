@@ -7,234 +7,10 @@
 // criar uma funcao pequena q chame todas as outras de semantica pra no fim dar o exit
 
 // avaliacao recursiva da arvore
-void semanticFullCheck(ASTREE *node){
-	if(!node) return;
-	
-	switch(node->type){
-		case AST_SYMBOL:
-			//Nothing(?)
-			break;
-		case AST_ADD:
-			//Check expr + define type of the expr				
-			//semanticFullCheck?(node->son[0]);
-			//semanticFullCheck?(node->son[1]);
-			break;
-		case AST_SUB:
-			//Check expr + define type of the expr
-			//semanticFullCheck?(node->son[0]);
-			//semanticFullCheck?(node->son[1]);
-			break;
-		case AST_MUL:
-			//Check expr + define type of the expr
-			//semanticFullCheck?(node->son[0]);
-			//semanticFullCheck?(node->son[1]);
-			break;
-		case AST_DIV:
-			//Check expr + define type of the expr
-			//semanticFullCheck?(node->son[0]);
-			//semanticFullCheck?(node->son[1]);
-			break;
-		case AST_LOGIC_G:
-			//Check expr + type = EXPR_BOOL
-			//semanticFullCheck?(node->son[0]);
-			//semanticFullCheck?(node->son[1]);
-			break;
-		case AST_LOGIC_L:
-			//Check expr + type = EXPR_BOOL
-			//semanticFullCheck?(node->son[0]);
-			//semanticFullCheck?(node->son[1]);
-			break;
-		case AST_LOGIC_LE:
-			//Check expr + type = EXPR_BOOL
-			//semanticFullCheck?(node->son[0]);
-			//semanticFullCheck?(node->son[1]);
-			break;
-		case AST_LOGIC_GE:
-			//Check expr + type = EXPR_BOOL
-			//semanticFullCheck?(node->son[0]);
-			//semanticFullCheck?(node->son[1]);
-			break;
-		case AST_LOGIC_EQ:
-			//Check expr + type = EXPR_BOOL
-			//semanticFullCheck?(node->son[0]);
-			//semanticFullCheck?(node->son[1]);
-			break;
-		case AST_LOGIC_NE:
-			//Check expr + type = EXPR_BOOL
-			//semanticFullCheck?(node->son[0]);
-			//semanticFullCheck?(node->son[1]);
-			break;
-		case AST_LOGIC_AND:
-			//Check expr + type = EXPR_BOOL
-			//semanticFullCheck?(node->son[0]);
-			//semanticFullCheck?(node->son[1]);
-			break;
-		case AST_LOGIC_OR:
-			//Check expr + type = EXPR_BOOL
-			//semanticFullCheck?(node->son[0]);
-			//semanticFullCheck?(node->son[1]);
-			break;
-		case AST_LOGIC_NOT:
-			//Check expr + type = EXPR_BOOL
-			//semanticFullCheck?(node->son[0]);
-			//semanticFullCheck?(node->son[1]);
-			break;
-		case AST_PARENTESIS_EXPR:
-			//Check inside expr + type = type son[0]
-			//semanticFullCheck?(node->son[0]);
-			break;
-		case AST_VECTOR_EXPR:
-			//Verify if son[0] expr is a EXPR_INT type
-			//Verify if used as vector(?)
-			//semanticFullCheck?(node->son[0]);
-			break;
-			break;
-		case AST_FUNC_CALL:
-			//Verify arguments number and types compatibility
-			//semanticFullCheck?(node->son[0]); //LIST_ARG_BEGIN or empty
-			break;
-		case AST_LIST_ARG_BEGIN:
-			//Verify type compatibility of son[0], recurse on son[1]
-			//semanticFullCheck?(node->son[0]); //expr
-			//semanticFullCheck?(node->son[1]); //LIST_ARG_ELEM's
-			break;
-		case AST_LIST_ARG_ELEM:
-			//Verify type compatibility of son[0], recurse on son[1]
-			//semanticFullCheck?(node->son[0]); //expr
-			//semanticFullCheck?(node->son[1]); //LIST_ARG_ELEM's
-			break;
-		case AST_ASSIGN:
-			//Verify usage of literals, vectors and functions
-			//semanticFullCheck?(node->son[0]);
-			break;
-		case AST_VEC_ASSIGN:
-			//Verify if son[0] is a EXPR_INT and compatibility of son[1]
-			//semanticFullCheck?(node->son[0]);
-			//semanticFullCheck?(node->son[1]);
-			break;
-		case AST_READ:
-			//Nothing(?)
-			break;
-		case AST_PRINT:
-			//Verify if son[0] expressions are EXPR_INT or EXPR_REAL (EXPR_ARIT)
-			//semanticFullCheck?(node->son[0]);
-			break;
-		case AST_PRINT_ELEM:
-			if(node->symbol){
-				//If string, no check needed.
-			}
-			else{
-				//verify if son[0] is EXPR_INT or EXPR_REAL (EXPR_ARIT)
-				//semanticFullCheck?(node->son[0]);
-			}
-			//Continue on the list
-			//semanticFullCheck?(node->son[1]);
-			break;
-		case AST_RETURN:
-			//Verify if son[0] is EXPR_INT or EXPR_REAL (EXPR_ARIT)
-			//semanticFullCheck?(node->son[0]);
-			break;
-		case AST_WHEN_THEN:
-			//Verify if son[0] is EXPR_BOOL
-			//semanticFullCheck?(node->son[0]);
-			//Verify son[1]
-			//semanticFullCheck?(node->son[1]);
-			break;
-		case AST_WHEN_THEN_ELSE:
-			//Verify if son[0] is EXPR_BOOL
-			//semanticFullCheck?(node->son[0]);
-			//Verify son[1]
-			//semanticFullCheck?(node->son[1]);
-			//Verify son[2]
-			//semanticFullCheck?(node->son[2]);
-			break;
-		case AST_WHILE:
-			//Verify if son[0] is EXPR_BOOL
-			//semanticFullCheck?(node->son[0]);
-			//Verify son[1]
-			//semanticFullCheck?(node->son[1]);
-			break;
-		case AST_FOR:
-			//Verify if son[0] is EXPR_INT or EXPR_FLOAT (EXPR_ARIT)
-			//semanticFullCheck?(node->son[0]);
-			//Verify if son[1] is EXPR_INT or EXPR_FLOAT (EXPR_ARIT)
-			//semanticFullCheck?(node->son[1]);
-			//Verify son[2]
-			//semanticFullCheck?(node->son[2]);
-			break;
-		case AST_COMMAND_BLOCK:
-			//Verify son[0]
-			//semanticFullCheck?(node->son[0]);
-			break;
-		case AST_SEQ_CMD:
-			//Verify son[0]
-			//semanticFullCheck?(node->son[0]);
-			//Verify son[1]
-			//semanticFullCheck?(node->son[1]);
-			break;
-		case AST_CJTODEC_ELEM:
-			//Verify son[0]
-			//semanticFullCheck?(node->son[0]);
-			//Verify son[1]
-			//semanticFullCheck?(node->son[1]);
-			break;
-		case AST_DEC_VAR_GLOB: 
-			//Nothing (already made??)
-			break;
-		case AST_DEC_VEC_GLOB: 
-			//Nothing (already made??)
-			break;
-		case AST_DEC_VEC:
-			//Nothing (already made??)
-			break;
-		case AST_DEC_VEC_SEQ:	
-			//Verify son[1] (needed?)
-			//semanticFullCheck?(node->son[1]);
-			break;
-		case AST_SEQNUM_ELEM:
-			//Verify son[0] (needed?)
-			if(node->son[0]){
-				//semanticFullCheck?(node->son[0]);
-			}
-			break;
-		case AST_DEC_FUNC:
-			//Verify son[1] (son[0] already made??)
-			//semanticFullCheck?(node->son[0]);
-			//semanticFullCheck?(node->son[1]);
-			break;
-		case AST_CABEC:
-			//verify list of params(??? novo campo com lista de parametros??) nao precisa, apenas numero de parametros
-			//semanticFullCheck?(node->son[0]);
-			//semanticFullCheck?(node->son[1]);	
-			break;
-		case AST_PARAM_ELEM: //talvez "nothing", pois AST_DEC_FUNC chamaria outra função para cuidar disso?
-			//anotate no novo campo???
-			//semanticFullCheck?(node->son[0]);			
-			if(node->son[1]){
-				//recursao para continuar anotando??
-				//semanticFullCheck?(node->son[1]);
-			}
-			break;		
-		case AST_PARAM:
-			//son[0] have the type of the param!
-			//semanticFullCheck?(node->son[0]);
-			break;
-		case AST_BYTE:
-			//anotate type?
-			break;
-		case AST_SHORT:
-			//anotate type?
-			break;
-		case AST_LONG:
-			//anotate type?
-			break;
-		case AST_FLOAT:		
-			//anotate type?
-			break;
-		case AST_DOUBLE:
-			//anotate type?
-			break;
-	}
+int semanticFullCheck(ASTREE *node){
+	hash_ckeck_undeclared();	
+	checkAstNodeDataType(node);
+	return semanticErrors;
 }
 
 
@@ -243,20 +19,20 @@ void setSymbolAndDataType(ASTREE *node, int type){
 
 	if (type == AST_DEC_FUNC){
 		if(node->son[0]->symbol->type != SYMBOL_IDENTIFIER){
-		fprintf(stderr,"Erro: funcao %s declarada mais de uma vez.\n", node->son[0]->symbol->text); //exit(4);
+		printSemanticError("funcao declarada mais de uma vez", node->son[0]->symbol->text);
 		return;
 		}
 	}
 	else if(node->symbol->type != SYMBOL_IDENTIFIER){
-		fprintf(stderr,"Erro: variavel %s declarada mais de uma vez.\n", node->symbol->text); //exit(4);
+		printSemanticError("variavel declarada mais de uma vez", node->symbol->text);
 		return;
 	}
 	
-	if(node->symbol)
+/*	if(node->symbol)
 		printf("node %s type %d\n",node->symbol->text,type);
 	else
 		printf("node %s type %d\n",node->son[0]->symbol->text,type);
-
+*/
 	switch(type){
 		case AST_PARAM:	
 			node->symbol->type = SYMBOL_VAR;
@@ -290,7 +66,7 @@ void setDataType(ASTREE *node, int type){
 }
 
 //TODO
-void setAstNodeDataType(ASTREE *node){
+void checkAstNodeDataType(ASTREE *node){
 	if(node == NULL){
 		// pode acontecer? é erro? 
 		return;
@@ -308,7 +84,7 @@ void setAstNodeDataType(ASTREE *node){
 		case AST_LOGIC_LE:
 		case AST_LOGIC_GE:
 			if(node->son[0]->dataType == DATATYPE_BOOL || node->son[1]->dataType == DATATYPE_BOOL){
-				fprintf(stderr,"Erro: expressao booleana em operacao relacional\n"); //exit(4);
+				printSemanticError("expressao booleana em operacao relacional", NULL);
 			}
 			node->dataType = DATATYPE_BOOL;
 			break;
@@ -316,20 +92,20 @@ void setAstNodeDataType(ASTREE *node){
 		case AST_LOGIC_NE:
 			if((node->son[0]->dataType == DATATYPE_BOOL && node->son[1]->dataType != DATATYPE_BOOL) || 
 			(node->son[1]->dataType == DATATYPE_BOOL && node->son[0]->dataType != DATATYPE_BOOL)){
-				fprintf(stderr,"Erro: conflito de tipos em operação de eq/ne\n"); //exit(4);
+				printSemanticError("conflito de tipos em operação de eq/ne", NULL);
 			}
 			node->dataType = DATATYPE_BOOL;
 			break;
 		case AST_LOGIC_AND:	
 		case AST_LOGIC_OR:
 			if(node->son[0]->dataType != DATATYPE_BOOL || node->son[1]->dataType != DATATYPE_BOOL){
-				fprintf(stderr,"Erro: expressao booleana esperada em operacao and/or\n"); //exit(4);
+				printSemanticError("expressao booleana esperada em operacao and/or", NULL); 
 			}
 			node->dataType = DATATYPE_BOOL;	
 			break;
 		case AST_LOGIC_NOT:
 			if(node->son[0]->dataType != DATATYPE_BOOL){
-				fprintf(stderr,"Erro: expressao booleana esperada em operacao not\n"); //exit(4);
+				printSemanticError("expressao booleana esperada em operacao not", NULL); 
 			}
 			node->dataType = DATATYPE_BOOL;
 			break;
@@ -338,22 +114,22 @@ void setAstNodeDataType(ASTREE *node){
 		case AST_MUL: 
 		case AST_DIV: 
 			if(node->son[0]->dataType == DATATYPE_BOOL || node->son[1]->dataType == DATATYPE_BOOL){
-				fprintf(stderr,"Erro: expressao booleana nao esperada em expressao aritmetica \n"); //exit(4);
+				printSemanticError("expressao booleana nao esperada em expressao aritmetica", NULL);
 			}
 			node->dataType = aritmeticInference(node);
 			break;
 		case AST_ASSIGN: 
 			if(!verifyAssignmentTypes(node->symbol->dataType, node->son[0]->dataType)){
-				fprintf(stderr,"Erro: conflito de tipos na atribuicao\n"); //exit(4);
+				printSemanticError("conflito de tipos na atribuicao", NULL);
 			}
 			node->dataType = node->symbol->dataType;
 			break;
 		case AST_VEC_ASSIGN: 
 			if(node->son[0]->dataType != (DATATYPE_LONG || DATATYPE_SHORT)) {
-				fprintf(stderr,"Erro: indice do vetor deve ser do tipo inteiro \n"); //exit(4);
+				printSemanticError("indice do vetor deve ser do tipo inteiro", NULL); 
 			}
 			if(!verifyAssignmentTypes(node->symbol->dataType, node->son[1]->dataType)){
-				fprintf(stderr,"Erro: conflito de tipos na atribuicao\n"); //exit(4);
+				printSemanticError("conflito de tipos na atribuicao", NULL);
 			}
 			node->dataType = node->symbol->dataType;
 			break;
@@ -406,11 +182,24 @@ int verifyAssignmentTypes(int type1, int type2){
 	return 1;
 }
 
-int isBool(ASTREE *node){
-	if(node->type == AST_LOGIC_L || node->type == AST_LOGIC_LE || node->type == AST_LOGIC_GE || node->type == AST_LOGIC_EQ || 
-	node->type == AST_LOGIC_NE || node->type == AST_LOGIC_AND || node->type == AST_LOGIC_G || node->type == AST_LOGIC_OR ||
-	node->type == AST_LOGIC_NOT){
-		return 1;
+void hash_ckeck_undeclared(){
+	HASH_NODE *node;
+	int i;	 
+	for(i=0; i<HASH_SIZE; i++){
+		for(node=hash_table[i]; node; node=node->next){ 
+			if(node->type == SYMBOL_IDENTIFIER){
+				//erro variavel nao declarada
+				printSemanticError("variavel nao declarada", node->text); 
+			}
+		}
+	} 
+}
+
+void printSemanticError(char* errorDesc, char* param){
+	if(param != NULL){
+		fprintf(stderr,"Erro semantico: %s [%s].\n", errorDesc, param);	
+	}else{
+		fprintf(stderr,"Erro semantico: %s.\n", errorDesc);	
 	}
-	return 0;
+	semanticErrors++;	
 }

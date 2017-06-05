@@ -25,6 +25,6 @@ HASH_NODE* hash_find(char *text, int address);
 HASH_NODE* hash_insert(int type, char *text);
 int hash_address(char *text);
 void hash_print();
-void hash_ckeck_undeclared();
+
 
 #endif

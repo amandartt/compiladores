@@ -88,7 +88,7 @@
 // Amanda e Gabriel
 
 
-program: cjto_declar 								{$$ = $1; /*astreePrint($$,0);*/ ast = $$; semanticFullCheck(ast);} 
+program: cjto_declar 								{$$ = $1; /*astreePrint($$,0);*/ ast = $$;} 
 	;
 
 cjto_declar: declar ';' cjto_declar					{$$ = astreeCreate(AST_CJTODEC_ELEM,0,$1,$3,0,0);}
@@ -176,29 +176,29 @@ seq_comandos: comando ';' seq_comandos				{$$ = astreeCreate(AST_SEQ_CMD,0,$1,$3
 	|												{$$ = 0;}
 	;
 
-expr: expr '+' expr									{$$ = astreeCreate(AST_ADD,0,$1,$3,0,0); setAstNodeDataType($$);}
-	| expr '-' expr									{$$ = astreeCreate(AST_SUB,0,$1,$3,0,0); setAstNodeDataType($$);}
-	| expr '*' expr									{$$ = astreeCreate(AST_MUL,0,$1,$3,0,0); setAstNodeDataType($$);}
-	| expr '/' expr									{$$ = astreeCreate(AST_DIV,0,$1,$3,0,0); setAstNodeDataType($$);}
-	| expr '>' expr									{$$ = astreeCreate(AST_LOGIC_G,0,$1,$3,0,0); setAstNodeDataType($$);}
-	| expr '<' expr									{$$ = astreeCreate(AST_LOGIC_L,0,$1,$3,0,0); setAstNodeDataType($$);}
-	| expr OPERATOR_LE expr							{$$ = astreeCreate(AST_LOGIC_LE,0,$1,$3,0,0); setAstNodeDataType($$);}
-	| expr OPERATOR_GE expr							{$$ = astreeCreate(AST_LOGIC_GE,0,$1,$3,0,0); setAstNodeDataType($$);}  
-	| expr OPERATOR_EQ expr							{$$ = astreeCreate(AST_LOGIC_EQ,0,$1,$3,0,0); setAstNodeDataType($$);}  
-	| expr OPERATOR_NE expr							{$$ = astreeCreate(AST_LOGIC_NE,0,$1,$3,0,0); setAstNodeDataType($$);}  
-	| expr OPERATOR_AND expr						{$$ = astreeCreate(AST_LOGIC_AND,0,$1,$3,0,0); setAstNodeDataType($$);}  
-	| expr OPERATOR_OR expr							{$$ = astreeCreate(AST_LOGIC_OR,0,$1,$3,0,0); setAstNodeDataType($$);}
-	| '!' expr										{$$ = astreeCreate(AST_LOGIC_NOT,0,$2,0,0,0); setAstNodeDataType($$);}
-	| '(' expr ')'									{$$ = astreeCreate(AST_PARENTESIS_EXPR,0,$2,0,0,0); setAstNodeDataType($$);}
-	| LIT_INTEGER									{$$ = astreeCreate(AST_SYMBOL,$1,0,0,0,0); setAstNodeDataType($$);}
-	| LIT_REAL										{$$ = astreeCreate(AST_SYMBOL,$1,0,0,0,0); setAstNodeDataType($$);}
-	| LIT_CHAR										{$$ = astreeCreate(AST_SYMBOL,$1,0,0,0,0); setAstNodeDataType($$);}
-	| TK_IDENTIFIER									{$$ = astreeCreate(AST_SYMBOL,$1,0,0,0,0); setAstNodeDataType($$);}
-	| TK_IDENTIFIER '[' expr ']'					{$$ = astreeCreate(AST_VECTOR_EXPR,$1,$3,0,0,0); setAstNodeDataType($$);}
+expr: expr '+' expr									{$$ = astreeCreate(AST_ADD,0,$1,$3,0,0);}
+	| expr '-' expr									{$$ = astreeCreate(AST_SUB,0,$1,$3,0,0);}
+	| expr '*' expr									{$$ = astreeCreate(AST_MUL,0,$1,$3,0,0);}
+	| expr '/' expr									{$$ = astreeCreate(AST_DIV,0,$1,$3,0,0);}
+	| expr '>' expr									{$$ = astreeCreate(AST_LOGIC_G,0,$1,$3,0,0);}
+	| expr '<' expr									{$$ = astreeCreate(AST_LOGIC_L,0,$1,$3,0,0);}
+	| expr OPERATOR_LE expr							{$$ = astreeCreate(AST_LOGIC_LE,0,$1,$3,0,0);}
+	| expr OPERATOR_GE expr							{$$ = astreeCreate(AST_LOGIC_GE,0,$1,$3,0,0);}  
+	| expr OPERATOR_EQ expr							{$$ = astreeCreate(AST_LOGIC_EQ,0,$1,$3,0,0);}  
+	| expr OPERATOR_NE expr							{$$ = astreeCreate(AST_LOGIC_NE,0,$1,$3,0,0);}  
+	| expr OPERATOR_AND expr						{$$ = astreeCreate(AST_LOGIC_AND,0,$1,$3,0,0);}  
+	| expr OPERATOR_OR expr							{$$ = astreeCreate(AST_LOGIC_OR,0,$1,$3,0,0);}
+	| '!' expr										{$$ = astreeCreate(AST_LOGIC_NOT,0,$2,0,0,0);}
+	| '(' expr ')'									{$$ = astreeCreate(AST_PARENTESIS_EXPR,0,$2,0,0,0);}
+	| LIT_INTEGER									{$$ = astreeCreate(AST_SYMBOL,$1,0,0,0,0);}
+	| LIT_REAL										{$$ = astreeCreate(AST_SYMBOL,$1,0,0,0,0);}
+	| LIT_CHAR										{$$ = astreeCreate(AST_SYMBOL,$1,0,0,0,0);}
+	| TK_IDENTIFIER									{$$ = astreeCreate(AST_SYMBOL,$1,0,0,0,0);}
+	| TK_IDENTIFIER '[' expr ']'					{$$ = astreeCreate(AST_VECTOR_EXPR,$1,$3,0,0,0);}
 	| chamada_func									{$$ = $1;}
 	;
 
-chamada_func: TK_IDENTIFIER '(' list_arg ')'		{$$ = astreeCreate(AST_FUNC_CALL,$1,$3,0,0,0); setAstNodeDataType($$);}
+chamada_func: TK_IDENTIFIER '(' list_arg ')'		{$$ = astreeCreate(AST_FUNC_CALL,$1,$3,0,0,0);}
 	;		
 
 list_arg: expr resto_arg							{$$ = astreeCreate(AST_LIST_ARG_BEGIN,0,$1,$2,0,0);}
