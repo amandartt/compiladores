@@ -22,7 +22,7 @@ int elements_count;
 
 HASH_NODE* hash_initialize();
 HASH_NODE* hash_find(char *text, int address);
-HASH_NODE* hash_insert(int type, char *text);
+HASH_NODE* hash_insert(int type, char *text, int dataType);
 int hash_address(char *text);
 void hash_print();
 

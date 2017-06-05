@@ -113,8 +113,11 @@ void checkAstNodeDataType(ASTREE *node){
 	switch(node->type){
 		case AST_SYMBOL:			
 		case AST_VECTOR_EXPR:
+			node->dataType = node->symbol->dataType;
+			break;
 		case AST_FUNC_CALL:  // not sure if node->symbol->dataType ou node->symbol->type
 			// talvez uma condicao a mais se for literal
+			verifyParams(node);
 			node->dataType = node->symbol->dataType;
 			break;
 		case AST_LOGIC_L:
@@ -162,8 +165,8 @@ void checkAstNodeDataType(ASTREE *node){
 			}
 			node->dataType = node->symbol->dataType;
 			break;
-		case AST_VEC_ASSIGN: //TODO arrumar -> caso de liteirais creio
-			if(node->son[0]->dataType != (DATATYPE_LONG || DATATYPE_SHORT)) {
+		case AST_VEC_ASSIGN: 
+			if(node->son[0]->dataType != DATATYPE_LONG && node->son[0]->dataType != DATATYPE_SHORT) {
 				printSemanticError("indice do vetor deve ser do tipo inteiro", NULL); 
 			}
 			if(!verifyAssignmentTypes(node->symbol->dataType, node->son[1]->dataType)){
@@ -198,6 +201,13 @@ void checkAstNodeDataType(ASTREE *node){
 	}
 
 	//printf("type: %d datatype: %d \n", node->type, node->dataType);
+}
+
+//TODO: criar lista com definicoes de funcoes e seu num de parametros?
+void verifyParams(ASTREE *node){
+	
+
+
 }
 
 int aritmeticInference(ASTREE *node){

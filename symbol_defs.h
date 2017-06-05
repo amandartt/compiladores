@@ -20,6 +20,7 @@
 #define DATATYPE_DOUBLE 16 //REAL subtype
 #define DATATYPE_CHAR 17 //INT subtype
 #define DATATYPE_BOOL 18
+#define DATATYPE_STRING 19
 #define DATATYPE_UNDEFINED 400
 
 /*

@@ -1,5 +1,6 @@
 #include "astree.h"
 #include "y.tab.h"
+#include "hash.h"
 #include "symbol_defs.h"
 
 int semanticErrors;
@@ -16,6 +17,7 @@ void setSymbolAndDataType(ASTREE *node, int type);
 void setDataType(ASTREE *node, int type);
 void checkSymbolsUse(ASTREE *node);
 void checkAstNodeDataType(ASTREE *node);
+void verifyParams(ASTREE *node);
 int aritmeticInference(ASTREE *node);
 int typeInference(int type1, int type2);
 int verifyAssignmentTypes(int type1, int type2);

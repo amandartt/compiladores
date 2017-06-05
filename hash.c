@@ -22,7 +22,7 @@ HASH_NODE* hash_find(char *text, int address){
 	return 0;
 }
 
-HASH_NODE* hash_insert(int type, char *text){	
+HASH_NODE* hash_insert(int type, char *text, int dataType){	
 	HASH_NODE *new_node = calloc(1, sizeof(HASH_NODE));
 	HASH_NODE *exist_node;
 	HASH_NODE *first_node;
@@ -32,6 +32,7 @@ HASH_NODE* hash_insert(int type, char *text){
 		return exist_node;
 	}
 	new_node->type = type;
+	new_node->dataType = dataType;
 	new_node->text = calloc(strlen(text)+1, sizeof(char));	
 	strcpy(new_node->text, text);
 	new_node->next = hash_table[address];

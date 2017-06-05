@@ -46,10 +46,10 @@
 "||"					{return OPERATOR_OR;}
 [-,;:/()+*<>=!&$#{}\[\]]		{return yytext[0];}
 
-[a-zA-Z_][a-zA-Z_0-9]*			{yylval.symbol = hash_insert(SYMBOL_IDENTIFIER, yytext); return TK_IDENTIFIER;}
-[0-9]+					{yylval.symbol = hash_insert(SYMBOL_LIT_INT, yytext); return LIT_INTEGER;}
-[0-9]+\.[0-9]+				{yylval.symbol = hash_insert(SYMBOL_LIT_REAL, yytext); return LIT_REAL;}
-'.'					{yylval.symbol = hash_insert(SYMBOL_LIT_CHAR, yytext); return LIT_CHAR;}
+[a-zA-Z_][a-zA-Z_0-9]*			{yylval.symbol = hash_insert(SYMBOL_IDENTIFIER, yytext, DATATYPE_UNDEFINED); return TK_IDENTIFIER;}
+[0-9]+					{yylval.symbol = hash_insert(SYMBOL_LIT_INT, yytext, DATATYPE_LONG); return LIT_INTEGER;}
+[0-9]+\.[0-9]+				{yylval.symbol = hash_insert(SYMBOL_LIT_REAL, yytext, DATATYPE_DOUBLE); return LIT_REAL;}
+'.'					{yylval.symbol = hash_insert(SYMBOL_LIT_CHAR, yytext, DATATYPE_CHAR); return LIT_CHAR;}
 "\""					{BEGIN(STRING); s = buf; *s++ = *yytext; /*return LIT_STRING;*/}
 
 \n					{++lineNumber;}
@@ -62,7 +62,7 @@
 <COMMENT>.
 <COMMENT>\n				{++lineNumber;}
 
-<STRING>"\""		{*s++ = *yytext; *s = 0; yylval.symbol = hash_insert(SYMBOL_LIT_STRING, buf); BEGIN(INITIAL); return LIT_STRING;}
+<STRING>"\""		{*s++ = *yytext; *s = 0; yylval.symbol = hash_insert(SYMBOL_LIT_STRING, buf,DATATYPE_STRING); BEGIN(INITIAL); return LIT_STRING;}
 <STRING>\\n				{*s++ = '\\'; *s++ = 'n';}
 <STRING>\\t     			{*s++ = '\\'; *s++ = 't';}
 <STRING>\\\"				{*s++ = '\"';}
