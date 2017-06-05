@@ -11,8 +11,10 @@ void semanticSetDeclations(ASTREE *node);
 // ** funcao para saber se é booleano
 
 void semanticFullCheck(ASTREE *node);
+void setSymbolAndDataType(ASTREE *node, int type);
 void setDataType(ASTREE *node, int type);
 void setAstNodeDataType(ASTREE *node);
 int aritmeticInference(ASTREE *node);
 int typeInference(int type1, int type2);
+int verifyAssignmentTypes(int type1, int type2);
 int isBool(ASTREE *node);

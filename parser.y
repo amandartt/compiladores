@@ -88,7 +88,7 @@
 // Amanda e Gabriel
 
 
-program: cjto_declar 								{$$ = $1; astreePrint($$,0); ast = $$; semanticFullCheck(ast);} 
+program: cjto_declar 								{$$ = $1; /*astreePrint($$,0);*/ ast = $$; semanticFullCheck(ast);} 
 	;
 
 cjto_declar: declar ';' cjto_declar					{$$ = astreeCreate(AST_CJTODEC_ELEM,0,$1,$3,0,0);}
@@ -99,8 +99,8 @@ declar: declar_var_globais							{$$ = $1;}
 	| declar_func 									{$$ = $1;}
 	;
 
-declar_var_globais: TK_IDENTIFIER ':' type value	{$$ = astreeCreate(AST_DEC_VAR_GLOB,$1,$3,$4,0,0); setDataType($$, AST_DEC_VAR_GLOB);}
-	| TK_IDENTIFIER ':' declar_vetor				{$$ = astreeCreate(AST_DEC_VEC_GLOB,$1,$3,0,0,0); setDataType($$, AST_DEC_VEC_GLOB);}
+declar_var_globais: TK_IDENTIFIER ':' type value	{$$ = astreeCreate(AST_DEC_VAR_GLOB,$1,$3,$4,0,0); setSymbolAndDataType($$, AST_DEC_VAR_GLOB);}
+	| TK_IDENTIFIER ':' declar_vetor				{$$ = astreeCreate(AST_DEC_VEC_GLOB,$1,$3,0,0,0); setSymbolAndDataType($$, AST_DEC_VEC_GLOB);}
 	;
 
 declar_vetor: type '[' LIT_INTEGER ']' seq_num		{$$ = astreeCreate(AST_DEC_VEC_SEQ,$3,$1,$5,0,0);}
@@ -115,7 +115,7 @@ seq_num: LIT_INTEGER seq_num						{$$ = astreeCreate(AST_SEQNUM_ELEM,$1,$2,0,0,0
 	| LIT_CHAR										{$$ = astreeCreate(AST_SEQNUM_ELEM,$1,0,0,0,0);}
 	;
 
-declar_func: cabecalho comando						{$$ = astreeCreate(AST_DEC_FUNC,0,$1,$2,0,0); setDataType($$, AST_DEC_FUNC);}
+declar_func: cabecalho comando						{$$ = astreeCreate(AST_DEC_FUNC,0,$1,$2,0,0); setSymbolAndDataType($$, AST_DEC_FUNC);}
 	;
 
 cabecalho: type TK_IDENTIFIER '(' list_params ')'	{$$ = astreeCreate(AST_CABEC,$2,$1,$4,0,0);}
@@ -129,7 +129,7 @@ resto_params: ',' param resto_params				{$$ = astreeCreate(AST_PARAM_ELEM,0,$2,$
 	|												{$$ = 0;}
 	;
 
-param: type TK_IDENTIFIER							{$$ = astreeCreate(AST_PARAM,$2,$1,0,0,0);}
+param: type TK_IDENTIFIER							{$$ = astreeCreate(AST_PARAM,$2,$1,0,0,0); setSymbolAndDataType($$, AST_PARAM);}
 	;
 
 comando: bloco_comandos								{$$ = $1;}
@@ -189,7 +189,7 @@ expr: expr '+' expr									{$$ = astreeCreate(AST_ADD,0,$1,$3,0,0); setAstNodeD
 	| expr OPERATOR_AND expr						{$$ = astreeCreate(AST_LOGIC_AND,0,$1,$3,0,0); setAstNodeDataType($$);}  
 	| expr OPERATOR_OR expr							{$$ = astreeCreate(AST_LOGIC_OR,0,$1,$3,0,0); setAstNodeDataType($$);}
 	| '!' expr										{$$ = astreeCreate(AST_LOGIC_NOT,0,$2,0,0,0); setAstNodeDataType($$);}
-	| '(' expr ')'									{$$ = astreeCreate(AST_PARENTESIS_EXPR,0,$2,0,0,0);}
+	| '(' expr ')'									{$$ = astreeCreate(AST_PARENTESIS_EXPR,0,$2,0,0,0); setAstNodeDataType($$);}
 	| LIT_INTEGER									{$$ = astreeCreate(AST_SYMBOL,$1,0,0,0,0); setAstNodeDataType($$);}
 	| LIT_REAL										{$$ = astreeCreate(AST_SYMBOL,$1,0,0,0,0); setAstNodeDataType($$);}
 	| LIT_CHAR										{$$ = astreeCreate(AST_SYMBOL,$1,0,0,0,0); setAstNodeDataType($$);}

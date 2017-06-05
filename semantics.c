@@ -3,6 +3,8 @@
 //TODO 
 // lembrar de marcar tipos dos nodos - add na estrutura
 // contar numero de parametros
+// padronizar erros em uma funcao e usar as flags de exit
+// criar uma funcao pequena q chame todas as outras de semantica pra no fim dar o exit
 
 // avaliacao recursiva da arvore
 void semanticFullCheck(ASTREE *node){
@@ -237,11 +239,11 @@ void semanticFullCheck(ASTREE *node){
 
 
 // completo(?) i guess so
-void setDataType(ASTREE *node, int type){
+void setSymbolAndDataType(ASTREE *node, int type){
 
 	if (type == AST_DEC_FUNC){
 		if(node->son[0]->symbol->type != SYMBOL_IDENTIFIER){
-		fprintf(stderr,"Erro: variavel %s declarada mais de uma vez.\n", node->son[0]->symbol->text); //exit(4);
+		fprintf(stderr,"Erro: funcao %s declarada mais de uma vez.\n", node->son[0]->symbol->text); //exit(4);
 		return;
 		}
 	}
@@ -256,42 +258,38 @@ void setDataType(ASTREE *node, int type){
 		printf("node %s type %d\n",node->son[0]->symbol->text,type);
 
 	switch(type){
-		case AST_DEC_VAR_GLOB: 			
+		case AST_PARAM:	
 			node->symbol->type = SYMBOL_VAR;
-			// outro switch pra dataType:  byte, short, long, float, double
-			switch(node->son[0]->type){
-				case AST_BYTE: node->symbol->dataType = DATATYPE_BYTE; break;
-				case AST_SHORT: node->symbol->dataType = DATATYPE_SHORT; break;
-				case AST_LONG: node->symbol->dataType = DATATYPE_LONG; break;
-				case AST_FLOAT: node->symbol->dataType = DATATYPE_FLOAT; break;
-				case AST_DOUBLE: node->symbol->dataType = DATATYPE_DOUBLE; break;
-			}
+			setDataType(node, node->son[0]->type);
+			break;
+		case AST_DEC_VAR_GLOB: 				
+			node->symbol->type = SYMBOL_VAR;
+			setDataType(node, node->son[0]->type);
 			break;
 		case AST_DEC_VEC_GLOB: 
 			node->symbol->type = SYMBOL_VEC;
-			switch(node->son[0]->son[0]->type){
-				case AST_BYTE: node->symbol->dataType = DATATYPE_BYTE; break;
-				case AST_SHORT: node->symbol->dataType = DATATYPE_SHORT; break;
-				case AST_LONG: node->symbol->dataType = DATATYPE_LONG; break;
-				case AST_FLOAT: node->symbol->dataType = DATATYPE_FLOAT; break;
-				case AST_DOUBLE: node->symbol->dataType = DATATYPE_DOUBLE; break;
-			}
+			setDataType(node, node->son[0]->son[0]->type);
 			break;
 		case AST_DEC_FUNC:
 			node->son[0]->symbol->type = SYMBOL_FUNC;
-			switch(node->son[0]->son[0]->type){
-				case AST_BYTE: node->son[0]->symbol->dataType = DATATYPE_BYTE; break;
-				case AST_SHORT: node->son[0]->symbol->dataType = DATATYPE_SHORT; break;
-				case AST_LONG: node->son[0]->symbol->dataType = DATATYPE_LONG; break;
-				case AST_FLOAT: node->son[0]->symbol->dataType = DATATYPE_FLOAT; break;
-				case AST_DOUBLE: node->son[0]->symbol->dataType = DATATYPE_DOUBLE; break;
-			}
+			setDataType(node->son[0], node->son[0]->son[0]->type);
 			break;
 	}
 }
 
+void setDataType(ASTREE *node, int type){
+	switch(type){
+		case AST_BYTE: node->symbol->dataType = DATATYPE_BYTE; break;
+		case AST_SHORT: node->symbol->dataType = DATATYPE_SHORT; break;
+		case AST_LONG: node->symbol->dataType = DATATYPE_LONG; break;
+		case AST_FLOAT: node->symbol->dataType = DATATYPE_FLOAT; break;
+		case AST_DOUBLE: node->symbol->dataType = DATATYPE_DOUBLE; break;
+		default: node->symbol->dataType = DATATYPE_UNDEFINED; break;
+	}
+	node->dataType = node->symbol->dataType;
+}
+
 //TODO
-// FALTAM AS EXP ADD, SUB ETC
 void setAstNodeDataType(ASTREE *node){
 	if(node == NULL){
 		// pode acontecer? é erro? 
@@ -301,29 +299,66 @@ void setAstNodeDataType(ASTREE *node){
 	switch(node->type){
 		case AST_SYMBOL:			
 		case AST_VECTOR_EXPR:
-		case AST_FUNC_CALL:  // nao tenho  nehuma certeza
-			node->dataType = node->symbol->type;
+		case AST_FUNC_CALL:  // not sure if node->symbol->dataType ou node->symbol->type
+			// talvez uma condicao a mais se for literal
+			node->dataType = node->symbol->dataType;
 			break;
 		case AST_LOGIC_L:
+		case AST_LOGIC_G:
 		case AST_LOGIC_LE:
 		case AST_LOGIC_GE:
+			if(node->son[0]->dataType == DATATYPE_BOOL || node->son[1]->dataType == DATATYPE_BOOL){
+				fprintf(stderr,"Erro: expressao booleana em operacao relacional\n"); //exit(4);
+			}
+			node->dataType = DATATYPE_BOOL;
+			break;
 		case AST_LOGIC_EQ:
 		case AST_LOGIC_NE:
-		case AST_LOGIC_AND:
-		case AST_LOGIC_G:
+			if((node->son[0]->dataType == DATATYPE_BOOL && node->son[1]->dataType != DATATYPE_BOOL) || 
+			(node->son[1]->dataType == DATATYPE_BOOL && node->son[0]->dataType != DATATYPE_BOOL)){
+				fprintf(stderr,"Erro: conflito de tipos em operação de eq/ne\n"); //exit(4);
+			}
+			node->dataType = DATATYPE_BOOL;
+			break;
+		case AST_LOGIC_AND:	
 		case AST_LOGIC_OR:
+			if(node->son[0]->dataType != DATATYPE_BOOL || node->son[1]->dataType != DATATYPE_BOOL){
+				fprintf(stderr,"Erro: expressao booleana esperada em operacao and/or\n"); //exit(4);
+			}
+			node->dataType = DATATYPE_BOOL;	
+			break;
 		case AST_LOGIC_NOT:
+			if(node->son[0]->dataType != DATATYPE_BOOL){
+				fprintf(stderr,"Erro: expressao booleana esperada em operacao not\n"); //exit(4);
+			}
 			node->dataType = DATATYPE_BOOL;
 			break;
 		case AST_ADD:    
 		case AST_SUB: 
 		case AST_MUL: 
 		case AST_DIV: 
+			if(node->son[0]->dataType == DATATYPE_BOOL || node->son[1]->dataType == DATATYPE_BOOL){
+				fprintf(stderr,"Erro: expressao booleana nao esperada em expressao aritmetica \n"); //exit(4);
+			}
 			node->dataType = aritmeticInference(node);
 			break;
 		case AST_ASSIGN: 
+			if(!verifyAssignmentTypes(node->symbol->dataType, node->son[0]->dataType)){
+				fprintf(stderr,"Erro: conflito de tipos na atribuicao\n"); //exit(4);
+			}
+			node->dataType = node->symbol->dataType;
+			break;
 		case AST_VEC_ASSIGN: 
-			node->dataType = node->symbol->type;
+			if(node->son[0]->dataType != (DATATYPE_LONG || DATATYPE_SHORT)) {
+				fprintf(stderr,"Erro: indice do vetor deve ser do tipo inteiro \n"); //exit(4);
+			}
+			if(!verifyAssignmentTypes(node->symbol->dataType, node->son[1]->dataType)){
+				fprintf(stderr,"Erro: conflito de tipos na atribuicao\n"); //exit(4);
+			}
+			node->dataType = node->symbol->dataType;
+			break;
+		case AST_PARENTESIS_EXPR:
+			node->dataType = node->son[0]->dataType;
 			break;
 	}
 
@@ -337,6 +372,11 @@ int aritmeticInference(ASTREE *node){
 }
 
 int typeInference(int type1, int type2){
+
+	if(type1 == DATATYPE_BOOL || type2 == DATATYPE_BOOL){
+		return DATATYPE_UNDEFINED;
+	}
+
 	if(type1 == DATATYPE_DOUBLE || type2 == DATATYPE_DOUBLE){
 		return DATATYPE_DOUBLE;
 	}
@@ -352,9 +392,18 @@ int typeInference(int type1, int type2){
 	else if(type1 == DATATYPE_BYTE || type2 == DATATYPE_BYTE){
 		return DATATYPE_BYTE;
 	}else{ 
-		printf("\n\n\n aqui %d %d", type1, type2);
-		return -1;
+		return DATATYPE_UNDEFINED;
 	}	
+}
+
+int verifyAssignmentTypes(int type1, int type2){
+	if(type1 == DATATYPE_BOOL || type2 == DATATYPE_BOOL){
+		return 0;
+	}
+	if(type1 == DATATYPE_UNDEFINED || type2 == DATATYPE_UNDEFINED){
+		return 0;
+	}
+	return 1;
 }
 
 int isBool(ASTREE *node){
