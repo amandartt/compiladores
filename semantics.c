@@ -65,7 +65,38 @@ void setDataType(ASTREE *node, int type){
 	node->dataType = node->symbol->dataType;
 }
 
-//TODO
+void checkSymbolsUse(ASTREE *node){
+	if(node == NULL){
+		return;
+	}
+	
+	switch(node->type){
+		case AST_ASSIGN:
+			if(node->symbol->type != SYMBOL_VAR){
+				printSemanticError("expressao de atribuicao invalida",NULL);
+			}
+			break;
+		case AST_VEC_ASSIGN:
+			if(node->symbol->type != SYMBOL_VEC){
+				printSemanticError("expressao de atribuicao de vetor invalida",NULL);
+			}
+			break;
+		case AST_VECTOR_EXPR:
+			if(node->symbol->type != SYMBOL_VEC){
+				printSemanticError("expressao de acesso ao vetor invalida",NULL);
+			}
+			break;
+		case AST_FUNC_CALL:
+			if(node->symbol->type != SYMBOL_FUNC){
+				printSemanticError("expressao de chamada de funcao invalida",NULL);		
+			}
+			break;
+
+		//TODO: verificar read print params
+	}
+}
+
+//TODO : verificar read print params
 void checkAstNodeDataType(ASTREE *node){
 	if(node == NULL){
 		return;
