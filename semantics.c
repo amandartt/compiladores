@@ -92,7 +92,10 @@ void checkSymbolsUse(ASTREE *node){
 			}
 			break;
 
-		//TODO: verificar read print params
+		int i;
+		for(i=0; i<MAX_SONS; i++){
+			checkSymbolsUse(node->son[i]);
+		}
 	}
 }
 
@@ -103,7 +106,7 @@ void checkAstNodeDataType(ASTREE *node){
 	}
 
 	int i;
-	for(i=0; i<4; i++){
+	for(i=0; i<MAX_SONS; i++){
 		checkAstNodeDataType(node->son[i]);
 	}
 
