@@ -68,8 +68,12 @@ void setDataType(ASTREE *node, int type){
 //TODO
 void checkAstNodeDataType(ASTREE *node){
 	if(node == NULL){
-		// pode acontecer? é erro? 
 		return;
+	}
+
+	int i;
+	for(i=0; i<4; i++){
+		checkAstNodeDataType(node->son[i]);
 	}
 
 	switch(node->type){
@@ -124,7 +128,7 @@ void checkAstNodeDataType(ASTREE *node){
 			}
 			node->dataType = node->symbol->dataType;
 			break;
-		case AST_VEC_ASSIGN: 
+		case AST_VEC_ASSIGN: //TODO arrumar -> caso de liteirais creio
 			if(node->son[0]->dataType != (DATATYPE_LONG || DATATYPE_SHORT)) {
 				printSemanticError("indice do vetor deve ser do tipo inteiro", NULL); 
 			}
@@ -136,6 +140,27 @@ void checkAstNodeDataType(ASTREE *node){
 		case AST_PARENTESIS_EXPR:
 			node->dataType = node->son[0]->dataType;
 			break;
+		case AST_FOR:
+			if(node->son[0]->dataType == DATATYPE_BOOL || node->son[1]->dataType == DATATYPE_BOOL){
+				printSemanticError("expresao booleana em comando for", NULL);	
+			}	
+			break;
+		case AST_WHILE:
+			if(node->son[0]->dataType != DATATYPE_BOOL){
+				printSemanticError("expresao booleana esperada em comando while", NULL);	
+			}
+			break;
+		case AST_WHEN_THEN:
+		case AST_WHEN_THEN_ELSE:
+			if(node->son[0]->dataType != DATATYPE_BOOL){
+				printSemanticError("expresao booleana esperada em comando when", NULL);
+			}
+			break;		
+		case AST_RETURN:	
+			if(node->son[0]->dataType == DATATYPE_BOOL){
+				printSemanticError("return do tipo booleano nao esperado", NULL);
+			}
+			break;	
 	}
 
 	//printf("type: %d datatype: %d \n", node->type, node->dataType);

@@ -14,13 +14,13 @@ void readFile(int argc, char *argv[]){
 	
 	if(argc < 3){
 		fprintf(stderr, "%s", "Missing file name! Command format: ./executable_program <input_name> <output_name> \n");
-		exit(1);
+		exit(1); // arquivo nao informado
 	}
 
 	FILE* input = fopen(argv[1], "r");
 	if(input == NULL){
 		fprintf(stderr, "%s", "Can't open input file. \n");
-		exit(1);
+		exit(2); // arquivo inexistente
 	}
 
 	yyin = input;
@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
 
 	if(output == NULL){
 		fprintf(stderr, "%s", "Can't open output file. \n");
-		exit(1);
+		exit(2);
 	}
 
 	astreeProgram(ast,output); 
