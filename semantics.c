@@ -154,7 +154,7 @@ int countFuncCallParams(ASTREE* node){
 		return 1 + countFuncCallParams(node->son[1]);
 }
 
-//TODO : verificar read print params
+//TODO : verificar print
 void checkAstNodeDataType(ASTREE *node){
 	if(node == NULL){
 		return;
@@ -241,30 +241,41 @@ void checkAstNodeDataType(ASTREE *node){
 			break;
 		case AST_FOR:
 			if(node->son[0]->dataType == DATATYPE_BOOL || node->son[1]->dataType == DATATYPE_BOOL){
-				printSemanticError("expresao booleana em comando for", NULL);	
+				printSemanticError("expresao booleana em comando FOR", NULL);	
 			}	
 			break;
 		case AST_WHILE:
 			if(node->son[0]->dataType != DATATYPE_BOOL){
-				printSemanticError("expresao booleana esperada em comando while", NULL);	
+				printSemanticError("expresao booleana esperada em comando WHILE", NULL);	
 			}
 			break;
 		case AST_WHEN_THEN:
 		case AST_WHEN_THEN_ELSE:
 			if(node->son[0]->dataType != DATATYPE_BOOL){
-				printSemanticError("expresao booleana esperada em comando when", NULL);
+				printSemanticError("expresao booleana esperada em comando WHEN", NULL);
 			}
 			break;		
 		case AST_RETURN:	
 			if(node->son[0]->dataType == DATATYPE_BOOL){
-				printSemanticError("return do tipo booleano nao esperado", NULL);
+				printSemanticError("comando RETURN do tipo booleano nao esperado", NULL);
 			}
 			break;	
 		case AST_READ:
 			if(node->symbol->dataType == DATATYPE_BOOL || node->symbol->dataType == DATATYPE_UNDEFINED){
-				printSemanticError("read de tipo nao esperado", NULL);
+				printSemanticError("comando READ com tipo nao esperado", NULL);
 			}
 			break;
+		// print é uma lista de elementos onde cada elemento pode ser um string ou expressao aritmetica
+		case AST_PRINT_ELEM:
+			if(node->symbol){
+				if(node->symbol->dataType != DATATYPE_STRING){
+					printSemanticError("comando PRINT com simbolo nao esperado, deve ser string", NULL);
+				}
+			}else if(node->son[0]){
+				if(node->son[0]->dataType == DATATYPE_BOOL || node->son[0]->dataType == DATATYPE_UNDEFINED){
+					printSemanticError("comando PRINT com expressao nao esperada, deve ser artitmetica", NULL);
+				}
+			}
 	}
 
 	//printf("type: %d datatype: %d \n", node->type, node->dataType);
