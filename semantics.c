@@ -159,8 +159,14 @@ void checkAstNodeDataType(ASTREE *node){
 	}
 
 	switch(node->type){
-		case AST_SYMBOL:			
+		case AST_SYMBOL:	
+			node->dataType = node->symbol->dataType;
+			break;		
 		case AST_VECTOR_EXPR:
+			if(node->son[0]->dataType != DATATYPE_LONG && node->son[0]->dataType != DATATYPE_SHORT
+				 && node->son[0]->dataType != DATATYPE_CHAR && node->son[0]->dataType != DATATYPE_BYTE) {
+				printSemanticError("indice do vetor deve ser do tipo inteiro", node->symbol->text); 
+			}
 			node->dataType = node->symbol->dataType;
 			break;
 		case AST_FUNC_CALL:  // not sure if node->symbol->dataType ou node->symbol->type
@@ -216,7 +222,7 @@ void checkAstNodeDataType(ASTREE *node){
 		case AST_VEC_ASSIGN: 
 			if(node->son[0]->dataType != DATATYPE_LONG && node->son[0]->dataType != DATATYPE_SHORT
 				 && node->son[0]->dataType != DATATYPE_CHAR && node->son[0]->dataType != DATATYPE_BYTE) {
-				printSemanticError("indice do vetor deve ser do tipo inteiro", NULL); 
+				printSemanticError("indice do vetor em atribuicao v#indice deve ser do tipo inteiro", node->symbol->text); 
 			}
 			if(!verifyAssignmentTypes(node->symbol->dataType, node->son[1]->dataType)){
 				printSemanticError("conflito de tipos na atribuicao", NULL);
