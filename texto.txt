@@ -56,4 +56,9 @@ short whilemaluco(long i, long j, long k, long omg)
 			while (j >= 20)
 				while (k <= 30)
 					while (omg != 30); return !omg;};
-  
+
+double chamadasErradas()
+{
+	a = incn(1<1,1!=1,var_extra);
+	a = whilemaluco();
+};

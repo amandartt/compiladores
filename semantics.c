@@ -49,17 +49,17 @@ void setSymbolAndDataType(ASTREE *node, int type){
 		case AST_DEC_FUNC:
 			node->son[0]->symbol->type = SYMBOL_FUNC;
 			setDataType(node->son[0], node->son[0]->son[0]->type);
-			int n_par = countNumParams(node->son[0]->son[1]);
+			int n_par = countDecFuncNumParams(node->son[0]->son[1]);
 			setNumParams(node,n_par);
 			break;
 	}
 }
 
-int countNumParams(ASTREE *node){
+int countDecFuncNumParams(ASTREE *node){
 	if(!node) // if NULL = end of list
 		return 0;
 	else
-		return 1 + countNumParams(node->son[1]);
+		return 1 + countDecFuncNumParams(node->son[1]);
 }
 
 void setNumParams(ASTREE *node, int npar){
@@ -104,7 +104,7 @@ void checkSymbolsUse(ASTREE *node){
 		case AST_FUNC_CALL:
 			if(node->symbol->type != SYMBOL_FUNC){
 				printSemanticError("expressao de chamada de funcao invalida",NULL);		
-			}
+			}			
 			break;
 
 		int i;
@@ -112,6 +112,45 @@ void checkSymbolsUse(ASTREE *node){
 			checkSymbolsUse(node->son[i]);
 		}
 	}
+}
+
+void verifyParams(ASTREE* node){
+	int n_par = 0;
+	if(node->son[0]){
+		int val = verifyFuncCallParams(node->son[0]);
+		if(!val) 
+			printSemanticError("ha parametros booleanos na chamada da funcao",node->symbol->text);
+		n_par = countFuncCallParams(node->son[0]);
+	}		
+	int address = hash_address(node->symbol->text);
+	HASH_NODE* hash = hash_find(node->symbol->text, address);
+	int correct_n_par = hash->num_params;
+	if(n_par != correct_n_par)
+		printSemanticError("numero invalido de parametros na chamada da funcao",node->symbol->text);
+}
+
+int verifyFuncCallParams(ASTREE* node){
+	/*
+	if(!node)
+		return 1;
+
+	TODO: como voce faz para descobrir o tipo da expressao?
+	int expr_type == exprType(node->son[0]);
+	if(expr_type == DATATYPE_BOOL) return 0; //indicativo de invalidez (algum parametro eh -1)
+
+	int acc_val = verifyFuncCallParams(node->son[1]);
+	if(acc_val == 0) return 0; //se no resto da lista tem bool, retorna false
+	else return 1; //apenas retorna true se o tipo dessa nao eh booleano e nao tem nenhuma outra bool no resto da lista
+	*/
+
+	return 1; //temporario (soh para nao dar erro)
+}
+
+int countFuncCallParams(ASTREE* node){
+	if(!node)
+		return 0;
+	else
+		return 1 + countFuncCallParams(node->son[1]);
 }
 
 //TODO : verificar read print params
@@ -217,14 +256,6 @@ void checkAstNodeDataType(ASTREE *node){
 
 	//printf("type: %d datatype: %d \n", node->type, node->dataType);
 }
-
-//TODO: criar lista com definicoes de funcoes e seu num de parametros?
-void verifyParams(ASTREE *node){
-	
-
-
-}
-
 int aritmeticInference(ASTREE *node){
 	// eh soh isso ?? 
 	return typeInference(node->son[0]->dataType, node->son[1]->dataType);
