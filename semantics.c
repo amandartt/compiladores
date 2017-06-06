@@ -1,14 +1,9 @@
 #include "semantics.h"
 
-//TODO 
-// lembrar de marcar tipos dos nodos - add na estrutura
-// contar numero de parametros
-// padronizar erros em uma funcao e usar as flags de exit
-// criar uma funcao pequena q chame todas as outras de semantica pra no fim dar o exit
 
 // avaliacao recursiva da arvore
 int semanticFullCheck(ASTREE *node){
-	hash_ckeck_undeclared();	
+	hashCheckUndeclared();	
 	checkAstNodeDataType(node);
 	return semanticErrors;
 }
@@ -130,20 +125,19 @@ void verifyParams(ASTREE* node){
 }
 
 int verifyFuncCallParams(ASTREE* node){
-	/*
-	if(!node)
+	if(!node){
 		return 1;
-
-	TODO: como voce faz para descobrir o tipo da expressao?
-	int expr_type == exprType(node->son[0]);
-	if(expr_type == DATATYPE_BOOL) return 0; //indicativo de invalidez (algum parametro eh -1)
-
+	}
+	// undefined pq alem de bool, alguem pode tentar colocar uma string ou var q n exista
+	if(node->son[0]->dataType == DATATYPE_BOOL || node->son[0]->dataType == DATATYPE_UNDEFINED){
+		return 0; //indicativo de invalidez (algum parametro eh -1)
+	}
 	int acc_val = verifyFuncCallParams(node->son[1]);
-	if(acc_val == 0) return 0; //se no resto da lista tem bool, retorna false
-	else return 1; //apenas retorna true se o tipo dessa nao eh booleano e nao tem nenhuma outra bool no resto da lista
-	*/
-
-	return 1; //temporario (soh para nao dar erro)
+	if(acc_val == 0){
+		return 0; //se no resto da lista tem bool, retorna false
+	} 
+	
+	return 1; //apenas retorna true se o tipo dessa nao eh booleano e nao tem nenhuma outra bool no resto da lista
 }
 
 int countFuncCallParams(ASTREE* node){
@@ -220,7 +214,8 @@ void checkAstNodeDataType(ASTREE *node){
 			node->dataType = node->symbol->dataType;
 			break;
 		case AST_VEC_ASSIGN: 
-			if(node->son[0]->dataType != DATATYPE_LONG && node->son[0]->dataType != DATATYPE_SHORT) {
+			if(node->son[0]->dataType != DATATYPE_LONG && node->son[0]->dataType != DATATYPE_SHORT
+				 && node->son[0]->dataType != DATATYPE_CHAR && node->son[0]->dataType != DATATYPE_BYTE) {
 				printSemanticError("indice do vetor deve ser do tipo inteiro", NULL); 
 			}
 			if(!verifyAssignmentTypes(node->symbol->dataType, node->son[1]->dataType)){
@@ -297,7 +292,7 @@ int verifyAssignmentTypes(int type1, int type2){
 	return 1;
 }
 
-void hash_ckeck_undeclared(){
+void hashCheckUndeclared(){
 	HASH_NODE *node;
 	int i;	 
 	for(i=0; i<HASH_SIZE; i++){

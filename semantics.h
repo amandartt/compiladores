@@ -25,7 +25,7 @@ void checkAstNodeDataType(ASTREE *node);
 int aritmeticInference(ASTREE *node);
 int typeInference(int type1, int type2);
 int verifyAssignmentTypes(int type1, int type2);
-void hash_ckeck_undeclared();
+void hashCheckUndeclared();
 void printSemanticError(char* errorDesc, char* param);
 
 
