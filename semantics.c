@@ -5,6 +5,7 @@
 int semanticFullCheck(ASTREE *node){
 	hashCheckUndeclared();	
 	checkAstNodeDataType(node);
+	checkSymbolsUse(node);
 	return semanticErrors;
 }
 
@@ -101,11 +102,17 @@ void checkSymbolsUse(ASTREE *node){
 				printSemanticError("expressao de chamada de funcao invalida",NULL);		
 			}			
 			break;
+	//Somente variaveis escalares sao aceitas no comando read e nao vetores ou pos. de vetores
+		case AST_READ:
+			if(node->symbol->type != SYMBOL_VAR){
+				printSemanticError("comando 'read' invalido, apenas valores escalares sao aceitos",NULL);		
+			}			
+			break;		
+	}
 
-		int i;
-		for(i=0; i<MAX_SONS; i++){
-			checkSymbolsUse(node->son[i]);
-		}
+	int i;
+	for(i=0; i<MAX_SONS; i++){
+		checkSymbolsUse(node->son[i]);
 	}
 }
 
@@ -253,6 +260,11 @@ void checkAstNodeDataType(ASTREE *node){
 				printSemanticError("return do tipo booleano nao esperado", NULL);
 			}
 			break;	
+		case AST_READ:
+			if(node->symbol->dataType == DATATYPE_BOOL || node->symbol->dataType == DATATYPE_UNDEFINED){
+				printSemanticError("read de tipo nao esperado", NULL);
+			}
+			break;
 	}
 
 	//printf("type: %d datatype: %d \n", node->type, node->dataType);
