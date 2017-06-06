@@ -15,6 +15,8 @@ void semanticSetDeclations(ASTREE *node);
 int semanticFullCheck(ASTREE *node);
 void setSymbolAndDataType(ASTREE *node, int type);
 void setDataType(ASTREE *node, int type);
+int countNumParams(ASTREE *node);
+void setNumParams(ASTREE *node, int npar);
 void checkSymbolsUse(ASTREE *node);
 void checkAstNodeDataType(ASTREE *node);
 void verifyParams(ASTREE *node);

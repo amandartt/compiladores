@@ -49,8 +49,23 @@ void setSymbolAndDataType(ASTREE *node, int type){
 		case AST_DEC_FUNC:
 			node->son[0]->symbol->type = SYMBOL_FUNC;
 			setDataType(node->son[0], node->son[0]->son[0]->type);
+			int n_par = countNumParams(node->son[0]->son[1]);
+			setNumParams(node,n_par);
 			break;
 	}
+}
+
+int countNumParams(ASTREE *node){
+	if(!node) // if NULL = end of list
+		return 0;
+	else
+		return 1 + countNumParams(node->son[1]);
+}
+
+void setNumParams(ASTREE *node, int npar){
+	int address = hash_address(node->son[0]->symbol->text);
+	HASH_NODE* hash = hash_find(node->son[0]->symbol->text, address);
+	hash->num_params = npar;
 }
 
 void setDataType(ASTREE *node, int type){

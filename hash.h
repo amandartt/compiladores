@@ -13,6 +13,7 @@
 typedef struct hash_struct{
 	int type;
 	int dataType;
+	int num_params;
 	char *text;
 	struct hash_struct *next;
 } HASH_NODE;

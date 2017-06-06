@@ -56,8 +56,12 @@ void hash_print(){
 	HASH_NODE *node;
 	int i;	
 	for(i=0; i<HASH_SIZE; i++){
-		for(node=hash_table[i]; node; node=node->next){
-			printf("[Table] Type: %d [DataType %d] - Text: %s\n", node->type, node->dataType, node->text);
+		for(node=hash_table[i]; node; node=node->next)
+		{
+			if(node->type == SYMBOL_FUNC)
+				printf("[Table] Type: %d [DataType %d | %d params] - Text: %s\n", node->type, node->dataType, node->num_params, node->text);
+			else				
+				printf("[Table] Type: %d [DataType %d] - Text: %s\n", node->type, node->dataType, node->text);
 		}
 	} 
 }
