@@ -13,6 +13,7 @@ void semanticSetDeclations(ASTREE *node);
 // ** funcao para saber se é booleano
 
 int semanticFullCheck(ASTREE *node);
+int testID(HASH_NODE* id,ASTREE* node);
 void setSymbolAndDataType(ASTREE *node, int type);
 void setDataType(ASTREE *node, int type);
 int countDecFuncNumParams(ASTREE *node);

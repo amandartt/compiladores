@@ -6,19 +6,67 @@ b: byte '1';
 c: byte 25.34;
 v: float[3] 'b''a''c'; 
 
+c: float '1'; //redeclaracao percebida
+
 byte main()
 {
-	a = b;
-	b = a;
-	a = v; //nao percebendo erro
+	a = b; //aceito corretamente
+	b = a;//aceito corretamente
+	a = v; //erro percebido
 	v = a; //erro percebido
 	chamadasErradas = a; //erro percebido
 	a = v[2.5]; //erro percebido
 	a = v[a]; //erro percebido
+	a = v[b]; //aceito corretamente
+	a = chamadasErradas(); //aceito corretamente
+	a = chamadasErradas(b); //erro percebido
+	a = chamadasErradas; //erro percebido
+	v = chamadasErradas; //erro percebido
+	chamadasErradas = a; //erro percebido
+
+	a = d; //variavel nao declarada percebida
+	a = chamadasErradas() + v[b]; //aceito corretamente
+	a = chamadasErradas + v[b]; //erro percebido
+	a = chamadasErradas() + v; //erro percebido
+	a = a + d; //erro percebido
+	a = a < b; //erro percebido
+	a = a + (a < b); //erro percebido
+	
+	v#2 = 2; //aceito corretamente
+	v#2.5 = 2; //erro percebido
+	v#a = 2; //erro percebido
+	v#a = a < b; //erro duplo percebido
+	v#(1+1) = 2; //aceito corretamente
+	v#(1<1) = 2; //erro percebido
+
+	when (a < b && b < c) then ; //aceito corretamente
+	when (a && b < c) then ; //erro percebido
+	when (a < b && c) then ; //erro percebido
+
+	print a; //aceito corretamente
+	print a+b; //aceito corretamente
+	print a<b; //erro percebido
+	print a+v; //erro percebido
+	print "hu3hu3"; //aceito corretamente
+	print "hu3hu3" a; //aceito corretamente
+	print "hu3hu3" a<b; //erro percebido
+	print v; //erro percebido
+	print chamadasErradas; //erro percebido
+
+	read a; //aceito corretamente
+	read v; //erro percebido
+	read chamadasErradas; //erro percebido
+	a = a + v + a + v + a + a + chamadasErradas;
+
+	return a != b; //erro percebido
+	
 };
+
+long incn (long c, long n)
+  return c+n;
 
 double chamadasErradas()
 {
-	/*a = incn(1<1,1!=1,var_extra);
-	a = whilemaluco();*/
+	a = incn(1<1,1!=1,var_extra);
+	a = whilemaluco();
 };

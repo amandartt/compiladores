@@ -102,7 +102,7 @@ void checkSymbolsUse(ASTREE *node){
 				printSemanticError("expressao de chamada de funcao invalida",NULL);		
 			}			
 			break;
-	//Somente variaveis escalares sao aceitas no comando read e nao vetores ou pos. de vetores
+		//Somente variaveis escalares sao aceitas no comando read e nao vetores ou pos. de vetores
 		case AST_READ:
 			if(node->symbol->type != SYMBOL_VAR){
 				printSemanticError("comando 'read' invalido, apenas valores escalares sao aceitos",NULL);		
@@ -154,6 +154,16 @@ int countFuncCallParams(ASTREE* node){
 		return 1 + countFuncCallParams(node->son[1]);
 }
 
+int testID(HASH_NODE* id,ASTREE* node){
+	if(id->type == SYMBOL_VEC || id->type == SYMBOL_FUNC){
+		printSemanticError("uso invalido de vetor/funcao", id->text);
+		node->dataType = DATATYPE_UNDEFINED;
+		return 0;
+	}
+	return 1;
+}
+
+
 //TODO : verificar print
 void checkAstNodeDataType(ASTREE *node){
 	if(node == NULL){
@@ -166,8 +176,9 @@ void checkAstNodeDataType(ASTREE *node){
 	}
 
 	switch(node->type){
-		case AST_SYMBOL:	
-			node->dataType = node->symbol->dataType;
+		case AST_SYMBOL:
+			if(testID(node->symbol,node))
+				node->dataType = node->symbol->dataType;
 			break;		
 		case AST_VECTOR_EXPR:
 			if(node->son[0]->dataType != DATATYPE_LONG && node->son[0]->dataType != DATATYPE_SHORT
@@ -188,7 +199,12 @@ void checkAstNodeDataType(ASTREE *node){
 			if(node->son[0]->dataType == DATATYPE_BOOL || node->son[1]->dataType == DATATYPE_BOOL){
 				printSemanticError("expressao booleana em operacao relacional", NULL);
 			}
-			node->dataType = DATATYPE_BOOL;
+			if(node->son[0]->dataType == DATATYPE_UNDEFINED || node->son[1]->dataType == DATATYPE_UNDEFINED){
+				printSemanticError("expressao UNDEFINED em operacao relacional", NULL);
+				node->dataType = DATATYPE_UNDEFINED;
+			}
+			else
+				node->dataType = DATATYPE_BOOL;
 			break;
 		case AST_LOGIC_EQ:
 		case AST_LOGIC_NE:
@@ -196,20 +212,35 @@ void checkAstNodeDataType(ASTREE *node){
 			(node->son[1]->dataType == DATATYPE_BOOL && node->son[0]->dataType != DATATYPE_BOOL)){
 				printSemanticError("conflito de tipos em operação de eq/ne", NULL);
 			}
-			node->dataType = DATATYPE_BOOL;
+			if(node->son[0]->dataType == DATATYPE_UNDEFINED || node->son[1]->dataType == DATATYPE_UNDEFINED){
+				printSemanticError("expressao UNDEFINED em operacao relacional", NULL);
+				node->dataType = DATATYPE_UNDEFINED;
+			}
+			else
+				node->dataType = DATATYPE_BOOL;
 			break;
 		case AST_LOGIC_AND:	
 		case AST_LOGIC_OR:
 			if(node->son[0]->dataType != DATATYPE_BOOL || node->son[1]->dataType != DATATYPE_BOOL){
 				printSemanticError("expressao booleana esperada em operacao and/or", NULL); 
 			}
-			node->dataType = DATATYPE_BOOL;	
+			if(node->son[0]->dataType == DATATYPE_UNDEFINED || node->son[1]->dataType == DATATYPE_UNDEFINED){
+				printSemanticError("expressao UNDEFINED em operacao relacional", NULL);
+				node->dataType = DATATYPE_UNDEFINED;
+			}
+			else
+				node->dataType = DATATYPE_BOOL;	
 			break;
 		case AST_LOGIC_NOT:
 			if(node->son[0]->dataType != DATATYPE_BOOL){
 				printSemanticError("expressao booleana esperada em operacao not", NULL); 
 			}
-			node->dataType = DATATYPE_BOOL;
+			if(node->son[0]->dataType == DATATYPE_UNDEFINED){
+				printSemanticError("expressao UNDEFINED em operacao NOT", NULL);
+				node->dataType = DATATYPE_UNDEFINED;
+			}
+			else
+				node->dataType = DATATYPE_BOOL;
 			break;
 		case AST_ADD:    
 		case AST_SUB: 
@@ -218,13 +249,23 @@ void checkAstNodeDataType(ASTREE *node){
 			if(node->son[0]->dataType == DATATYPE_BOOL || node->son[1]->dataType == DATATYPE_BOOL){
 				printSemanticError("expressao booleana nao esperada em expressao aritmetica", NULL);
 			}
-			node->dataType = aritmeticInference(node);
+			if(node->son[0]->dataType == DATATYPE_UNDEFINED || node->son[1]->dataType == DATATYPE_UNDEFINED){
+				printSemanticError("expressao UNDEFINED em operacao aritmetica", NULL);
+				node->dataType = DATATYPE_UNDEFINED;
+			}
+			else
+				node->dataType = aritmeticInference(node);
 			break;
 		case AST_ASSIGN: 
 			if(!verifyAssignmentTypes(node->symbol->dataType, node->son[0]->dataType)){
 				printSemanticError("conflito de tipos na atribuicao", NULL);
 			}
-			node->dataType = node->symbol->dataType;
+			if(node->son[0]->dataType == DATATYPE_UNDEFINED){
+				printSemanticError("expressao UNDEFINED em comando ASSIGN", NULL);
+				node->dataType = DATATYPE_UNDEFINED;
+			}
+			else
+				node->dataType = node->symbol->dataType;
 			break;
 		case AST_VEC_ASSIGN: 
 			if(node->son[0]->dataType != DATATYPE_LONG && node->son[0]->dataType != DATATYPE_SHORT
@@ -234,7 +275,12 @@ void checkAstNodeDataType(ASTREE *node){
 			if(!verifyAssignmentTypes(node->symbol->dataType, node->son[1]->dataType)){
 				printSemanticError("conflito de tipos na atribuicao", NULL);
 			}
-			node->dataType = node->symbol->dataType;
+			if(node->son[1]->dataType == DATATYPE_UNDEFINED){
+				printSemanticError("expressao UNDEFINED em comando ASSIGN", NULL);
+				node->dataType = DATATYPE_UNDEFINED;
+			}
+			else
+				node->dataType = node->symbol->dataType;
 			break;
 		case AST_PARENTESIS_EXPR:
 			node->dataType = node->son[0]->dataType;
@@ -242,11 +288,17 @@ void checkAstNodeDataType(ASTREE *node){
 		case AST_FOR:
 			if(node->son[0]->dataType == DATATYPE_BOOL || node->son[1]->dataType == DATATYPE_BOOL){
 				printSemanticError("expresao booleana em comando FOR", NULL);	
+			}
+			if(node->son[0]->dataType == DATATYPE_UNDEFINED || node->son[1]->dataType == DATATYPE_UNDEFINED){
+				printSemanticError("expressao UNDEFINED em comando FOR", NULL);
 			}	
 			break;
 		case AST_WHILE:
 			if(node->son[0]->dataType != DATATYPE_BOOL){
 				printSemanticError("expresao booleana esperada em comando WHILE", NULL);	
+			}
+			if(node->son[0]->dataType == DATATYPE_UNDEFINED){
+				printSemanticError("expressao UNDEFINED em comando WHILE", NULL);
 			}
 			break;
 		case AST_WHEN_THEN:
@@ -254,10 +306,16 @@ void checkAstNodeDataType(ASTREE *node){
 			if(node->son[0]->dataType != DATATYPE_BOOL){
 				printSemanticError("expresao booleana esperada em comando WHEN", NULL);
 			}
+			if(node->son[0]->dataType == DATATYPE_UNDEFINED){
+				printSemanticError("expressao UNDEFINED em comando WHEN", NULL);
+			}
 			break;		
 		case AST_RETURN:	
 			if(node->son[0]->dataType == DATATYPE_BOOL){
 				printSemanticError("comando RETURN do tipo booleano nao esperado", NULL);
+			}
+			if(node->son[0]->dataType == DATATYPE_UNDEFINED){
+				printSemanticError("expressao UNDEFINED em comando RETURN", NULL);
 			}
 			break;	
 		case AST_READ:
@@ -287,7 +345,9 @@ int aritmeticInference(ASTREE *node){
 }
 
 int typeInference(int type1, int type2){
-
+	if(type1 == DATATYPE_UNDEFINED || type2 == DATATYPE_UNDEFINED){
+		return DATATYPE_UNDEFINED;
+	}
 	if(type1 == DATATYPE_BOOL || type2 == DATATYPE_BOOL){
 		return DATATYPE_UNDEFINED;
 	}
