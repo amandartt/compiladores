@@ -77,6 +77,8 @@ void astreePrint(ASTREE* node, int depth){
 
 		default: printf ("ASTREE_UNDEFINED");
 	}
+	
+	printf("[%d],",node->dataType);
 
 	if(node->symbol){
 		printf(",%s)\n", node->symbol->text);

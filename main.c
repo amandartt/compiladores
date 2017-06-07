@@ -37,6 +37,7 @@ int main(int argc, char *argv[]) {
 	int numErrors = semanticFullCheck(ast);
 	if(numErrors){
 		fprintf(stderr,"%d erros semanticos.\n", numErrors);
+		//astreePrint(ast,0);
 		//hash_print();
 		exit(4);
 	}
@@ -49,7 +50,6 @@ int main(int argc, char *argv[]) {
 	}
 
 	astreeProgram(ast,output); 
-	fclose(output);	
-	//hash_print();
+	fclose(output);
 	exit(0);
 }

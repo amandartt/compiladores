@@ -3,6 +3,8 @@
 
 a: short 0;
 i: long 0;
+j: long 0;
+k: long 0;
 v: long[10] 'b''a''c'; 
 mat: long[10]; 
 f: float 10.55;
@@ -51,14 +53,8 @@ long incn (long x, long n)
 
 short voidfunc();
 
-short whilemaluco(long i, long j, long k, long omg)
-	{while (i < 10)
-			while (j >= 20)
-				while (k <= 30)
-					while (omg != 30); return !omg;};
-
-double chamadasErradas()
-{
-	a = incn(1<1,1!=1,var_extra);
-	a = whilemaluco();
-};
+short whilemaluco(long ia, long ja, long ka, long omg)
+	{while (ia < 10)
+			while (ja >= 20)
+				while (ka <= 30)
+					while (omg != 30); return omg;};

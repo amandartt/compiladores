@@ -273,7 +273,7 @@ void checkAstNodeDataType(ASTREE *node){
 				}
 			}else if(node->son[0]){
 				if(node->son[0]->dataType == DATATYPE_BOOL || node->son[0]->dataType == DATATYPE_UNDEFINED){
-					printSemanticError("comando PRINT com expressao nao esperada, deve ser artitmetica", NULL);
+					printSemanticError("comando PRINT com expressao nao esperada, deve ser aritmetica", NULL);
 				}
 			}
 	}

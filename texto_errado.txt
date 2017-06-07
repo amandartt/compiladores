@@ -1,0 +1,24 @@
+// UFRGS - Compiladores - Marcelo Johann - 2017/1
+// Programa sintaticamente correto, mas semanticamente horrivel
+
+a: double 0;
+b: byte '1';
+c: byte 25.34;
+v: float[3] 'b''a''c'; 
+
+byte main()
+{
+	a = b;
+	b = a;
+	a = v; //nao percebendo erro
+	v = a; //erro percebido
+	chamadasErradas = a; //erro percebido
+	a = v[2.5]; //erro percebido
+	a = v[a]; //erro percebido
+};
+
+double chamadasErradas()
+{
+	/*a = incn(1<1,1!=1,var_extra);
+	a = whilemaluco();*/
+};
