@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include "hash.h"
-#include "ast_const.h"
+#include "ast_defines.h"
 
 
 typedef struct astree{

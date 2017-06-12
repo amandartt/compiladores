@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "symbol_defs.h"
+#include "symbol_defines.h"
 
 #define HASH_SIZE 900
 

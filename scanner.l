@@ -6,7 +6,7 @@
 	#include "astree.h"
 	#include "hash.h"
 	#include "y.tab.h"
-	#include "symbol_defs.h"
+	#include "symbol_defines.h"
 
 
 	extern YYSTYPE yylval;

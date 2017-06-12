@@ -1,7 +1,7 @@
 #include "astree.h"
 #include "y.tab.h"
 #include "hash.h"
-#include "symbol_defs.h"
+#include "symbol_defines.h"
 
 int semanticErrors;
 
