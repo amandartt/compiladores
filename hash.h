@@ -15,6 +15,7 @@ typedef struct hash_struct{
 	int dataType;
 	int num_params;
 	char *text;
+	int lineNumber;
 	struct hash_struct *next;
 } HASH_NODE;
 
@@ -23,7 +24,7 @@ int elements_count;
 
 HASH_NODE* hash_initialize();
 HASH_NODE* hash_find(char *text, int address);
-HASH_NODE* hash_insert(int type, char *text, int dataType);
+HASH_NODE* hash_insert(int type, char *text, int dataType, int lineNumber);
 int hash_address(char *text);
 void hash_print();
 

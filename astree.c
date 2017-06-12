@@ -2,11 +2,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-ASTREE* astreeCreate(int type, HASH_NODE* symbol, ASTREE* son1, ASTREE* son2, ASTREE* son3, ASTREE* son4){
+ASTREE* astreeCreate(int type, HASH_NODE* symbol, ASTREE* son1, ASTREE* son2, ASTREE* son3, ASTREE* son4, int lineNumber){
 	ASTREE* new_node = 0;
 	new_node = calloc(1,sizeof(ASTREE));
 	new_node->type = type;
 	new_node->symbol = symbol;
+	new_node->lineNumber = lineNumber;
 	new_node->son[0] = son1;
 	new_node->son[1] = son2;
 	new_node->son[2] = son3;

@@ -37,8 +37,8 @@ int main(int argc, char *argv[]) {
 	int numErrors = semanticFullCheck(ast);
 	if(numErrors){
 		fprintf(stderr,"%d erros semanticos.\n", numErrors);
-		astreePrint(ast,0);
-		hash_print();
+		//astreePrint(ast,0);
+		//hash_print();
 		exit(4);
 	}
 
