@@ -15,4 +15,13 @@
 #define TAC_OR	   		13
 #define TAC_NOT	   		14
 #define TAC_ASSIGN		17
-#define TAC_VEC_ASSIGN	18
+#define TAC_VEC_WRITE	18
+#define TAC_VEC_READ	19
+#define TAC_RETURN		20
+#define TAC_PRINT		21
+#define TAC_READ		22
+#define TAC_WHENTHEN	23
+#define TAC_WHENTHENELSE	24
+#define TAC_WHILE		25
+#define TAC_FOR			26
+#define TAC_ARG			27
