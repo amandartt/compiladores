@@ -61,14 +61,14 @@ TAC* tacReverse(TAC *tac){
 void tacPrintBack(TAC *last){
 	TAC *tac;
 	for(tac = last; tac; tac=tac->prev){
-		fprintf(stderr, "TAC(");
+	    fprintf(stderr, "TAC(");
 		printTacType(tac->type);
+
+		if(tac->res) fprintf(stderr, ", %s ", tac->res->text); else fprintf(stderr, ", 0 ");
+		if(tac->op1) fprintf(stderr, ", %s ", tac->op1->text); else	fprintf(stderr, ", 0 ");
+		if(tac->op2) fprintf(stderr, ", %s ", tac->op2->text); else	fprintf(stderr, ", 0 ");
+		fprintf(stderr, ")\n");
 	}
-	if(tac->res) fprintf(stderr, ", %s ", tac->res->text); else fprintf(stderr, ", 0 ");
-	if(tac->op1) fprintf(stderr, ", %s ", tac->op1->text); else	fprintf(stderr, ", 0 ");
-	if(tac->op2) fprintf(stderr, ", %s ", tac->op2->text); else	fprintf(stderr, ", 0 ");
-	
-	fprintf(stderr, ")\n");
 }
 
 void tacPrintForward(TAC *first){
@@ -76,12 +76,13 @@ void tacPrintForward(TAC *first){
 	for(tac = first; tac; tac=tac->next){
 		fprintf(stderr, "TAC(");
 		printTacType(tac->type);
+
+		if(tac->res) fprintf(stderr, ", %s ", tac->res->text); else fprintf(stderr, ", 0 ");
+		if(tac->op1) fprintf(stderr, ", %s ", tac->op1->text); else	fprintf(stderr, ", 0 ");
+		if(tac->op2) fprintf(stderr, ", %s ", tac->op2->text); else	fprintf(stderr, ", 0 ");
+		fprintf(stderr, ")\n");
 	}
-	if(tac->res) fprintf(stderr, ", %s ", tac->res->text); else fprintf(stderr, ", 0 ");
-	if(tac->op1) fprintf(stderr, ", %s ", tac->op1->text); else	fprintf(stderr, ", 0 ");
-	if(tac->op2) fprintf(stderr, ", %s ", tac->op2->text); else	fprintf(stderr, ", 0 ");
 	
-	fprintf(stderr, ")\n");
 }
 
 //TODO continuar...
