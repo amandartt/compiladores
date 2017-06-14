@@ -17,7 +17,7 @@ TAC* makeFuncDef(HASH_NODE* identifier, TAC** code);
 TAC* makeFuncCall(ASTREE *funcCall);
 TAC* makeReturn(TAC** code);
 TAC* makeRead(TAC** code);
-TAC* makePrint(ASTREE* print);
+TAC* makePrint(ASTREE* print, TAC** code);
 
 
 // implementation
@@ -122,7 +122,7 @@ TAC * tacGenerate(ASTREE *node){
 		case AST_FUNC_CALL: result = makeFuncCall(node); break;
 		case AST_RETURN: result = makeReturn(code); break;
 		case AST_READ: result = makeRead(code); break;
-		case AST_PRINT: result = makePrint(node); break;
+		case AST_PRINT: result = makePrint(node, code); break;
 	
 		case AST_COMMAND_BLOCK: result = code[0]; break;
 		case AST_SEQ_CMD: result = tacJoin(code[0],code[1]); break;
@@ -254,14 +254,21 @@ TAC* makeRead(TAC** code){
 	return ret;
 }
 
-TAC* makePrint(ASTREE* print){
+TAC* makePrint(ASTREE* print, TAC** code){
+	ASTREE* buff = 0;
 	TAC* prints = 0;
 	TAC* tacBuff = 0;
 	TAC* tacPrint = 0;
-	ASTREE* buff = 0;
-	for(buff = print->son[0];buff;buff->son[1]){
-		tacBuff = tacGenerate(buff->son[0]); //expr or a symbol... tacGenerate can process
-		tacPrint = tacCreate(TAC_PRINT,tacBuff->res,0,0);
+	buff = print->son[0];
+	while(buff){
+		if(buff->symbol){
+			tacBuff = code[0]; //symbol
+			buff = buff->son[0];
+		}else{
+			tacBuff = code[1]; //expr
+			buff = buff->son[1];
+		}
+		tacPrint = tacCreate(TAC_PRINT,tacBuff ? tacBuff->res: 0,0,0);	
 		prints = tacJoin(tacJoin(prints,tacBuff),tacPrint);
 	}
 	return prints;
