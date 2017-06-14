@@ -5,6 +5,7 @@
 #include "hash.h"
 #include "y.tab.h"
 #include "semantics.h"
+#include "tac.h"
 
 void initMe(void);
 int isRunning(void);
@@ -42,8 +43,8 @@ int main(int argc, char *argv[]) {
 		exit(4);
 	}
 
-	astreePrint(ast,0);
-	hash_print();
+	//astreePrint(ast,0);
+	//hash_print();
 
 	FILE* output = fopen(argv[2], "w+");
 
@@ -53,6 +54,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	astreeProgram(ast,output); 
+	tacPrintForward(tacReverse(tacGenerate(ast)));
 	fclose(output);
 	exit(0);
 }

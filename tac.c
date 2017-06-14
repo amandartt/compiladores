@@ -4,9 +4,14 @@
 
 // local functions
 HASH_NODE* makeTemp();
+HASH_NODE* makeLabel();
 void printTacType(int type);
 TAC* makeOpBin(int op, TAC** code);
-
+TAC* makeWhenThen(TAC** code);
+TAC* makeWhenThenElse(TAC** code);
+TAC* makeWhile(TAC** code);
+TAC* makeFor(HASH_NODE* identifier, TAC** code);
+TAC* makeAssign(HASH_NODE* identifier, TAC** code);
 
 
 // implementation
@@ -39,6 +44,12 @@ TAC* tacJoin(TAC *l1 ,TAC *l2){
 	tac->prev = l1;
 	l1->next = tac;
 	return l2;
+}
+
+TAC* tacReverse(TAC *tac){
+	TAC *t = 0;
+	for(t=tac;t->prev;t=t->prev){t->prev->next = t;}
+	return t;
 }
 
 void tacPrintBack(TAC *last){
@@ -90,7 +101,12 @@ TAC * tacGenerate(ASTREE *node){
 		case AST_LOGIC_EQ: result = makeOpBin(TAC_EQ, code); break;	
 		case AST_LOGIC_NE: result = makeOpBin(TAC_NE, code); break;	
 		case AST_LOGIC_AND: result = makeOpBin(TAC_AND, code); break;	
-		case AST_LOGIC_OR: result = makeOpBin(TAC_OR, code); break;			
+		case AST_LOGIC_OR: result = makeOpBin(TAC_OR, code); break;
+		case AST_WHEN_THEN: result = makeWhenThen(code); break;
+		case AST_WHEN_THEN_ELSE: result = makeWhenThenElse(code); break;
+		case AST_WHILE: result = makeWhile(code); break;
+		case AST_FOR: result = makeFor(node->symbol,code); break;
+		case AST_ASSIGN: result = makeAssign(node->symbol,code); break;
 	}
 	
 	return result;
@@ -102,12 +118,90 @@ TAC* makeOpBin(int op, TAC** code){
 	return tacJoin(code[0], tacJoin(code[1], newTac));
 }
 
+TAC* makeWhenThen(TAC** code){
+	TAC* iftac = 0;
+	TAC* labeltac = 0;
+	HASH_NODE* newlabel = 0;
+	newlabel = makeLabel();
+	iftac = tacCreate(TAC_IFZ,newlabel,code[0] ? code[0]->res : 0, 0);
+	labeltac = tacCreate(TAC_LABEL,newlabel,0,0);
+	return tacJoin(tacJoin(tacJoin(code[0],iftac),code[1]),labeltac);
+}
+
+TAC* makeWhenThenElse(TAC** code){
+	TAC* iftac = 0;
+	TAC* labeltac1 = 0;
+	TAC* labeltac2 = 0;
+	TAC* jump = 0;
+	HASH_NODE* newlabel1 = 0;
+	HASH_NODE* newlabel2 = 0;
+	newlabel1 = makeLabel();
+	newlabel2 = makeLabel();
+	iftac = tacCreate(TAC_IFZ,newlabel1,code[0] ? code[0]->res : 0, 0);
+	labeltac1 = tacCreate(TAC_LABEL,newlabel1,0,0);
+	labeltac2 = tacCreate(TAC_LABEL,newlabel2,0,0);
+	jump = tacCreate(TAC_JUMP,newlabel2,0,0);
+	return tacJoin(tacJoin(tacJoin(tacJoin(tacJoin(tacJoin(code[0],iftac),code[1]),jump),labeltac1),code[2]),labeltac2);
+}
+
+TAC* makeWhile(TAC** code){
+	TAC* iftac = 0;
+	TAC* labeltac1 = 0;
+	TAC* labeltac2 = 0;
+	TAC* jump = 0;
+	HASH_NODE* newlabel1 = 0;
+	HASH_NODE* newlabel2 = 0;
+	newlabel1 = makeLabel();
+	newlabel2 = makeLabel();
+	iftac = tacCreate(TAC_IFZ,newlabel2,code[0] ? code[0]->res : 0, 0);
+	labeltac1 = tacCreate(TAC_LABEL,newlabel1,0,0);
+	labeltac2 = tacCreate(TAC_LABEL,newlabel2,0,0);
+	jump = tacCreate(TAC_JUMP,newlabel1,0,0);
+	return tacJoin(tacJoin(tacJoin(tacJoin(tacJoin(labeltac1,code[0]),iftac),code[1]),jump),labeltac2);
+}
+
+TAC* makeFor(HASH_NODE* identifier,TAC** code){
+	TAC* initid = 0;
+	TAC* ifless = 0;
+	TAC* inc = 0;
+	TAC* jump = 0;
+	TAC* labeltac1 = 0;
+	TAC* labeltac2 = 0;
+	HASH_NODE* newlabel1 = 0;
+	HASH_NODE* newlabel2 = 0;
+	newlabel1 = makeLabel();
+	newlabel2 = makeLabel();
+	initid = makeAssign(identifier,code);
+	ifless = tacCreate(TAC_IFLESS,newlabel2,identifier,code[1]? code[1]->res : 0);
+	labeltac1 = tacCreate(TAC_LABEL,newlabel1,0,0);
+	labeltac2 = tacCreate(TAC_LABEL,newlabel2,0,0);
+	inc = tacCreate(TAC_INC,identifier,0,0);
+	jump = tacCreate(TAC_JUMP,newlabel1,0,0);
+
+	return tacJoin(tacJoin(tacJoin(tacJoin(tacJoin(tacJoin(labeltac1,initid),ifless),code[2]),inc),jump),labeltac2);
+}
+
+TAC* makeAssign(HASH_NODE* identifier, TAC** code){
+	TAC* move = 0;
+	move = tacCreate(TAC_MOVE, identifier, code[0]? code[0]-> res : 0,0);
+	return move; 
+}
+
 HASH_NODE* makeTemp(){
-	static int serial = 0;
+	static int serial_temp = 0;
 	static char buffer[128];
 
-	sprintf(buffer, "#temporary_%d", serial);
-	serial++;
+	sprintf(buffer, "#temporary_%d", serial_temp);
+	serial_temp++;
+	return hash_insert(SYMBOL_VAR, buffer, 0, 0);
+}
+
+HASH_NODE* makeLabel(){
+	static int serial_label = 0;
+	static char buffer[128];
+
+	sprintf(buffer, "#label_%d", serial_label);
+	serial_label++;
 	return hash_insert(SYMBOL_VAR, buffer, 0, 0);
 }
 

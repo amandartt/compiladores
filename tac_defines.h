@@ -20,8 +20,14 @@
 #define TAC_RETURN		20
 #define TAC_PRINT		21
 #define TAC_READ		22
-#define TAC_WHENTHEN	23
-#define TAC_WHENTHENELSE	24
-#define TAC_WHILE		25
-#define TAC_FOR			26
+#define TAC_CALL		26
 #define TAC_ARG			27
+#define TAC_IFZ			28
+#define TAC_LABEL		29
+#define TAC_JUMP		30
+#define TAC_IFLESS		31
+#define TAC_INC			32
+#define TAC_MOVE		33
+#define TAC_BEGIN_FUNC 	34
+#define TAC_END_FUNC 	35
+

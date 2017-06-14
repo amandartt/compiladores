@@ -21,6 +21,7 @@ TAC* tacCreate(int type, HASH_NODE *res, HASH_NODE *op1, HASH_NODE *op2);
 TAC* tacJoin(TAC *l1 ,TAC *l2);
 void tacPrintBack(TAC *last);
 void tacPrintForward(TAC *first);
+TAC* tacReverse(TAC* tac);
 TAC * tacGenerate(ASTREE *node);
 
 #endif
