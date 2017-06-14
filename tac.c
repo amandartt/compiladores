@@ -125,7 +125,9 @@ TAC * tacGenerate(ASTREE *node){
 	
 		case AST_COMMAND_BLOCK: result = code[0]; break;
 		case AST_SEQ_CMD: result = tacJoin(code[0],code[1]); break;
-		default: break;
+		default: 
+			result = tacJoin(tacJoin(tacJoin(code[0], code[1]), code[2]), code[3]);			
+			break;
 	}
 	
 	return result;
