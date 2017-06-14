@@ -12,9 +12,12 @@ TAC* makeWhenThenElse(TAC** code);
 TAC* makeWhile(TAC** code);
 TAC* makeFor(HASH_NODE* identifier, TAC** code);
 TAC* makeAssign(HASH_NODE* identifier, TAC** code);
+TAC* makeVecAssign(HASH_NODE* identifier, TAC** code);
 TAC* makeFuncDef(HASH_NODE* identifier, TAC** code);
-//TODO
 TAC* makeFuncCall(ASTREE *funcCall);
+TAC* makeReturn(TAC** code);
+TAC* makeRead(TAC** code);
+TAC* makePrint(ASTREE* print);
 
 
 // implementation
@@ -84,7 +87,7 @@ void tacPrintForward(TAC *first){
 //TODO continuar...
 TAC * tacGenerate(ASTREE *node){
 	TAC *code[MAX_SONS];
-	TAC *result;
+	TAC *result = 0;
 	int i = 0;
 
 	if(!node) { return 0; }
@@ -113,8 +116,15 @@ TAC * tacGenerate(ASTREE *node){
 		case AST_WHILE: result = makeWhile(code); break;
 		case AST_FOR: result = makeFor(node->symbol,code); break;
 		case AST_ASSIGN: result = makeAssign(node->symbol,code); break;
-		case AST_DEC_FUNC: makeFuncDef(node->symbol, code); break;
-		case AST_FUNC_CALL: break;
+		case AST_VEC_ASSIGN: result = makeVecAssign(node->symbol,code); break;
+		case AST_DEC_FUNC: result = makeFuncDef(node->symbol, code); break;
+		case AST_FUNC_CALL: result = makeFuncCall(node); break;
+		case AST_RETURN: result = makeReturn(code); break;
+		case AST_READ: result = makeRead(code); break;
+		case AST_PRINT: result = makePrint(node); break;
+	
+		case AST_COMMAND_BLOCK: result = code[0]; break;
+		case AST_SEQ_CMD: result = tacJoin(code[0],code[1]); break;
 		default: break;
 	}
 	
@@ -196,6 +206,12 @@ TAC* makeAssign(HASH_NODE* identifier, TAC** code){
 	return move; 
 }
 
+TAC* makeVecAssign(HASH_NODE* identifier, TAC** code){
+	TAC* vecAssign = 0;
+	vecAssign = tacCreate(TAC_VEC_WRITE, identifier, code[0]? code[0]-> res : 0,code[1]? code[1]-> res : 0);
+	return vecAssign; 
+}
+
 TAC* makeFuncDef(HASH_NODE* identifier, TAC** code){
 	TAC* funcBody = code[1];
 	TAC* beginFunc = tacCreate(TAC_BEGIN_FUNC, identifier, 0, 0);
@@ -204,8 +220,48 @@ TAC* makeFuncDef(HASH_NODE* identifier, TAC** code){
 	return tacJoin(beginFunc, tacJoin(funcBody, endFunc));
 }
 
-//TODO
 TAC* makeFuncCall(ASTREE *funcCall){
+	TAC* tacCall = 0;	
+	TAC* params = 0;
+	ASTREE* buff = 0;
+	TAC* tacBuff = 0;
+	TAC* tacArg = 0;
+	int i = 0;
+	HASH_NODE* func_name = funcCall->symbol;
+	for(buff = funcCall->son[0]; buff; buff = buff->son[1]){
+		tacBuff = tacGenerate(buff->son[0]); //expr or a symbol... tacGenerate can process
+		tacArg = tacCreate(TAC_ARG,tacBuff->res,i,func_name); //This generates a Warning, but him said to save the param number...
+		params = tacJoin(tacJoin(params,tacBuff),tacArg);
+	}
+
+	HASH_NODE* tempCall = makeTemp();
+	tacCall = tacCreate(TAC_CALL, tempCall, funcCall->symbol,0);
+	return tacJoin(params,tacCall);
+}
+
+TAC* makeReturn(TAC** code){
+	TAC* ret = 0;
+	ret = tacCreate(TAC_RETURN,code[0]? code[0]->res : 0, 0, 0);
+	return ret;
+}
+
+TAC* makeRead(TAC** code){
+	TAC* ret = 0;
+	ret = tacCreate(TAC_READ,code[0]? code[0]->res : 0, 0, 0);
+	return ret;
+}
+
+TAC* makePrint(ASTREE* print){
+	TAC* prints = 0;
+	TAC* tacBuff = 0;
+	TAC* tacPrint = 0;
+	ASTREE* buff = 0;
+	for(buff = print->son[0];buff;buff->son[1]){
+		tacBuff = tacGenerate(buff->son[0]); //expr or a symbol... tacGenerate can process
+		tacPrint = tacCreate(TAC_PRINT,tacBuff->res,0,0);
+		prints = tacJoin(tacJoin(prints,tacBuff),tacPrint);
+	}
+	return prints;
 }
 
 HASH_NODE* makeTemp(){
