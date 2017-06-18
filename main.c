@@ -43,7 +43,7 @@ int main(int argc, char *argv[]) {
 		exit(4);
 	}
 
-	//astreePrint(ast,0);
+	astreePrint(ast,0);
 	//hash_print();
 
 	FILE* output = fopen(argv[2], "w+");

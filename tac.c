@@ -64,9 +64,9 @@ void tacPrintBack(TAC *last){
 	    fprintf(stderr, "TAC(");
 		printTacType(tac->type);
 
-		if(tac->res) fprintf(stderr, ", %s ", tac->res->text); else fprintf(stderr, ", 0 ");
-		if(tac->op1) fprintf(stderr, ", %s ", tac->op1->text); else	fprintf(stderr, ", 0 ");
-		if(tac->op2) fprintf(stderr, ", %s ", tac->op2->text); else	fprintf(stderr, ", 0 ");
+		if(tac->res) fprintf(stderr, ",%s", tac->res->text); else fprintf(stderr, ",");
+		if(tac->op1) fprintf(stderr, ",%s", tac->op1->text); else	fprintf(stderr, ",");
+		if(tac->op2) fprintf(stderr, ",%s", tac->op2->text); else	fprintf(stderr, ",");
 		fprintf(stderr, ")\n");
 	}
 }
@@ -77,9 +77,9 @@ void tacPrintForward(TAC *first){
 		fprintf(stderr, "TAC(");
 		printTacType(tac->type);
 
-		if(tac->res) fprintf(stderr, ", %s ", tac->res->text); else fprintf(stderr, ", 0 ");
-		if(tac->op1) fprintf(stderr, ", %s ", tac->op1->text); else	fprintf(stderr, ", 0 ");
-		if(tac->op2) fprintf(stderr, ", %s ", tac->op2->text); else	fprintf(stderr, ", 0 ");
+		if(tac->res) fprintf(stderr, ",%s", tac->res->text); else fprintf(stderr, ",");
+		if(tac->op1) fprintf(stderr, ",%s", tac->op1->text); else	fprintf(stderr, ",");
+		if(tac->op2) fprintf(stderr, ",%s", tac->op2->text); else	fprintf(stderr, ",");
 		fprintf(stderr, ")\n");
 	}
 	
@@ -98,7 +98,7 @@ TAC * tacGenerate(ASTREE *node){
 	for(i=0; i<MAX_SONS; i++){
 		code[i]= tacGenerate(node->son[i]);
 	}
-	switch(node->type){ 
+	switch(node->type){
 		case AST_SYMBOL: result = tacCreate(TAC_SYMBOL, node->symbol, 0, 0); break;
 		case AST_ADD: result = makeOpBin(TAC_ADD, code); break;	
 		case AST_SUB: result = makeOpBin(TAC_SUB, code); break;		
@@ -126,9 +126,8 @@ TAC * tacGenerate(ASTREE *node){
 	
 		case AST_COMMAND_BLOCK: result = code[0]; break;
 		case AST_SEQ_CMD: result = tacJoin(code[0],code[1]); break;
-		default: 
-			result = tacJoin(tacJoin(tacJoin(code[0], code[1]), code[2]), code[3]);			
-			break;
+		case AST_PARENTESIS_EXPR: result = code[0]; break;
+		default: result = tacJoin(tacJoin(tacJoin(code[0], code[1]), code[2]), code[3]);
 	}
 	
 	return result;
@@ -233,7 +232,7 @@ TAC* makeFuncCall(ASTREE *funcCall){
 	HASH_NODE* func_name = funcCall->symbol;
 	for(buff = funcCall->son[0]; buff; buff = buff->son[1]){
 		tacBuff = tacGenerate(buff->son[0]); //expr or a symbol... tacGenerate can process
-		tacArg = tacCreate(TAC_ARG,tacBuff->res,i,func_name); //This generates a Warning, but him said to save the param number...
+		tacArg = tacCreate(TAC_ARG,tacBuff->res,i,func_name); //This generates a Warning, but he said to save the param number...
 		params = tacJoin(tacJoin(params,tacBuff),tacArg);
 	}
 
@@ -260,7 +259,7 @@ TAC* makePrint(ASTREE* print, TAC** code){
 	TAC* tacBuff = 0;
 	TAC* tacPrint = 0;
 	buff = print->son[0];
-	while(buff){
+	if(buff){
 		if(buff->symbol){
 			tacBuff = code[0]; //symbol
 			buff = buff->son[0];
@@ -270,6 +269,19 @@ TAC* makePrint(ASTREE* print, TAC** code){
 		}
 		tacPrint = tacCreate(TAC_PRINT,tacBuff ? tacBuff->res: 0,0,0);	
 		prints = tacJoin(tacJoin(prints,tacBuff),tacPrint);
+
+		//rest of the print list
+		while(buff){
+			if(buff->symbol){
+				tacBuff = tacCreate(TAC_SYMBOL,buff->symbol, 0, 0);
+				buff = buff->son[0];
+			}else{
+				tacBuff = tacGenerate(buff->son[0]);
+				buff = buff->son[1];
+			}
+			tacPrint = tacCreate(TAC_PRINT,tacBuff ? tacBuff->res: 0,0,0);	
+			prints = tacJoin(tacJoin(prints,tacBuff),tacPrint);
+		}
 	}
 	return prints;
 }
