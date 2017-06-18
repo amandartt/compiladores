@@ -18,6 +18,9 @@ TAC* makeFuncCall(ASTREE *funcCall);
 TAC* makeReturn(TAC** code);
 TAC* makeRead(TAC** code);
 TAC* makePrint(ASTREE* print, TAC** code);
+TAC* makeVecValues(HASH_NODE* identifier, TAC** code);
+TAC* makeVar(HASH_NODE* identifier, TAC** code);
+TAC* makeVec(HASH_NODE* identifier, TAC** code);
 
 
 // implementation
@@ -99,7 +102,9 @@ TAC * tacGenerate(ASTREE *node){
 		code[i]= tacGenerate(node->son[i]);
 	}
 	switch(node->type){
-		case AST_SYMBOL: result = tacCreate(TAC_SYMBOL, node->symbol, 0, 0); break;
+		case AST_SYMBOL:
+		case AST_VECTOR_EXPR:
+			result = tacCreate(TAC_SYMBOL, node->symbol, 0, 0); break;
 		case AST_ADD: result = makeOpBin(TAC_ADD, code); break;	
 		case AST_SUB: result = makeOpBin(TAC_SUB, code); break;		
 		case AST_MUL: result = makeOpBin(TAC_MUL, code); break;	
@@ -123,10 +128,14 @@ TAC * tacGenerate(ASTREE *node){
 		case AST_RETURN: result = makeReturn(code); break;
 		case AST_READ: result = makeRead(code); break;
 		case AST_PRINT: result = makePrint(node, code); break;
+		case AST_SEQNUM_ELEM: result = makeVecValues(node->symbol, code); break;
+		case AST_DEC_VAR_GLOB: result = makeVar(node->symbol, code); break;
+		case AST_DEC_VEC_GLOB: result = makeVec(node->symbol, code); break;
 	
 		case AST_COMMAND_BLOCK: result = code[0]; break;
 		case AST_SEQ_CMD: result = tacJoin(code[0],code[1]); break;
-		case AST_PARENTESIS_EXPR: result = code[0]; break;
+		case AST_PARENTESIS_EXPR: result = code[0]; break;	
+		
 		default: result = tacJoin(tacJoin(tacJoin(code[0], code[1]), code[2]), code[3]);
 	}
 	
@@ -259,19 +268,20 @@ TAC* makePrint(ASTREE* print, TAC** code){
 	TAC* tacBuff = 0;
 	TAC* tacPrint = 0;
 	buff = print->son[0];
-	if(buff){
+	if(buff){		
 		if(buff->symbol){
-			tacBuff = code[0]; //symbol
+			tacBuff = tacCreate(TAC_SYMBOL, buff->symbol,0,0);	
 			buff = buff->son[0];
 		}else{
-			tacBuff = code[1]; //expr
-			buff = buff->son[1];
-		}
+			tacBuff = code[0]; //expr
+			buff = buff->son[1];	
+		}	
+		
 		tacPrint = tacCreate(TAC_PRINT,tacBuff ? tacBuff->res: 0,0,0);	
 		prints = tacJoin(tacJoin(prints,tacBuff),tacPrint);
 
 		//rest of the print list
-		while(buff){
+		while(buff){				
 			if(buff->symbol){
 				tacBuff = tacCreate(TAC_SYMBOL,buff->symbol, 0, 0);
 				buff = buff->son[0];
@@ -284,6 +294,21 @@ TAC* makePrint(ASTREE* print, TAC** code){
 		}
 	}
 	return prints;
+}
+
+TAC* makeVecValues(HASH_NODE* identifier, TAC** code){
+	TAC *vecValue = tacCreate(TAC_ARRAY_VALUES, identifier, 0, 0);
+	return tacJoin(vecValue, code[1]);
+}
+
+TAC* makeVar(HASH_NODE* identifier, TAC** code){
+	TAC *var = tacCreate(TAC_VAR, identifier, code[1]->res, 0);
+	return tacJoin(var, code[1]);
+}
+
+TAC* makeVec(HASH_NODE* identifier, TAC** code){
+	TAC *vec = tacCreate(TAC_VEC, identifier, 0, 0);
+	return tacJoin(vec, code[0]);
 }
 
 HASH_NODE* makeTemp(){
@@ -336,6 +361,9 @@ void printTacType(int type){
 		case TAC_IFLESS: fprintf(stderr, "TAC_IFLESS"); break;
 		case TAC_INC: fprintf(stderr, "TAC_INC"); break;
 		case TAC_MOVE: fprintf(stderr, "TAC_MOVE"); break;
+		case TAC_ARRAY_VALUES: fprintf(stderr, "TAC_ARRAY_VALUES"); break;
+		case TAC_VAR: fprintf(stderr, "TAC_VAR"); break;
+		case TAC_VEC: fprintf(stderr, "TAV_VEC"); break;
 		default:
 			fprintf(stderr, "Type not found"); break;
 	}

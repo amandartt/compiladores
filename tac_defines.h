@@ -20,6 +20,9 @@
 #define TAC_RETURN		20
 #define TAC_PRINT		21
 #define TAC_READ		22
+#define TAC_ARRAY_VALUES 23
+#define TAC_VAR 		24
+#define TAC_VEC 		25
 #define TAC_CALL		26
 #define TAC_ARG			27
 #define TAC_IFZ			28
