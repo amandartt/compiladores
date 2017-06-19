@@ -268,31 +268,18 @@ TAC* makePrint(ASTREE* print, TAC** code){
 	TAC* tacBuff = 0;
 	TAC* tacPrint = 0;
 	buff = print->son[0];
-	if(buff){		
+	while(buff){				
 		if(buff->symbol){
-			tacBuff = tacCreate(TAC_SYMBOL, buff->symbol,0,0);	
+			tacBuff = tacCreate(TAC_SYMBOL,buff->symbol, 0, 0);
 			buff = buff->son[0];
 		}else{
 			tacBuff = tacGenerate(buff->son[0]);
-			buff = buff->son[1];	
-		}	
-		
+			buff = buff->son[1];
+		}
 		tacPrint = tacCreate(TAC_PRINT,tacBuff ? tacBuff->res: 0,0,0);	
 		prints = tacJoin(tacJoin(prints,tacBuff),tacPrint);
-
-		//rest of the print list
-		while(buff){				
-			if(buff->symbol){
-				tacBuff = tacCreate(TAC_SYMBOL,buff->symbol, 0, 0);
-				buff = buff->son[0];
-			}else{
-				tacBuff = tacGenerate(buff->son[0]);
-				buff = buff->son[1];
-			}
-			tacPrint = tacCreate(TAC_PRINT,tacBuff ? tacBuff->res: 0,0,0);	
-			prints = tacJoin(tacJoin(prints,tacBuff),tacPrint);
-		}
 	}
+	
 	return prints;
 }
 
