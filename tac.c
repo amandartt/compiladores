@@ -241,7 +241,7 @@ TAC* makeFuncCall(ASTREE *funcCall){
 	HASH_NODE* func_name = funcCall->symbol;
 	for(buff = funcCall->son[0]; buff; buff = buff->son[1]){
 		tacBuff = tacGenerate(buff->son[0]); //expr or a symbol... tacGenerate can process
-		tacArg = tacCreate(TAC_ARG,tacBuff->res,i,func_name); //This generates a Warning, but he said to save the param number...
+		tacArg = tacCreate(TAC_ARG_CALL,tacBuff->res,i,func_name); //This generates a Warning, but he said to save the param number...
 		params = tacJoin(tacJoin(params,tacBuff),tacArg);
 	}
 

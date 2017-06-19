@@ -24,7 +24,7 @@
 #define TAC_VAR 		24
 #define TAC_VEC 		25
 #define TAC_CALL		26
-#define TAC_ARG			27
+#define TAC_ARG_CALL	27
 #define TAC_IFZ			28
 #define TAC_LABEL		29
 #define TAC_JUMP		30
@@ -32,5 +32,6 @@
 #define TAC_INC			32
 #define TAC_MOVE		33
 #define TAC_BEGIN_FUNC 	34
-#define TAC_END_FUNC 	35
-#define TAC_VEC_EXPR	36
+#define TAC_ARG_RECEIVE 35
+#define TAC_END_FUNC 	36
+#define TAC_VEC_EXPR	37
