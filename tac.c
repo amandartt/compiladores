@@ -273,7 +273,7 @@ TAC* makePrint(ASTREE* print, TAC** code){
 			tacBuff = tacCreate(TAC_SYMBOL, buff->symbol,0,0);	
 			buff = buff->son[0];
 		}else{
-			tacBuff = code[0]; //expr
+			tacBuff = tacGenerate(buff->son[0]);
 			buff = buff->son[1];	
 		}	
 		
