@@ -10,6 +10,7 @@
 
 typedef struct tac_struct{
 	int type;
+	int posParam;
 	HASH_NODE *res;
 	HASH_NODE *op1;
 	HASH_NODE *op2;
@@ -17,7 +18,7 @@ typedef struct tac_struct{
 	struct tac_struct *next;
 } TAC;
 
-TAC* tacCreate(int type, HASH_NODE *res, HASH_NODE *op1, HASH_NODE *op2);
+TAC* tacCreate(int type, HASH_NODE *res, HASH_NODE *op1, HASH_NODE *op2, int posParam);
 TAC* tacJoin(TAC *l1 ,TAC *l2);
 void tacPrintBack(TAC *last);
 void tacPrintForward(TAC *first);
