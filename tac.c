@@ -71,7 +71,7 @@ void tacPrintBack(TAC *last){
 
 		if(tac->res) fprintf(stderr, ",%s", tac->res->text); else fprintf(stderr, ",");
 		if(tac->op1) fprintf(stderr, ",%s", tac->op1->text); else	fprintf(stderr, ",");
-		if(tac->op2) fprintf(stderr, ",%s", tac->op2->text); else	fprintf(stderr, ",");
+		if(tac->op2) fprintf(stderr, ",%s", tac->op2->text); else if(tac->posParam) fprintf(stderr, ",%d", tac->posParam); else fprintf(stderr, ",");
 		fprintf(stderr, ")\n");
 	}
 }
@@ -84,7 +84,7 @@ void tacPrintForward(TAC *first){
 
 		if(tac->res) fprintf(stderr, ",%s", tac->res->text); else fprintf(stderr, ",");
 		if(tac->op1) fprintf(stderr, ",%s", tac->op1->text); else	fprintf(stderr, ",");
-		if(tac->op2) fprintf(stderr, ",%s", tac->op2->text); else	fprintf(stderr, ",");
+		if(tac->op2) fprintf(stderr, ",%s", tac->op2->text); else if(tac->posParam) fprintf(stderr, ",%d", tac->posParam); else fprintf(stderr, ",");
 		fprintf(stderr, ")\n");
 	}
 	
@@ -205,7 +205,7 @@ TAC* makeFor(HASH_NODE* identifier,TAC** code){
 	newlabel1 = makeLabel();
 	newlabel2 = makeLabel();
 	initid = makeAssign(identifier,code);
-	ifless = tacCreate(TAC_IFLESS,newlabel2,identifier,code[1]? code[1]->res : 0, 0);
+	ifless = tacCreate(TAC_IFLESSEQ,newlabel2,identifier,code[1]? code[1]->res : 0, 0);
 	labeltac1 = tacCreate(TAC_LABEL,newlabel1,0,0,0);
 	labeltac2 = tacCreate(TAC_LABEL,newlabel2,0,0,0);
 	inc = tacCreate(TAC_INC,identifier,0,0,0);
@@ -238,13 +238,13 @@ TAC* makeFuncDef(HASH_NODE* identifier, TAC** code, ASTREE *funcDef){
 	// save params
 	for(buff = funcDef->son[0]->son[1]; buff; buff = buff->son[1]){
 		tacBuff = tacGenerate(buff->son[0]);
-		tacArg = tacCreate(TAC_ARG_RECEIVE, tacBuff->res, 0, identifier, i);
+		tacArg = tacCreate(TAC_ARG_RECEIVE, identifier, tacBuff->res, 0, i);
 		params = tacJoin(tacJoin(params,tacBuff), tacArg);
 		i++;
 	}
 
 	TAC* endFunc = tacCreate(TAC_END_FUNC, identifier, 0, 0, 0);
-	return tacJoin(params, tacJoin(beginFunc, tacJoin(funcBody, endFunc)));
+	return tacJoin(tacJoin(tacJoin(params, beginFunc),funcBody), endFunc);
 }
 
 TAC* makeFuncCall(ASTREE *funcCall){
@@ -257,7 +257,7 @@ TAC* makeFuncCall(ASTREE *funcCall){
 	HASH_NODE* func_name = funcCall->symbol;
 	for(buff = funcCall->son[0]; buff; buff = buff->son[1]){
 		tacBuff = tacGenerate(buff->son[0]); //expr or a symbol... tacGenerate can process
-		tacArg = tacCreate(TAC_ARG_CALL,tacBuff->res,0,func_name, i); //This generates a Warning, but he said to save the param number...
+		tacArg = tacCreate(TAC_ARG_CALL,func_name, tacBuff->res,0,i); //This generates a Warning, but he said to save the param number...
 		params = tacJoin(tacJoin(params,tacBuff),tacArg);
 		i++;
 	}
@@ -369,7 +369,7 @@ void printTacType(int type){
 		case TAC_BEGIN_FUNC: fprintf(stderr, "TAC_BEGIN_FUNC"); break;
 		case TAC_END_FUNC: fprintf(stderr, "TAC_END_FUNC"); break;
 		case TAC_JUMP: fprintf(stderr, "TAC_JUMP"); break;
-		case TAC_IFLESS: fprintf(stderr, "TAC_IFLESS"); break;
+		case TAC_IFLESSEQ: fprintf(stderr, "TAC_IFLESSEQ"); break;
 		case TAC_INC: fprintf(stderr, "TAC_INC"); break;
 		case TAC_MOVE: fprintf(stderr, "TAC_MOVE"); break;
 		case TAC_ARRAY_VALUES: fprintf(stderr, "TAC_ARRAY_VALUES"); break;

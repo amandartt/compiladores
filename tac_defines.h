@@ -28,7 +28,7 @@
 #define TAC_IFZ			28
 #define TAC_LABEL		29
 #define TAC_JUMP		30
-#define TAC_IFLESS		31
+#define TAC_IFLESSEQ	31
 #define TAC_INC			32
 #define TAC_MOVE		33
 #define TAC_BEGIN_FUNC 	34
