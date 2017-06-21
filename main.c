@@ -43,7 +43,7 @@ int main(int argc, char *argv[]) {
 		exit(4);
 	}
 
-	astreePrint(ast,0);
+	//astreePrint(ast,0);
 	//hash_print();
 
 	FILE* output = fopen(argv[2], "w+");
@@ -54,6 +54,8 @@ int main(int argc, char *argv[]) {
 	}
 
 	astreeProgram(ast,output); 
+
+	fprintf(stderr,"<<TAC_SYMBOL's omitidas para facilitar a leitura.>>\n");
 	tacPrintForward(tacReverse(tacGenerate(ast)));
 	fclose(output);
 	exit(0);
