@@ -70,9 +70,28 @@ void tacPrintBack(TAC *last){
 			fprintf(stderr, "TAC(");
 			printTacType(tac->type);
 
-			if(tac->res) fprintf(stderr, ",%s", tac->res->text); else if(tac->posParam) fprintf(stderr, ",arg%d", tac->posParam); else fprintf(stderr, ",");
-			if(tac->op1) fprintf(stderr, ",%s", tac->op1->text); else fprintf(stderr, ",");
-			if(tac->op2) fprintf(stderr, ",%s", tac->op2->text); else fprintf(stderr, ",");
+			if(tac->res){ 
+				fprintf(stderr, ",%s", tac->res->text); 
+			}else if(tac->posParam && tac->type == TAC_ARG_CALL){
+				fprintf(stderr, ",arg%d", tac->posParam); 
+			}else{ 
+				fprintf(stderr, ",");
+			}
+
+			if(tac->op1){ 
+				fprintf(stderr, ",%s", tac->op1->text); 
+			}else if(tac->posParam && tac->type == TAC_ARG_RECEIVE){
+				fprintf(stderr, ",arg%d", tac->posParam); 
+			}else{
+				fprintf(stderr, ",");
+			}
+
+			if(tac->op2){ 
+				fprintf(stderr, ",%s", tac->op2->text); 
+			}else{ 
+				fprintf(stderr, ",");
+			}
+
 			fprintf(stderr, ")\n");
 		}
 	}
@@ -85,9 +104,28 @@ void tacPrintForward(TAC *first){
 			fprintf(stderr, "TAC(");
 			printTacType(tac->type);
 
-			if(tac->res) fprintf(stderr, ",%s", tac->res->text); else if(tac->posParam) fprintf(stderr, ",arg%d", tac->posParam); else fprintf(stderr, ",");
-			if(tac->op1) fprintf(stderr, ",%s", tac->op1->text); else fprintf(stderr, ",");
-			if(tac->op2) fprintf(stderr, ",%s", tac->op2->text); else fprintf(stderr, ",");
+			if(tac->res){ 
+				fprintf(stderr, ",%s", tac->res->text); 
+			}else if(tac->posParam && tac->type == TAC_ARG_CALL){
+				fprintf(stderr, ",arg%d", tac->posParam); 
+			}else{ 
+				fprintf(stderr, ",");
+			}
+
+			if(tac->op1){ 
+				fprintf(stderr, ",%s", tac->op1->text); 
+			}else if(tac->posParam && tac->type == TAC_ARG_RECEIVE){
+				fprintf(stderr, ",arg%d", tac->posParam); 
+			}else{
+				fprintf(stderr, ",");
+			}
+
+			if(tac->op2){ 
+				fprintf(stderr, ",%s", tac->op2->text); 
+			}else{ 
+				fprintf(stderr, ",");
+			}
+
 			fprintf(stderr, ")\n");
 		}
 	}
@@ -283,7 +321,7 @@ TAC* makeFuncDef(HASH_NODE* identifier, TAC** code, ASTREE *funcDef){
 	// save params
 	for(buff = funcDef->son[0]->son[1]; buff; buff = buff->son[1]){
 		tacBuff = tacGenerate(buff->son[0]);
-		tacArg = tacCreate(TAC_ARG_RECEIVE, 0, tacBuff->res,identifier, i);
+		tacArg = tacCreate(TAC_ARG_RECEIVE, tacBuff->res, 0, identifier, i);
 		params = tacJoin(tacJoin(params,tacBuff), tacArg);
 		i++;
 	}
