@@ -36,7 +36,7 @@ void asmGen(TAC* first, FILE* output){ //PARA DESCOBRIR OS ASM: gcc -S -O0 track
 		}
 }
 
-void asmPushHash(FILE* output){ //LEMBRAR: converter todos os numericos para float (para nao precisar se preocupar com compatibilidade de operandos)
+void asmPushHash(FILE* output){ //LEMBRAR: Johann permitiu considerar tudo como inteiro
 
 }
 
