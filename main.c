@@ -6,6 +6,7 @@
 #include "y.tab.h"
 #include "semantics.h"
 #include "tac.h"
+#include "asm.h"
 
 void initMe(void);
 int isRunning(void);
@@ -57,6 +58,15 @@ int main(int argc, char *argv[]) {
 
 	fprintf(stderr,"<<TAC_SYMBOL's omitidas para facilitar a leitura.>>\n");
 	tacPrintForward(tacReverse(tacGenerate(ast)));
+
+	FILE* asmFile = fopen("asmFile.s", "w+");
+	if(output == NULL){
+		fprintf(stderr, "%s", "Can't create asm file. \n");
+		exit(2);
+	}
+	//asmGen(tacReverse(tacGenerate(ast)), asmFile);
+
 	fclose(output);
+	fclose(asmFile);	
 	exit(0);
 }
