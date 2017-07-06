@@ -1,0 +1,9 @@
+a: short 0;
+i: long 0;
+
+
+long main()
+{
+  a = 10+a;
+ return a;
+};

@@ -64,7 +64,8 @@ int main(int argc, char *argv[]) {
 		fprintf(stderr, "%s", "Can't create asm file. \n");
 		exit(2);
 	}
-	//asmGen(tacReverse(tacGenerate(ast)), asmFile);
+	
+	asmGen(tacReverse(tacGenerate(ast)), asmFile);
 
 	fclose(output);
 	fclose(asmFile);	

@@ -12,6 +12,7 @@
 #define SYMBOL_VAR 9
 #define SYMBOL_VEC 10
 #define SYMBOL_FUNC 11
+#define SYMBOL_VAR_TEMP 12
 
 #define DATATYPE_BYTE 12 //INT subtype
 #define DATATYPE_SHORT 13 //INT subtype

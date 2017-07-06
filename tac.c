@@ -408,16 +408,16 @@ HASH_NODE* makeTemp(){
 	static int serial_temp = 0;
 	static char buffer[128];
 
-	sprintf(buffer, "#temporary_%d", serial_temp);
+	sprintf(buffer, "tttemporary_%d", serial_temp);
 	serial_temp++;
-	return hash_insert(SYMBOL_VAR, buffer, 0, 0);
+	return hash_insert(SYMBOL_VAR_TEMP, buffer, 0, 0);
 }
 
 HASH_NODE* makeLabel(){
 	static int serial_label = 0;
 	static char buffer[128];
 
-	sprintf(buffer, "#label_%d", serial_label);
+	sprintf(buffer, "ttlabel_%d", serial_label);
 	serial_label++;
 	return hash_insert(SYMBOL_VAR, buffer, 0, 0);
 }
