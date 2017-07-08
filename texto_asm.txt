@@ -5,5 +5,14 @@ i: long 0;
 long main()
 {
   a = 10+a;
+  i = i - a;
+
+	while(a>0){
+		a = a + 1;
+	};
+
+	for (i = a to 10)
+		i = a * 50;
+
  return a;
 };
