@@ -2,26 +2,41 @@ tttemporary_7:
 	.long 0
 tttemporary_9:
 	.long 0
+tttemporary_14:
+	.long 0
 tttemporary_0:
+	.long 0
+tttemporary_10:
 	.long 0
 tttemporary_2:
 	.long 0
 tttemporary_4:
 	.long 0
+tttemporary_13:
+	.long 0
 tttemporary_6:
 	.long 0
 tttemporary_8:
+	.long 0
+tttemporary_12:
 	.long 0
 tttemporary_1:
 	.long 0
 tttemporary_3:
 	.long 0
+tttemporary_15:
+	.long 0
 tttemporary_5:
+	.long 0
+tttemporary_11:
 	.long 0
 a:
 	.long 0
 i:
 	.long 0
+v:
+	.long 1
+	.long 3
 
 	## TAC_BEGIN_FUNC
 
@@ -30,22 +45,45 @@ main:
 	.cfi_startproc
 	pushq	%rbp
 
+	## TAC_VEC_READ
+	movl v+8(%rip), %eax
+	movl %eax, tttemporary_8(%rip)
+
+	## TAC_VEC_WRITE
+	movl tttemporary_8(%rip), %eax
+	movl %eax, v+4(%rip)
+
+	## TAC_ADD
+	movl 1(%rip), %eax
+	addl 1(%rip), %eax
+	movl %eax, tttemporary_9(%rip)
+
+	## TAC_VEC_READ
+	movl tttemporary_9(%rip), %eax
+	cltq
+	movl v(,%rax, 4), %eax
+	movl %eax, tttemporary_10(%rip)
+
+	## TAC_VEC_WRITE
+	movl tttemporary_10(%rip), %eax
+	movl %eax, v+4(%rip)
+
 	## TAC_ADD
 	movl 10(%rip), %eax
 	addl a(%rip), %eax
-	movl %eax, tttemporary_5(%rip)
+	movl %eax, tttemporary_11(%rip)
 
 	## TAC_MOVE
-	movl tttemporary_5(%rip), %eax
+	movl tttemporary_11(%rip), %eax
 	movl %eax, a(%rip)
 
 	## TAC_SUB
 	movl i(%rip), %eax
 	subl a(%rip), %eax
-	movl %eax, tttemporary_6(%rip)
+	movl %eax, tttemporary_12(%rip)
 
 	## TAC_MOVE
-	movl tttemporary_6(%rip), %eax
+	movl tttemporary_12(%rip), %eax
 	movl %eax, i(%rip)
 
 	## TAC_LABEL
@@ -57,20 +95,20 @@ main:
 	cmpl %eax, %edx
 	setg %al
 	movzbl %al, %eax
-	movl %eax, tttemporary_7(%rip)
+	movl %eax, tttemporary_13(%rip)
 
 	## TAC_IFZ
-	movl tttemporary_7(%rip), %eax
+	movl tttemporary_13(%rip), %eax
 	testl %eax, %eax
 	je .ttlabel_5
 
 	## TAC_ADD
 	movl a(%rip), %eax
 	addl 1(%rip), %eax
-	movl %eax, tttemporary_8(%rip)
+	movl %eax, tttemporary_14(%rip)
 
 	## TAC_MOVE
-	movl tttemporary_8(%rip), %eax
+	movl tttemporary_14(%rip), %eax
 	movl %eax, a(%rip)
 
 	## TAC_JUMP
@@ -94,10 +132,10 @@ main:
 	## TAC_MUL
 	movl a(%rip), %eax
 	imull 50(%rip), %eax
-	movl %eax, tttemporary_9(%rip)
+	movl %eax, tttemporary_15(%rip)
 
 	## TAC_MOVE
-	movl tttemporary_9(%rip), %eax
+	movl tttemporary_15(%rip), %eax
 	movl %eax, i(%rip)
 
 	## TAC_INC
