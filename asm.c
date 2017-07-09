@@ -1,18 +1,20 @@
 #include "asm.h"
 
 // local functions
-void asmPrintFixed(FILE* output);
+void asmPrintFixed(FILE* output, TAC* first);
 void asmPushHash(FILE* output);
+int numConsLabel = 0;
 
 
 // implementation
 
 void asmGen(TAC* first, FILE* output){ //PARA DESCOBRIR OS ASM: gcc -S -O0 tracker.c
 	TAC* tac;
-	asmPrintFixed(output);
+	TAC* tac_print = first;	
 	asmPushHash(output);
+	asmPrintFixed(output, tac_print);
 	int pos = 0;	
-	int numLabel = 0;
+	int numLabel = 0;	
 	for(tac=first; tac; tac = tac->next){	
 		switch(tac->type){
 			case TAC_SYMBOL: break;
@@ -93,7 +95,8 @@ void asmGen(TAC* first, FILE* output){ //PARA DESCOBRIR OS ASM: gcc -S -O0 track
 											"\tmovl %%eax, %s(%%rip)\n",
 								  tac->op1->text,tac->op2->text,tac->res->text); break; 
 			case TAC_BEGIN_FUNC: fprintf(output,	"\n\t## TAC_BEGIN_FUNC\n"
-											"\n.globl %s\n"
+											"\t.text\n"
+											"\t.globl %s\n"
 											"%s:\n"				
 								  			"\t.cfi_startproc\n"
 											"\tpushq	%%rbp\n",
@@ -192,18 +195,31 @@ void asmGen(TAC* first, FILE* output){ //PARA DESCOBRIR OS ASM: gcc -S -O0 track
 										numLabel+1, tac->res->text, numLabel+2); 
 										numLabel = numLabel + 3; 
 										break;
+			case TAC_PRINT: if(tac->res->type == SYMBOL_LIT_STRING){
+								fprintf(output,	"\n\t## TAC_PRINT: STRING\n"
+											"\tmovl $.LC%d, %%edi\n"
+											"\tmovl $0, %%eax\n"
+											"\tcall printf\n",
+								  tac->posParam); 
+							 }else{
+								fprintf(output,	"\n\t## TAC_PRINT: VAR\n"
+											"\tmovl %s(%%rip), %%eax\n"
+											"\tmovl %%eax, %%esi\n"
+											"\tmovl $.LC%d, %%edi\n"
+											"\tmovl $0, %%eax\n"
+											"\tcall printf\n",
+								  tac->res->text, tac->posParam); 
+							 } 							
+							 break;
 			default: break; 
 		}
 	}
 }
 
 void asmPushHash(FILE* output){ //LEMBRAR: Johann permitiu considerar tudo como inteiro
-
-}
-
-void asmPrintFixed(FILE* output){ //TODO: print imutável (section TEXT, .str asciz "%f", section DATA"...
 	HASH_NODE *node;
 	int i;	
+	fprintf(output, "\n.data\n");
 	for(i=0; i<HASH_SIZE; i++){
 		for(node=hash_table[i]; node; node=node->next)
 		{
@@ -213,5 +229,27 @@ void asmPrintFixed(FILE* output){ //TODO: print imutável (section TEXT, .str as
 									node->text); 
 		}
 	}
+}
 
+void asmPrintFixed(FILE* output, TAC* first){ //TODO: print imutável (section TEXT, .str asciz "%f", section DATA"...
+	TAC* tac;
+	for(tac=first; tac; tac = tac->next){	
+		switch(tac->type){
+			case TAC_PRINT:
+				if(tac->res->type == SYMBOL_LIT_STRING){
+					fprintf(output,	".LC%d:\n"
+											"\t.string %s\n",
+									numConsLabel, tac->res->text); 
+					tac->posParam = numConsLabel;
+				}else{
+					fprintf(output,	".LC%d:\n"
+											"\t.string \"%%d\"\n",
+									numConsLabel); 
+					tac->posParam = numConsLabel;
+				}
+				numConsLabel++;
+				break;
+			default: break;
+		}
+	}
 }
