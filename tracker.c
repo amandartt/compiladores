@@ -1,4 +1,5 @@
 int main(){
-	int a = 999;	
-	a = !a;
+	int a = 6;
+	int b = 3;
+	a = a / b;
 }

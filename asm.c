@@ -60,13 +60,18 @@ void asmGen(TAC* first, FILE* output){ //PARA DESCOBRIR OS ASM: gcc -S -O0 track
 								fprintf(output,	"\timull $%s, %%eax\n",  tac->op2->text); 	 								
 							fprintf(output,	"\tmovl %%eax, %s(%%rip)\n",  tac->res->text); 	 									
 							break;
-			// TODO: qdo a divisao é por literal fica uma loucura
-			case TAC_DIV: fprintf(output,	"\n\t## TAC_DIV\n"
-								  			"\tmovl %s(%%rip), %%eax\n"
-											"\tcltd\n"
-											"\tidivl %s(%%rip)\n"
-											"\tmovl %%eax, %s(%%rip)\n",
-								  tac->op1->text,tac->op2->text,tac->res->text); break;
+			// TODO: qdo a divisao é por literal fica uma loucura -> resolvi deixar igual ao TAC_MUL, ver depois se funciona
+			case TAC_DIV: fprintf(output,	"\n\t## TAC_DIV\n");
+						  	if(tac->op1->type == SYMBOL_VAR || tac->op1->type == SYMBOL_VAR_TEMP)
+								fprintf(output,"\tmovl %s(%%rip), %%eax\n", tac->op1->text);
+						  	else
+								fprintf(output,	"\tmovl $%s, %%eax\n",  tac->op1->text);
+							fprintf(output,"\tcltd\n");
+							if(tac->op2->type == SYMBOL_VAR || tac->op1->type == SYMBOL_VAR_TEMP)
+								fprintf(output,"\tidivl %s(%%rip)\n", tac->op2->text);
+							else
+								fprintf(output,"\tidvl $%s\n", tac->op2->text);							
+							fprintf(output,"\tmovl %%eax, %s(%%rip)\n", tac->res->text); break;
 			case TAC_G: fprintf(output,	"\n\t## TAC_G\n");
 					  	if(tac->op1->type == SYMBOL_VAR || tac->op1->type == SYMBOL_VAR_TEMP)
 					  		fprintf(output,	"\tmovl %s(%%rip), %%edx\n",  tac->op1->text); 
