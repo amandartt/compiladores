@@ -9,7 +9,11 @@ long main()
   a = 10+a;
   i = i - a;
 
-	while(a>0){
+	while(a>0 || i>0){
+		a = a + 1;
+	};
+	
+	while(a>0 && i>0){
 		a = a + 1;
 	};
 

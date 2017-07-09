@@ -12,6 +12,7 @@ void asmGen(TAC* first, FILE* output){ //PARA DESCOBRIR OS ASM: gcc -S -O0 track
 	asmPrintFixed(output);
 	asmPushHash(output);
 	int pos = 0;	
+	int numLabel = 0;
 	for(tac=first; tac; tac = tac->next){	
 		switch(tac->type){
 			case TAC_SYMBOL: break;
@@ -151,6 +152,46 @@ void asmGen(TAC* first, FILE* output){ //PARA DESCOBRIR OS ASM: gcc -S -O0 track
 												"\tmovl %%eax, %s(%%rip)\n",
 									  tac->op2->text, tac->op1->text, tac->res->text); 
 								} break;
+			case TAC_OR: fprintf(output,	"\n\t## TAC_OR\n"
+											"\tmovl %s(%%rip), %%eax\n"
+											"\ttestl %%eax, %%eax\n"
+											"\tje .L%d\n"
+											"\tmovl $1, %s(%%rip)\n"	
+											"\tjmp .L%d\n"
+											".L%d:\n"
+											"\tmovl %s(%%rip), %%eax\n"
+											"\ttestl %%eax, %%eax\n"
+											"\tje .L%d\n"
+											"\tmovl $1, %s(%%rip)\n"
+											"\tjmp .L%d\n"
+											".L%d:\n"
+											"\tmovl $0, %s(%%rip)\n"
+											".L%d:\n",
+										tac->op1->text, numLabel, tac->res->text, numLabel+2, 
+										numLabel, tac->op2->text, numLabel+1, tac->res->text, numLabel+2, 
+										numLabel+1, tac->res->text, numLabel+2); 
+										numLabel = numLabel + 3; 
+										break;
+		case TAC_AND: fprintf(output,	"\n\t## TAC_AND\n"
+											"\tmovl %s(%%rip), %%eax\n"
+											"\ttestl %%eax, %%eax\n"
+											"\tjne .L%d\n"
+											"\tmovl $0, %s(%%rip)\n"	
+											"\tjmp .L%d\n"
+											".L%d:\n"
+											"\tmovl %s(%%rip), %%eax\n"
+											"\ttestl %%eax, %%eax\n"
+											"\tje .L%d\n"
+											"\tmovl $1, %s(%%rip)\n"
+											"\tjmp .L%d\n"
+											".L%d:\n"
+											"\tmovl $0, %s(%%rip)\n"
+											".L%d:\n",
+										tac->op1->text, numLabel, tac->res->text, numLabel+2, 
+										numLabel, tac->op2->text, numLabel+1, tac->res->text, numLabel+2, 
+										numLabel+1, tac->res->text, numLabel+2); 
+										numLabel = numLabel + 3; 
+										break;
 			default: break; 
 		}
 	}
