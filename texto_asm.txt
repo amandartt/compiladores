@@ -1,12 +1,16 @@
 a: short 2;
 i: long 0;
 
+long add() return 2;
+
+long sub(long m, long n) {print m "\n"; print n "\n"; return 1;};
+
 long main()
 {	
- 	a = a-1;
+ 	a = sub(a, 10);
 	print a "\n";
 
-	a = a+1;
+	a = add();
 	print a "\n";
 
 	a = a * 2;

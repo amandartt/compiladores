@@ -36,10 +36,14 @@ tttemporary_5:
 	.long 0
 tttemporary_11:
 	.long 0
+m:
+	.long 0
 .LC0:
 	.string "%d"
+n:
+	.long 0
 .LC1:
-	.string "\n"
+	.string "%d"
 .LC2:
 	.string "%d"
 .LC3:
@@ -53,18 +57,30 @@ tttemporary_11:
 .LC7:
 	.string "\n"
 .LC8:
-	.string "dentro while\n"
-.LC9:
-	.string "fora while"
-.LC10:
-	.string "a:"
-.LC11:
 	.string "%d"
-.LC12:
+.LC9:
 	.string "\n"
+.LC10:
+	.string "%d"
+.LC11:
+	.string "\n"
+.LC12:
+	.string "%d"
 .LC13:
-	.string "ok1 a > 11"
+	.string "\n"
 .LC14:
+	.string "dentro while\n"
+.LC15:
+	.string "fora while"
+.LC16:
+	.string "a:"
+.LC17:
+	.string "%d"
+.LC18:
+	.string "\n"
+.LC19:
+	.string "ok1 a > 11"
+.LC20:
 	.string "ok2 a <= 11"
 a:
 	.long 2
@@ -73,15 +89,79 @@ i:
 
 	## TAC_BEGIN_FUNC
 	.text
+	.globl add
+add:
+	.cfi_startproc
+	pushq	%rbp
+
+	## TAC_RETURN
+	movl $2, %eax
+
+	## TAC_END_FUNC
+	popq	%rbp
+	ret
+	.cfi_endproc
+
+	## TAC_BEGIN_FUNC
+	.text
+	.globl sub
+sub:
+	.cfi_startproc
+	pushq	%rbp
+	 movl %ecx, m(%rip)
+	 movl %edx, n(%rip)
+
+	## TAC_PRINT: VAR
+	movl m(%rip), %eax
+	movl %eax, %esi
+	movl $.LC2, %edi
+	movl $0, %eax
+	call printf
+
+	## TAC_PRINT: STRING
+	movl $.LC3, %edi
+	movl $0, %eax
+	call printf
+
+	## TAC_PRINT: VAR
+	movl n(%rip), %eax
+	movl %eax, %esi
+	movl $.LC4, %edi
+	movl $0, %eax
+	call printf
+
+	## TAC_PRINT: STRING
+	movl $.LC5, %edi
+	movl $0, %eax
+	call printf
+
+	## TAC_RETURN
+	movl $1, %eax
+
+	## TAC_END_FUNC
+	popq	%rbp
+	ret
+	.cfi_endproc
+
+	## TAC_BEGIN_FUNC
+	.text
 	.globl main
 main:
 	.cfi_startproc
 	pushq	%rbp
 
-	## TAC_SUB
-	movl a(%rip), %eax
-	subl $1, %eax
+	## TAC_ARG_CALL
+	movl a(%rip), %ecx
+
+	## TAC_ARG_CALL
+	movl $10, %edx
+
+	## TAC_CALL
+	call sub
 	movl %eax, tttemporary_9(%rip)
+
+	## TAC_ARG_CALL
+	movl $sub, %ecx
 
 	## TAC_MOVE
 	movl tttemporary_9(%rip), %eax
@@ -90,19 +170,21 @@ main:
 	## TAC_PRINT: VAR
 	movl a(%rip), %eax
 	movl %eax, %esi
-	movl $.LC0, %edi
+	movl $.LC6, %edi
 	movl $0, %eax
 	call printf
 
 	## TAC_PRINT: STRING
-	movl $.LC1, %edi
+	movl $.LC7, %edi
 	movl $0, %eax
 	call printf
 
-	## TAC_ADD
-	movl a(%rip), %eax
-	addl $1, %eax
+	## TAC_CALL
+	call add
 	movl %eax, tttemporary_10(%rip)
+
+	## TAC_ARG_CALL
+	movl $add, %ecx
 
 	## TAC_MOVE
 	movl tttemporary_10(%rip), %eax
@@ -111,12 +193,12 @@ main:
 	## TAC_PRINT: VAR
 	movl a(%rip), %eax
 	movl %eax, %esi
-	movl $.LC2, %edi
+	movl $.LC8, %edi
 	movl $0, %eax
 	call printf
 
 	## TAC_PRINT: STRING
-	movl $.LC3, %edi
+	movl $.LC9, %edi
 	movl $0, %eax
 	call printf
 
@@ -132,12 +214,12 @@ main:
 	## TAC_PRINT: VAR
 	movl a(%rip), %eax
 	movl %eax, %esi
-	movl $.LC4, %edi
+	movl $.LC10, %edi
 	movl $0, %eax
 	call printf
 
 	## TAC_PRINT: STRING
-	movl $.LC5, %edi
+	movl $.LC11, %edi
 	movl $0, %eax
 	call printf
 
@@ -154,12 +236,12 @@ main:
 	## TAC_PRINT: VAR
 	movl a(%rip), %eax
 	movl %eax, %esi
-	movl $.LC6, %edi
+	movl $.LC12, %edi
 	movl $0, %eax
 	call printf
 
 	## TAC_PRINT: STRING
-	movl $.LC7, %edi
+	movl $.LC13, %edi
 	movl $0, %eax
 	call printf
 
@@ -208,7 +290,7 @@ main:
 	je .ttlabel_5
 
 	## TAC_PRINT: STRING
-	movl $.LC8, %edi
+	movl $.LC14, %edi
 	movl $0, %eax
 	call printf
 
@@ -228,24 +310,24 @@ main:
 .ttlabel_5:
 
 	## TAC_PRINT: STRING
-	movl $.LC9, %edi
+	movl $.LC15, %edi
 	movl $0, %eax
 	call printf
 
 	## TAC_PRINT: STRING
-	movl $.LC10, %edi
+	movl $.LC16, %edi
 	movl $0, %eax
 	call printf
 
 	## TAC_PRINT: VAR
 	movl a(%rip), %eax
 	movl %eax, %esi
-	movl $.LC11, %edi
+	movl $.LC17, %edi
 	movl $0, %eax
 	call printf
 
 	## TAC_PRINT: STRING
-	movl $.LC12, %edi
+	movl $.LC18, %edi
 	movl $0, %eax
 	call printf
 
@@ -267,7 +349,7 @@ main:
 	je .ttlabel_6
 
 	## TAC_PRINT: STRING
-	movl $.LC13, %edi
+	movl $.LC19, %edi
 	movl $0, %eax
 	call printf
 
@@ -278,7 +360,7 @@ main:
 .ttlabel_6:
 
 	## TAC_PRINT: STRING
-	movl $.LC14, %edi
+	movl $.LC20, %edi
 	movl $0, %eax
 	call printf
 

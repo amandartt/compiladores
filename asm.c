@@ -14,7 +14,9 @@ void asmGen(TAC* first, FILE* output){ //PARA DESCOBRIR OS ASM: gcc -S -O0 track
 	asmPushHash(output);
 	asmPrintFixed(output, tac_print);
 	int pos = 0;	
-	int numLabel = 0;	
+	int numLabel = 0;
+	int numParamsCall = 0;	
+	int numParamsReceive = 0;	
 	for(tac=first; tac; tac = tac->next){	
 		switch(tac->type){
 			case TAC_SYMBOL: break;
@@ -160,9 +162,15 @@ void asmGen(TAC* first, FILE* output){ //PARA DESCOBRIR OS ASM: gcc -S -O0 track
 											"\tpopq	%%rbp\n"				
 								  			"\tret\n"
 											"\t.cfi_endproc\n"); break; 
-			case TAC_RETURN: fprintf(output,"\n\t## TAC_RETURN\n"
+			case TAC_RETURN: if(tac->res->type == SYMBOL_VAR || tac->res->type == SYMBOL_VAR_TEMP){ 
+							 fprintf(output,"\n\t## TAC_RETURN\n"
 											"\tmovl %s(%%rip), %%eax\n",
-								  tac->res->text); break; 
+								  tac->res->text); 
+							}else{
+								 fprintf(output,"\n\t## TAC_RETURN\n"
+											"\tmovl $%s, %%eax\n",
+								  tac->res->text); 
+							}break; 
 			case TAC_MOVE: if(tac->op1->type == SYMBOL_VAR || tac->op1->type == SYMBOL_VAR_TEMP){ 
 								fprintf(output,"\n\t## TAC_MOVE\n"
 											"\tmovl %s(%%rip), %%eax\n"
@@ -237,7 +245,7 @@ void asmGen(TAC* first, FILE* output){ //PARA DESCOBRIR OS ASM: gcc -S -O0 track
 										numLabel+1, tac->res->text, numLabel+2); 
 										numLabel = numLabel + 3; 
 										break;
-		case TAC_AND: fprintf(output,	"\n\t## TAC_AND\n"
+			case TAC_AND: fprintf(output,	"\n\t## TAC_AND\n"
 											"\tmovl %s(%%rip), %%eax\n"
 											"\ttestl %%eax, %%eax\n"
 											"\tjne .L%d\n"
@@ -272,7 +280,40 @@ void asmGen(TAC* first, FILE* output){ //PARA DESCOBRIR OS ASM: gcc -S -O0 track
 											"\tcall printf\n",
 								  tac->res->text, tac->posParam); 
 							 } 							
-							 break;
+							 break;			
+			case TAC_CALL:  numParamsCall = 0;
+							fprintf(output,	"\n\t## TAC_CALL\n"
+											"\tcall %s\n"
+											"\tmovl %%eax, %s(%%rip)\n",
+								  tac->op1->text, tac->res->text); 
+			case TAC_ARG_CALL:	numParamsCall++;
+								fprintf(output,	"\n\t## TAC_ARG_CALL\n");
+								if(tac->op1->type == SYMBOL_VAR || tac->op1->type == SYMBOL_VAR_TEMP){
+									fprintf(output,	"\tmovl %s(%%rip), ", tac->op1->text);
+								}else{
+									fprintf(output,	"\tmovl $%s, ", tac->op1->text);
+								}	
+								switch(numParamsCall){
+									case 1: fprintf(output,	"%%ecx\n"); break;
+									case 2: fprintf(output,	"%%edx\n"); break;
+									case 3: fprintf(output,	"%%esi\n"); break;
+									case 4: fprintf(output,	"%%edi\n"); break;
+								}
+								break;
+			case TAC_ARG_RECEIVE:
+								numParamsReceive++;
+								switch(numParamsReceive){
+									case 1: fprintf(output,	"\t movl %%ecx, "); break;
+									case 2: fprintf(output,	"\t movl %%edx, "); break;
+									case 3: fprintf(output,	"\t movl %%esi, "); break;
+									case 4: fprintf(output,	"\t movl %%edi, "); break;
+								}
+								if(tac->res->type == SYMBOL_VAR || tac->res->type == SYMBOL_VAR_TEMP){
+								fprintf(output,	"%s(%%rip)\n", tac->res->text);
+								}else{
+									fprintf(output,	"$%s\n", tac->res->text);
+								}	
+								break;
 			default: break; 
 		}
 	}
@@ -297,6 +338,10 @@ void asmPrintFixed(FILE* output, TAC* first){ //TODO: print imutável (section T
 	TAC* tac;
 	for(tac=first; tac; tac = tac->next){	
 		switch(tac->type){
+			case TAC_ARG_RECEIVE:
+				fprintf(output,	"%s:\n"
+									"\t.long 0\n",
+									tac->res->text);
 			case TAC_PRINT:
 				if(tac->res->type == SYMBOL_LIT_STRING){
 					fprintf(output,	".LC%d:\n"
