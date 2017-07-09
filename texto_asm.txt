@@ -1,24 +1,29 @@
-a: short 0;
+a: short 2;
 i: long 0;
-v: long[2] 1 3;
 
 long main()
-{
-  v#1 = v[2];	
- v#1 = v[1+1];	
-  a = 10+a;
-  i = i - a;
+{	
+ 	a = a-1;
+	print a "\n";
 
-	while(a>0 || i>0){
+	a = a+1;
+	print a "\n";
+
+	a = a * 2;
+
+	print a "\n";
+
+	a = a/2;
+
+	print a "\n";
+ 	a = 0;
+	while(a<2 || a <5){
+		print "dentro while\n";
 		a = a + 1;
 	};
-	
-	while(a>0 && i>0){
-		a = a + 1;
-	};
-
-	for (i = a to 10)
-		i = a * 50;
-
+	print "fora while";
+	print "a:" a "\n";
+	a = 250;
+	when (a>11) then print "ok1 a > 11" else print "ok2 a <= 11";
  return a;
 };
