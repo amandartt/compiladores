@@ -10,15 +10,17 @@ main:
 	.cfi_offset 6, -16
 	movq	%rsp, %rbp
 	.cfi_def_cfa_register 6
-	movss	-12(%rbp), %xmm0
-	divss	-8(%rbp), %xmm0
-	cvttss2si	%xmm0, %eax
+	movl	$999, -4(%rbp)
+	cmpl	$0, -4(%rbp)
+	sete	%al
+	movzbl	%al, %eax
 	movl	%eax, -4(%rbp)
+	movl	$0, %eax
 	popq	%rbp
 	.cfi_def_cfa 7, 8
 	ret
 	.cfi_endproc
 .LFE0:
 	.size	main, .-main
-	.ident	"GCC: (Ubuntu 4.8.4-2ubuntu1~14.04.3) 4.8.4"
+	.ident	"GCC: (Ubuntu 5.4.0-6ubuntu1~16.04.4) 5.4.0 20160609"
 	.section	.note.GNU-stack,"",@progbits

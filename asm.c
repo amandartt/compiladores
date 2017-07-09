@@ -3,7 +3,7 @@
 // local functions
 void asmPrintFixed(FILE* output, TAC* first);
 void asmPushHash(FILE* output);
-int numConsLabel = 0;
+int numConsLabel = 1;
 
 
 // implementation
@@ -265,6 +265,13 @@ void asmGen(TAC* first, FILE* output){ //PARA DESCOBRIR OS ASM: gcc -S -O0 track
 										numLabel+1, tac->res->text, numLabel+2); 
 										numLabel = numLabel + 3; 
 										break;
+			case TAC_NOT: fprintf(output, "\n\t## TAC_NOT\n"
+										  "\tcmpl $0, %s(%%rbp)\n"
+										  "\tsete %%al\n"
+	                                      "\tmovzbl %%al, %%eax\n"
+	                                      "\tmovl %%eax, %s(%%rbp)\n",
+										tac->op1->text, tac->res->text);
+										break;
 			case TAC_PRINT: if(tac->res->type == SYMBOL_LIT_STRING){
 								fprintf(output,	"\n\t## TAC_PRINT: STRING\n"
 											"\tmovl $.LC%d, %%edi\n"
@@ -329,13 +336,15 @@ void asmPushHash(FILE* output){ //LEMBRAR: Johann permitiu considerar tudo como 
 			if(node->type == SYMBOL_VAR_TEMP)
 				 fprintf(output,	"%s:\n"
 											"\t.long 0\n",
-									node->text); 
+									node->text);
 		}
 	}
 }
 
-void asmPrintFixed(FILE* output, TAC* first){ //TODO: print imutável (section TEXT, .str asciz "%f", section DATA"...
+void asmPrintFixed(FILE* output, TAC* first){
 	TAC* tac;
+	fprintf(output,	".LC0:\n"
+					"\t.string \"%%d\"\n"); 	
 	for(tac=first; tac; tac = tac->next){	
 		switch(tac->type){
 			case TAC_ARG_RECEIVE:
@@ -348,13 +357,10 @@ void asmPrintFixed(FILE* output, TAC* first){ //TODO: print imutável (section T
 											"\t.string %s\n",
 									numConsLabel, tac->res->text); 
 					tac->posParam = numConsLabel;
+					numConsLabel++;
 				}else{
-					fprintf(output,	".LC%d:\n"
-											"\t.string \"%%d\"\n",
-									numConsLabel); 
-					tac->posParam = numConsLabel;
+					tac->posParam = 0;
 				}
-				numConsLabel++;
 				break;
 			default: break;
 		}

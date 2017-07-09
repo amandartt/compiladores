@@ -7,6 +7,7 @@ HASH_NODE* makeTemp();
 HASH_NODE* makeLabel();
 void printTacType(int type);
 TAC* makeOpBin(int op, TAC** code);
+TAC* makeNot(TAC** code);
 TAC* makeWhenThen(TAC** code);
 TAC* makeWhenThenElse(TAC** code);
 TAC* makeWhile(TAC** code);
@@ -147,6 +148,7 @@ void printTacType(int type){
 		case TAC_NE: fprintf(stderr, "TAC_NE"); break;
 		case TAC_AND: fprintf(stderr, "TAC_AND"); break;
 		case TAC_OR: fprintf(stderr, "TAC_OR"); break;
+		case TAC_NOT: fprintf(stderr, "TAC_NOT"); break;
 		case TAC_ASSIGN: fprintf(stderr, "TAC_ASSIGN"); break;
 		case TAC_VEC_WRITE: fprintf(stderr, "TAC_VEC_WRITE"); break;
 		case TAC_VEC_READ: fprintf(stderr, "TAC_VEC_READ"); break;
@@ -201,6 +203,7 @@ TAC * tacGenerate(ASTREE *node){
 		case AST_LOGIC_NE: result = makeOpBin(TAC_NE, code); break;	
 		case AST_LOGIC_AND: result = makeOpBin(TAC_AND, code); break;	
 		case AST_LOGIC_OR: result = makeOpBin(TAC_OR, code); break;
+		case AST_LOGIC_NOT: result = makeNot(code); break;
 		case AST_WHEN_THEN: result = makeWhenThen(code); break;
 		case AST_WHEN_THEN_ELSE: result = makeWhenThenElse(code); break;
 		case AST_WHILE: result = makeWhile(code); break;
@@ -230,6 +233,11 @@ TAC* makeOpBin(int op, TAC** code){
 	TAC *newTac = tacCreate(op, makeTemp(), code[0] ? code[0]->res : 0,
 							  code[1] ? code[1]->res : 0, 0);
 	return tacJoin(code[0], tacJoin(code[1], newTac));
+}
+
+TAC* makeNot(TAC** code){
+	TAC *newTac = tacCreate(TAC_NOT,makeTemp(),code[0] ? code[0]->res : 0,0,0);
+	return tacJoin(code[0], newTac);
 }
 
 TAC* makeWhenThen(TAC** code){
