@@ -306,7 +306,7 @@ void asmGen(TAC* first, FILE* output){ //PARA DESCOBRIR OS ASM: gcc -S -O0 track
 									case 1: fprintf(output,	"\t movl %%ecx, "); break;
 									case 2: fprintf(output,	"\t movl %%edx, "); break;
 									case 3: fprintf(output,	"\t movl %%esi, "); break;
-									case 4: fprintf(output,	"\t movl %%edi, "); break;
+									case 4: fprintf(output,	"\t movl %%edi, "); numParamsReceive = 0; break;
 								}
 								if(tac->res->type == SYMBOL_VAR || tac->res->type == SYMBOL_VAR_TEMP){
 								fprintf(output,	"%s(%%rip)\n", tac->res->text);
