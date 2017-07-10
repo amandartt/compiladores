@@ -25,8 +25,14 @@ void asmGen(TAC* first, FILE* output){ //PARA DESCOBRIR OS ASM: gcc -S -O0 track
 			case TAC_VAR: fprintf(output,	"%s:\n"
 											"\t.long %s\n",
 									tac->res->text, tac->op1->text); break;
-			case TAC_VEC: fprintf(output,	"%s:\n",
-									tac->res->text); break;
+			case TAC_VEC:
+					if(tac->next->type ==  TAC_ARRAY_VALUE){
+						fprintf(output,	"%s:\n", tac->res->text); 
+					}else{	
+						pos = atoi(tac->op1->text) * 4; 
+						fprintf(output,	"\n.comm %s, %d\n", tac->res->text, pos); 
+					}
+					break;
 			case TAC_ARRAY_VALUE: fprintf(output,	"\t.long %s\n",
 									tac->res->text); break;
 			case TAC_ADD:	fprintf(output,	"\n\t## TAC_ADD\n");
@@ -210,10 +216,18 @@ void asmGen(TAC* first, FILE* output){ //PARA DESCOBRIR OS ASM: gcc -S -O0 track
 											"\tjmp .%s\n",
 								  tac->res->text); break;
 			case TAC_VEC_WRITE: pos = atoi(tac->op1->text) * 4; 
-								fprintf(output,	"\n\t## TAC_VEC_WRITE\n"
-											"\tmovl %s(%%rip), %%eax\n"
-											"\tmovl %%eax, %s+%d(%%rip)\n",
-								  tac->op2->text, tac->res->text, pos); break;
+								if(tac->op2->type == SYMBOL_VAR || tac->op2->type == SYMBOL_VAR_TEMP){
+									fprintf(output,	"\n\t## TAC_VEC_WRITE\n"
+												"\tmovl %s(%%rip), %%eax\n"
+												"\tmovl %%eax, %s+%d(%%rip)\n",
+									  tac->op2->text, tac->res->text, pos); 
+								}else{
+									fprintf(output,	"\n\t## TAC_VEC_WRITE\n"
+												"\tmovl $%s, %%eax\n"
+												"\tmovl %%eax, %s+%d(%%rip)\n",
+									  tac->op2->text, tac->res->text, pos); 
+								}
+								break;
 			case TAC_VEC_READ:  pos = atoi(tac->op2->text);
 								// caso em que a chave é um int
 								if(pos){

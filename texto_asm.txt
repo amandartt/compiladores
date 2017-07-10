@@ -1,6 +1,7 @@
 a: short 2;
 i: long 0;
 b: long 0;
+v: float[3];
 
 long add() return 2;
 
@@ -8,6 +9,9 @@ long sub(long m, long n) {print m "\n"; print n "\n"; return 1;};
 
 long main()
 {	
+	v#2 = 3;
+	a = v[2];
+	print a "\n";
 	print "insira o valor de b: ";
 	read b;
 	print "o valor de b eh: " b "\n";
