@@ -4,6 +4,7 @@
 void asmPrintFixed(FILE* output, TAC* first);
 void asmPushHash(FILE* output);
 int numConsLabel = 1;
+int numLit = 0;
 
 
 // implementation
@@ -60,17 +61,16 @@ void asmGen(TAC* first, FILE* output){ //PARA DESCOBRIR OS ASM: gcc -S -O0 track
 								fprintf(output,	"\timull $%s, %%eax\n",  tac->op2->text); 	 								
 							fprintf(output,	"\tmovl %%eax, %s(%%rip)\n",  tac->res->text); 	 									
 							break;
-			// TODO: qdo a divisao é por literal fica uma loucura -> resolvi deixar igual ao TAC_MUL, ver depois se funciona
 			case TAC_DIV: fprintf(output,	"\n\t## TAC_DIV\n");
 						  	if(tac->op1->type == SYMBOL_VAR || tac->op1->type == SYMBOL_VAR_TEMP)
 								fprintf(output,"\tmovl %s(%%rip), %%eax\n", tac->op1->text);
 						  	else
-								//fprintf(output,	"\tmovl $%s, %%eax\n",  tac->op1->text);
+								fprintf(output,	"\tmovl $%s, %%eax\n",  tac->op1->text);
 							fprintf(output,"\tcltd\n");
-							if(tac->op2->type == SYMBOL_VAR || tac->op1->type == SYMBOL_VAR_TEMP)
+							if(tac->op1->type == SYMBOL_VAR || tac->op1->type == SYMBOL_VAR_TEMP)
 								fprintf(output,"\tidivl %s(%%rip)\n", tac->op2->text);
 							else
-								//fprintf(output,"\tidvl $%s\n", tac->op2->text);							
+								fprintf(output,"\tidivl lit%d(%%rip)\n", tac->posParam);				
 							fprintf(output,"\tmovl %%eax, %s(%%rip)\n", tac->res->text); break;
 			case TAC_G: fprintf(output,	"\n\t## TAC_G\n");
 					  	if(tac->op1->type == SYMBOL_VAR || tac->op1->type == SYMBOL_VAR_TEMP)
@@ -352,6 +352,13 @@ void asmPrintFixed(FILE* output, TAC* first){
 					"\t.string \"%%d\"\n"); 	
 	for(tac=first; tac; tac = tac->next){	
 		switch(tac->type){
+			case TAC_DIV:
+				if(tac->op2->type != SYMBOL_VAR && tac->op1->type != SYMBOL_VAR_TEMP){
+					fprintf(output,	"lit%d:\n"
+										"\t.long %s \n", numLit, tac->op2->text); 
+					tac->posParam = numLit;	
+				}
+				break;
 			case TAC_ARG_RECEIVE:
 				fprintf(output,	"%s:\n"
 									"\t.long 0\n",
