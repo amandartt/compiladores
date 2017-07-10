@@ -29,7 +29,7 @@ long main()
 	print "a:" a "\n";
 	a = 250;
 	when (a>11) then print "ok1 a > 11" else print "ok2 a <= 11";*/
-	when (!(a == a)) then {a = a/2;} else {a = 4/2;};
+	when (!(a == a)) then {a = 2;} else {a = 4;};
 	print a;
  return a;
 };

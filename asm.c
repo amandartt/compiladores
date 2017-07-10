@@ -65,12 +65,12 @@ void asmGen(TAC* first, FILE* output){ //PARA DESCOBRIR OS ASM: gcc -S -O0 track
 						  	if(tac->op1->type == SYMBOL_VAR || tac->op1->type == SYMBOL_VAR_TEMP)
 								fprintf(output,"\tmovl %s(%%rip), %%eax\n", tac->op1->text);
 						  	else
-								fprintf(output,	"\tmovl $%s, %%eax\n",  tac->op1->text);
+								//fprintf(output,	"\tmovl $%s, %%eax\n",  tac->op1->text);
 							fprintf(output,"\tcltd\n");
 							if(tac->op2->type == SYMBOL_VAR || tac->op1->type == SYMBOL_VAR_TEMP)
 								fprintf(output,"\tidivl %s(%%rip)\n", tac->op2->text);
 							else
-								fprintf(output,"\tidvl $%s\n", tac->op2->text);							
+								//fprintf(output,"\tidvl $%s\n", tac->op2->text);							
 							fprintf(output,"\tmovl %%eax, %s(%%rip)\n", tac->res->text); break;
 			case TAC_G: fprintf(output,	"\n\t## TAC_G\n");
 					  	if(tac->op1->type == SYMBOL_VAR || tac->op1->type == SYMBOL_VAR_TEMP)
@@ -271,10 +271,10 @@ void asmGen(TAC* first, FILE* output){ //PARA DESCOBRIR OS ASM: gcc -S -O0 track
 										numLabel = numLabel + 3; 
 										break;
 			case TAC_NOT: fprintf(output, "\n\t## TAC_NOT\n"
-										  "\tcmpl $0, %s(%%rbp)\n"
+										  "\tcmpl $0, %s(%%rip)\n"
 										  "\tsete %%al\n"
 	                                      "\tmovzbl %%al, %%eax\n"
-	                                      "\tmovl %%eax, %s(%%rbp)\n",
+	                                      "\tmovl %%eax, %s(%%rip)\n",
 										tac->op1->text, tac->res->text);
 										break;
 			case TAC_PRINT: if(tac->res->type == SYMBOL_LIT_STRING){

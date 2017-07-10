@@ -1,20 +1,12 @@
 
 .data
-tttemporary_7:
-	.long 0
 tttemporary_0:
 	.long 0
 tttemporary_2:
 	.long 0
-tttemporary_4:
-	.long 0
-tttemporary_6:
-	.long 0
 tttemporary_1:
 	.long 0
 tttemporary_3:
-	.long 0
-tttemporary_5:
 	.long 0
 .LC0:
 	.string "%d"
@@ -100,27 +92,21 @@ main:
 	cmpl %eax, %edx
 	sete %al
 	movzbl %al, %eax
-	movl %eax, tttemporary_4(%rip)
+	movl %eax, tttemporary_2(%rip)
 
 	## TAC_NOT
-	cmpl $0, tttemporary_4(%rbp)
+	cmpl $0, tttemporary_2(%rip)
 	sete %al
 	movzbl %al, %eax
-	movl %eax, tttemporary_5(%rbp)
+	movl %eax, tttemporary_3(%rip)
 
 	## TAC_IFZ
-	movl tttemporary_5(%rip), %eax
+	movl tttemporary_3(%rip), %eax
 	testl %eax, %eax
 	je .ttlabel_2
 
-	## TAC_DIV
-	movl a(%rip), %eax
-	cltd
-	idvl $2
-	movl %eax, tttemporary_6(%rip)
-
 	## TAC_MOVE
-	movl tttemporary_6(%rip), %eax
+	movl $2, %eax
 	movl %eax, a(%rip)
 
 	## TAC_JUMP
@@ -129,14 +115,8 @@ main:
 	## TAC_LABEL
 .ttlabel_2:
 
-	## TAC_DIV
-	movl $4, %eax
-	cltd
-	idvl $2
-	movl %eax, tttemporary_7(%rip)
-
 	## TAC_MOVE
-	movl tttemporary_7(%rip), %eax
+	movl $4, %eax
 	movl %eax, a(%rip)
 
 	## TAC_LABEL
