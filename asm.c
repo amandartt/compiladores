@@ -22,9 +22,7 @@ void asmGen(TAC* first, FILE* output){ //PARA DESCOBRIR OS ASM: gcc -S -O0 track
 		//printTacType(tac->type);printf("\n");
 		switch(tac->type){
 			case TAC_SYMBOL: break;
-			case TAC_VAR: fprintf(output,	"%s:\n"
-											"\t.long %s\n",
-									tac->res->text, tac->op1->text); break;
+			case TAC_VAR: break;
 			case TAC_VEC:
 					if(tac->next->type ==  TAC_ARRAY_VALUE){
 						fprintf(output,	"%s:\n", tac->res->text); 
@@ -328,25 +326,32 @@ void asmGen(TAC* first, FILE* output){ //PARA DESCOBRIR OS ASM: gcc -S -O0 track
 									fprintf(output,	"\tmovl $%s, ", tac->op1->text);
 								}	
 								switch(numParamsCall){
-									case 1: fprintf(output,	"%%ecx\n"); break;
-									case 2: fprintf(output,	"%%edx\n"); break;
-									case 3: fprintf(output,	"%%esi\n"); break;
-									case 4: fprintf(output,	"%%edi\n"); break;
+									case 1: fprintf(output,	"%%edi\n"); break;
+									case 2: fprintf(output,	"%%esi\n"); break;
+									case 3: fprintf(output,	"%%edx\n"); break;
+									case 4: fprintf(output,	"%%ecx\n"); break;
+									case 5: fprintf(output, "%%r8d\n"); break;
+									case 6: fprintf(output,	"%%r9d\n"); break;
+									default: fprintf(stderr,"Erro compilacao: Numero maximo de parametros suportado excedido\n");  exit(5);
 								}
 								break;
 			case TAC_ARG_RECEIVE:
 								numParamsReceive++;
 								switch(numParamsReceive){
-									case 1: fprintf(output,	"\t movl %%ecx, "); break;
-									case 2: fprintf(output,	"\t movl %%edx, "); break;
-									case 3: fprintf(output,	"\t movl %%esi, "); break;
-									case 4: fprintf(output,	"\t movl %%edi, "); numParamsReceive = 0; break;
+									case 1: fprintf(output,	"\t movl %%edi, "); break;
+									case 2: fprintf(output,	"\t movl %%esi, "); break;
+									case 3: fprintf(output,	"\t movl %%edx, "); break;
+									case 4: fprintf(output,	"\t movl %%ecx, "); break;
+									case 5: fprintf(output,	"\t movl %%r8d, "); break;
+									case 6: fprintf(output,	"\t movl %%r9d, "); break;
+									default: fprintf(stderr,"Erro compilacao: Numero maximo de parametros suportado excedido\n"); exit(5);
 								}
 								if(tac->res->type == SYMBOL_VAR || tac->res->type == SYMBOL_VAR_TEMP){
 								fprintf(output,	"%s(%%rip)\n", tac->res->text);
 								}else{
 									fprintf(output,	"$%s\n", tac->res->text);
-								}	
+								}
+								if(tac->next->next->type != TAC_ARG_RECEIVE) numParamsReceive = 0;
 								break;
 			default: break; 
 		}
@@ -388,7 +393,7 @@ void asmPrintFixed(FILE* output, TAC* first){
 			case TAC_ARG_RECEIVE:
 				fprintf(output,	"%s:\n"
 									"\t.long 0\n",
-									tac->res->text);
+									tac->res->text); break;
 			case TAC_PRINT:
 				if(tac->res->type == SYMBOL_LIT_STRING){
 					fprintf(output,	".LC%d:\n"
@@ -400,6 +405,10 @@ void asmPrintFixed(FILE* output, TAC* first){
 					tac->posParam = 0;
 				}
 				break;
+			case TAC_VAR:
+				fprintf(output,	"%s:\n"
+								"\t.long %s\n",
+						tac->res->text, tac->op1->text); break;
 			default: break;
 		}
 	}

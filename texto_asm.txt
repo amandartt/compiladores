@@ -7,8 +7,15 @@ long add() return 2;
 
 long sub(long m, long n) {print m "\n"; print n "\n"; return 1;};
 
+long parametros(long par1, long par2, long par3, long par4, long par5, long par6){
+	print par1 " " par2 " " par3 " " par4 " " par5 " " par6 "\n";
+};
+
+j: long 0;
+
 long main()
 {	
+	j = parametros(1, 2, 3, 4, 5, 6);
 	v#2 = 3;
 	a = v[2];
 	print a "\n";
@@ -36,6 +43,9 @@ long main()
 	};
 	print "fora while\n";
 	print "a: " a "\n";
+	for(a = 1 to 10){
+		print "dentro for a=" a "\n";
+	};
 	a = 250;
 	when (a>11) then print "ok1 a > 11\n" else print "ok2 a <= 11\n";
 	when (!!(a == a)) then {a = a/a;} else {a = 8/4;};
