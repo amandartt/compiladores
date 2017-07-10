@@ -71,7 +71,7 @@ void asmGen(TAC* first, FILE* output){ //PARA DESCOBRIR OS ASM: gcc -S -O0 track
 							if(tac->op1->type == SYMBOL_VAR || tac->op1->type == SYMBOL_VAR_TEMP)
 								fprintf(output,"\tidivl %s(%%rip)\n", tac->op2->text);
 							else
-								fprintf(output,"\tidivl lit%d(%%rip)\n", tac->posParam);				
+								fprintf(output,"\tidivl lit%s(%%rip)\n", tac->op2->text);				
 							fprintf(output,"\tmovl %%eax, %s(%%rip)\n", tac->res->text); break;
 			case TAC_G: fprintf(output,	"\n\t## TAC_G\n");
 					  	if(tac->op1->type == SYMBOL_VAR || tac->op1->type == SYMBOL_VAR_TEMP)
