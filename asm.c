@@ -1,6 +1,9 @@
+// Amanda Torbes e Gabriel Moita
+// Compiladores - INF-UFRGS - 2017/1
+
 #include "asm.h"
 
-// local functions
+// local functions and variables
 void asmPrintFixed(FILE* output, TAC* first);
 void asmPushHash(FILE* output);
 int numConsLabel = 1;
@@ -19,7 +22,7 @@ void asmGen(TAC* first, FILE* output){ //PARA DESCOBRIR OS ASM: gcc -S -O0 track
 	int numParamsCall = 0;	
 	int numParamsReceive = 0;	
 	for(tac=first; tac; tac = tac->next){	
-		//printTacType(tac->type);printf("\n");
+		//printTacType(tac->type);printf("\n"); //debug
 		switch(tac->type){
 			case TAC_SYMBOL: break;
 			case TAC_VAR: break;
@@ -389,8 +392,6 @@ void asmPrintFixed(FILE* output, TAC* first){
 		switch(tac->type){
 			case TAC_DIV:
 				if(tac->op2->type != SYMBOL_VAR && tac->op1->type != SYMBOL_VAR_TEMP){
-					//fprintf(output,	"lit%d:\n"
-					//					"\t.long %s \n", numLit, tac->op2->text); 
 					tac->posParam = numLit;	
 				}
 				break;

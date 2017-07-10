@@ -1,5 +1,6 @@
 %{
 	// Amanda Torbes e Gabriel Moita
+	// Compiladores - INF-UFRGS - 2017/1
 
 	#include <stdio.h>
 	#include <string.h>

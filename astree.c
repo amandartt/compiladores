@@ -1,3 +1,6 @@
+// Amanda Torbes e Gabriel Moita
+// Compiladores - INF-UFRGS - 2017/1
+
 #include "astree.h"	
 #include <stdio.h>
 #include <stdlib.h>

@@ -1,3 +1,6 @@
+// Amanda Torbes e Gabriel Moita
+// Compiladores - INF-UFRGS - 2017/1
+
 #include "semantics.h"
 
 
@@ -10,7 +13,6 @@ int semanticFullCheck(ASTREE *node){
 }
 
 
-// completo(?) i guess so
 void setSymbolAndDataType(ASTREE *node, int type){
 
 	if (type == AST_DEC_FUNC){
@@ -23,12 +25,6 @@ void setSymbolAndDataType(ASTREE *node, int type){
 		printSemanticError("variavel declarada mais de uma vez", node->symbol->text, node->lineNumber);
 		return;
 	}
-	
-/*	if(node->symbol)
-		printf("node %s type %d\n",node->symbol->text,type);
-	else
-		printf("node %s type %d\n",node->son[0]->symbol->text,type);
-*/
 	switch(type){
 		case AST_PARAM:	
 			node->symbol->type = SYMBOL_VAR;
@@ -164,7 +160,6 @@ int testID(HASH_NODE* id,ASTREE* node){
 }
 
 
-//TODO : verificar print
 void checkAstNodeDataType(ASTREE *node){
 	if(node == NULL){
 		return;
@@ -187,8 +182,7 @@ void checkAstNodeDataType(ASTREE *node){
 			}
 			node->dataType = node->symbol->dataType;
 			break;
-		case AST_FUNC_CALL:  // not sure if node->symbol->dataType ou node->symbol->type
-			// talvez uma condicao a mais se for literal
+		case AST_FUNC_CALL:
 			verifyParams(node);
 			node->dataType = node->symbol->dataType;
 			break;
@@ -339,7 +333,6 @@ void checkAstNodeDataType(ASTREE *node){
 	//printf("type: %d datatype: %d \n", node->type, node->dataType);
 }
 int aritmeticInference(ASTREE *node){
-	// eh soh isso ?? 
 	return typeInference(node->son[0]->dataType, node->son[1]->dataType);
 
 }
