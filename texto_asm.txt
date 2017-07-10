@@ -1,5 +1,6 @@
 a: short 2;
 i: long 0;
+b: long 0;
 
 long add() return 2;
 
@@ -7,7 +8,11 @@ long sub(long m, long n) {print m "\n"; print n "\n"; return 1;};
 
 long main()
 {	
- 	/*a = sub(a, 10);
+	print "insira o valor de b: ";
+	read b;
+	print "o valor de b eh: " b "\n";
+	a = 2;
+ 	a = sub(a, 10);
 	print a "\n";
 
 	a = add();
@@ -25,11 +30,11 @@ long main()
 		print "dentro while\n";
 		a = a + 1;
 	};
-	print "fora while";
-	print "a:" a "\n";
+	print "fora while\n";
+	print "a: " a "\n";
 	a = 250;
-	when (a>11) then print "ok1 a > 11" else print "ok2 a <= 11";*/
-	when (!(a == a)) then {a = a/a;} else {a = 8/4;};
-	print a;
+	when (a>11) then print "ok1 a > 11\n" else print "ok2 a <= 11\n";
+	when (!!(a == a)) then {a = a/a;} else {a = 8/4;};
+	print a "\n";
  return a;
 };

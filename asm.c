@@ -19,6 +19,7 @@ void asmGen(TAC* first, FILE* output){ //PARA DESCOBRIR OS ASM: gcc -S -O0 track
 	int numParamsCall = 0;	
 	int numParamsReceive = 0;	
 	for(tac=first; tac; tac = tac->next){	
+		printTacType(tac->type);printf("\n");
 		switch(tac->type){
 			case TAC_SYMBOL: break;
 			case TAC_VAR: fprintf(output,	"%s:\n"
@@ -292,7 +293,14 @@ void asmGen(TAC* first, FILE* output){ //PARA DESCOBRIR OS ASM: gcc -S -O0 track
 											"\tcall printf\n",
 								  tac->res->text, tac->posParam); 
 							 } 							
-							 break;			
+							 break;
+			case TAC_READ: fprintf(output, "\n\t## TAC_READ\n"
+											"\tmovl $%s, %%esi\n"
+											"\tmovl	$.LC0, %%edi\n"
+											"\tmovl	$0, %%eax\n"
+											"\tcall	__isoc99_scanf\n"
+											"\tmovl	$0, %%eax\n",
+											tac->res->text);
 			case TAC_CALL:  numParamsCall = 0;
 							fprintf(output,	"\n\t## TAC_CALL\n"
 											"\tcall %s\n"
@@ -342,6 +350,10 @@ void asmPushHash(FILE* output){ //LEMBRAR: Johann permitiu considerar tudo como 
 				 fprintf(output,	"%s:\n"
 											"\t.long 0\n",
 									node->text);
+			else if(node->type == SYMBOL_LIT_INT || node->type == SYMBOL_LIT_REAL || node->type == SYMBOL_LIT_SHORT || 
+					node->type == SYMBOL_LIT_LONG ||node->type == SYMBOL_LIT_BYTE || node->type == SYMBOL_LIT_CHAR )
+				fprintf(output, "lit%s:\n"
+										"\t.long %s \n", node->text, node->text);
 		}
 	}
 }
@@ -354,8 +366,8 @@ void asmPrintFixed(FILE* output, TAC* first){
 		switch(tac->type){
 			case TAC_DIV:
 				if(tac->op2->type != SYMBOL_VAR && tac->op1->type != SYMBOL_VAR_TEMP){
-					fprintf(output,	"lit%d:\n"
-										"\t.long %s \n", numLit, tac->op2->text); 
+					//fprintf(output,	"lit%d:\n"
+					//					"\t.long %s \n", numLit, tac->op2->text); 
 					tac->posParam = numLit;	
 				}
 				break;
