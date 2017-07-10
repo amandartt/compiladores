@@ -19,7 +19,7 @@ void asmGen(TAC* first, FILE* output){ //PARA DESCOBRIR OS ASM: gcc -S -O0 track
 	int numParamsCall = 0;	
 	int numParamsReceive = 0;	
 	for(tac=first; tac; tac = tac->next){	
-		printTacType(tac->type);printf("\n");
+		//printTacType(tac->type);printf("\n");
 		switch(tac->type){
 			case TAC_SYMBOL: break;
 			case TAC_VAR: fprintf(output,	"%s:\n"
@@ -300,7 +300,7 @@ void asmGen(TAC* first, FILE* output){ //PARA DESCOBRIR OS ASM: gcc -S -O0 track
 											"\tmovl	$0, %%eax\n"
 											"\tcall	__isoc99_scanf\n"
 											"\tmovl	$0, %%eax\n",
-											tac->res->text);
+											tac->res->text);break;
 			case TAC_CALL:  numParamsCall = 0;
 							fprintf(output,	"\n\t## TAC_CALL\n"
 											"\tcall %s\n"
