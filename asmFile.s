@@ -594,8 +594,8 @@ main:
 
 	## TAC_IFLESSEQ
 	movl a(%rip), %eax
-	cmpl 10(%rip), %eax
-	jg .ttlabel_11
+	cmpl $10, %eax
+	jnbe .ttlabel_11
 
 	## TAC_PRINT: STRING
 	movl $.LC21, %edi

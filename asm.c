@@ -197,11 +197,14 @@ void asmGen(TAC* first, FILE* output){ //PARA DESCOBRIR OS ASM: gcc -S -O0 track
 											"\ttestl %%eax, %%eax\n"
 											"\tje .%s\n",
 								  tac->op1->text, tac->res->text); break;
-			case TAC_IFLESSEQ: fprintf(output,	"\n\t## TAC_IFLESSEQ\n"
-											"\tmovl %s(%%rip), %%eax\n"
-											"\tcmpl %s(%%rip), %%eax\n"
-											"\tjg .%s\n",
-								  tac->op1->text, tac->op2->text, tac->res->text); break;
+			case TAC_IFLESSEQ: 	fprintf(output,	"\n\t## TAC_IFLESSEQ\n"
+											"\tmovl %s(%%rip), %%eax\n",
+											tac->op1->text);
+							   	if (tac->op2->type == SYMBOL_VAR || tac->op2->type == SYMBOL_VAR_TEMP)
+									fprintf(output, "\tcmpl %s(%%rip), %%eax\n", tac->op2->text);
+								else
+									fprintf(output, "\tcmpl $%s, %%eax\n", tac->op2->text);
+								fprintf(output,"\tjnbe .%s\n",tac->res->text); break;
 			case TAC_INC: fprintf(output,	"\n\t## TAC_INC\n"
 											"\tmovl %s(%%rip), %%eax\n"
 											"\taddl $1, %%eax\n"
