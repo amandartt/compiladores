@@ -340,13 +340,14 @@ void asmGen(TAC* first, FILE* output){ //PARA DESCOBRIR OS ASM: gcc -S -O0 track
 								break;
 			case TAC_ARG_RECEIVE:
 								numParamsReceive++;
+								fprintf(output,	"\n\t## TAC_ARG_RECEIVE\n");
 								switch(numParamsReceive){
-									case 1: fprintf(output,	"\t movl %%edi, "); break;
-									case 2: fprintf(output,	"\t movl %%esi, "); break;
-									case 3: fprintf(output,	"\t movl %%edx, "); break;
-									case 4: fprintf(output,	"\t movl %%ecx, "); break;
-									case 5: fprintf(output,	"\t movl %%r8d, "); break;
-									case 6: fprintf(output,	"\t movl %%r9d, "); break;
+									case 1: fprintf(output,	"\tmovl %%edi, "); break;
+									case 2: fprintf(output,	"\tmovl %%esi, "); break;
+									case 3: fprintf(output,	"\tmovl %%edx, "); break;
+									case 4: fprintf(output,	"\tmovl %%ecx, "); break;
+									case 5: fprintf(output,	"\tmovl %%r8d, "); break;
+									case 6: fprintf(output,	"\tmovl %%r9d, "); break;
 									default: fprintf(stderr,"Erro compilacao: Numero maximo de parametros suportado excedido\n"); exit(5);
 								}
 								if(tac->res->type == SYMBOL_VAR || tac->res->type == SYMBOL_VAR_TEMP){

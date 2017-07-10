@@ -186,8 +186,12 @@ add:
 sub:
 	.cfi_startproc
 	pushq	%rbp
-	 movl %edi, m(%rip)
-	 movl %esi, n(%rip)
+
+	## TAC_ARG_RECEIVE
+	movl %edi, m(%rip)
+
+	## TAC_ARG_RECEIVE
+	movl %esi, n(%rip)
 
 	## TAC_PRINT: VAR
 	movl m(%rip), %eax
@@ -227,12 +231,24 @@ sub:
 parametros:
 	.cfi_startproc
 	pushq	%rbp
-	 movl %edi, par1(%rip)
-	 movl %esi, par2(%rip)
-	 movl %edx, par3(%rip)
-	 movl %ecx, par4(%rip)
-	 movl %r8d, par5(%rip)
-	 movl %r9d, par6(%rip)
+
+	## TAC_ARG_RECEIVE
+	movl %edi, par1(%rip)
+
+	## TAC_ARG_RECEIVE
+	movl %esi, par2(%rip)
+
+	## TAC_ARG_RECEIVE
+	movl %edx, par3(%rip)
+
+	## TAC_ARG_RECEIVE
+	movl %ecx, par4(%rip)
+
+	## TAC_ARG_RECEIVE
+	movl %r8d, par5(%rip)
+
+	## TAC_ARG_RECEIVE
+	movl %r9d, par6(%rip)
 
 	## TAC_PRINT: VAR
 	movl par1(%rip), %eax
