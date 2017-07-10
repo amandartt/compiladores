@@ -14,14 +14,10 @@ lit4:
 	.long 4 
 lit5:
 	.long 5 
-tttemporary_26:
-	.long 0
 lit6:
 	.long 6 
 lit8:
 	.long 8 
-tttemporary_18:
-	.long 0
 tttemporary_9:
 	.long 0
 tttemporary_14:
@@ -32,35 +28,15 @@ tttemporary_10:
 	.long 0
 lit250:
 	.long 250 
-tttemporary_23:
-	.long 0
 tttemporary_2:
 	.long 0
-tttemporary_17:
-	.long 0
-tttemporary_27:
-	.long 0
 tttemporary_4:
-	.long 0
-tttemporary_20:
-	.long 0
-tttemporary_31:
 	.long 0
 tttemporary_13:
 	.long 0
 tttemporary_6:
 	.long 0
-tttemporary_24:
-	.long 0
 tttemporary_8:
-	.long 0
-tttemporary_30:
-	.long 0
-tttemporary_16:
-	.long 0
-tttemporary_28:
-	.long 0
-tttemporary_21:
 	.long 0
 tttemporary_12:
 	.long 0
@@ -70,21 +46,13 @@ lit11:
 	.long 11 
 tttemporary_1:
 	.long 0
-tttemporary_25:
-	.long 0
-tttemporary_19:
-	.long 0
 tttemporary_3:
 	.long 0
 tttemporary_15:
 	.long 0
-tttemporary_29:
-	.long 0
 tttemporary_5:
 	.long 0
 tttemporary_11:
-	.long 0
-tttemporary_22:
 	.long 0
 .LC0:
 	.string "%d"
@@ -354,13 +322,13 @@ main:
 
 	## TAC_CALL
 	call parametros
-	movl %eax, tttemporary_16(%rip)
+	movl %eax, tttemporary_0(%rip)
 
 	## TAC_ARG_CALL
 	movl $parametros, %edi
 
 	## TAC_MOVE
-	movl tttemporary_16(%rip), %eax
+	movl tttemporary_0(%rip), %eax
 	movl %eax, j(%rip)
 
 	## TAC_VEC_WRITE
@@ -369,10 +337,10 @@ main:
 
 	## TAC_VEC_READ
 	movl v+8(%rip), %eax
-	movl %eax, tttemporary_17(%rip)
+	movl %eax, tttemporary_1(%rip)
 
 	## TAC_MOVE
-	movl tttemporary_17(%rip), %eax
+	movl tttemporary_1(%rip), %eax
 	movl %eax, a(%rip)
 
 	## TAC_PRINT: VAR
@@ -428,13 +396,13 @@ main:
 
 	## TAC_CALL
 	call sub
-	movl %eax, tttemporary_18(%rip)
+	movl %eax, tttemporary_2(%rip)
 
 	## TAC_ARG_CALL
 	movl $sub, %edi
 
 	## TAC_MOVE
-	movl tttemporary_18(%rip), %eax
+	movl tttemporary_2(%rip), %eax
 	movl %eax, a(%rip)
 
 	## TAC_PRINT: VAR
@@ -451,13 +419,13 @@ main:
 
 	## TAC_CALL
 	call add
-	movl %eax, tttemporary_19(%rip)
+	movl %eax, tttemporary_3(%rip)
 
 	## TAC_ARG_CALL
 	movl $add, %edi
 
 	## TAC_MOVE
-	movl tttemporary_19(%rip), %eax
+	movl tttemporary_3(%rip), %eax
 	movl %eax, a(%rip)
 
 	## TAC_PRINT: VAR
@@ -475,10 +443,10 @@ main:
 	## TAC_MUL
 	movl a(%rip), %eax
 	imull $2, %eax
-	movl %eax, tttemporary_20(%rip)
+	movl %eax, tttemporary_4(%rip)
 
 	## TAC_MOVE
-	movl tttemporary_20(%rip), %eax
+	movl tttemporary_4(%rip), %eax
 	movl %eax, a(%rip)
 
 	## TAC_PRINT: VAR
@@ -497,10 +465,10 @@ main:
 	movl a(%rip), %eax
 	cltd
 	idivl 2(%rip)
-	movl %eax, tttemporary_21(%rip)
+	movl %eax, tttemporary_5(%rip)
 
 	## TAC_MOVE
-	movl tttemporary_21(%rip), %eax
+	movl tttemporary_5(%rip), %eax
 	movl %eax, a(%rip)
 
 	## TAC_PRINT: VAR
@@ -520,7 +488,7 @@ main:
 	movl %eax, a(%rip)
 
 	## TAC_LABEL
-.ttlabel_8:
+.ttlabel_0:
 
 	## TAC_L
 	movl a(%rip), %edx
@@ -528,7 +496,7 @@ main:
 	cmpl %eax, %edx
 	setl %al
 	movzbl %al, %eax
-	movl %eax, tttemporary_22(%rip)
+	movl %eax, tttemporary_6(%rip)
 
 	## TAC_L
 	movl a(%rip), %edx
@@ -536,28 +504,28 @@ main:
 	cmpl %eax, %edx
 	setl %al
 	movzbl %al, %eax
-	movl %eax, tttemporary_23(%rip)
+	movl %eax, tttemporary_7(%rip)
 
 	## TAC_OR
-	movl tttemporary_22(%rip), %eax
+	movl tttemporary_6(%rip), %eax
 	testl %eax, %eax
 	je .L0
-	movl $1, tttemporary_24(%rip)
+	movl $1, tttemporary_8(%rip)
 	jmp .L2
 .L0:
-	movl tttemporary_23(%rip), %eax
+	movl tttemporary_7(%rip), %eax
 	testl %eax, %eax
 	je .L1
-	movl $1, tttemporary_24(%rip)
+	movl $1, tttemporary_8(%rip)
 	jmp .L2
 .L1:
-	movl $0, tttemporary_24(%rip)
+	movl $0, tttemporary_8(%rip)
 .L2:
 
 	## TAC_IFZ
-	movl tttemporary_24(%rip), %eax
+	movl tttemporary_8(%rip), %eax
 	testl %eax, %eax
-	je .ttlabel_9
+	je .ttlabel_1
 
 	## TAC_PRINT: STRING
 	movl $.LC17, %edi
@@ -567,17 +535,17 @@ main:
 	## TAC_ADD
 	movl a(%rip), %eax
 	addl $1, %eax
-	movl %eax, tttemporary_25(%rip)
+	movl %eax, tttemporary_9(%rip)
 
 	## TAC_MOVE
-	movl tttemporary_25(%rip), %eax
+	movl tttemporary_9(%rip), %eax
 	movl %eax, a(%rip)
 
 	## TAC_JUMP
-	jmp .ttlabel_8
+	jmp .ttlabel_0
 
 	## TAC_LABEL
-.ttlabel_9:
+.ttlabel_1:
 
 	## TAC_PRINT: STRING
 	movl $.LC18, %edi
@@ -606,12 +574,12 @@ main:
 	movl %eax, a(%rip)
 
 	## TAC_LABEL
-.ttlabel_10:
+.ttlabel_2:
 
 	## TAC_IFLESSEQ
 	movl a(%rip), %eax
 	cmpl $10, %eax
-	jnbe .ttlabel_11
+	jnbe .ttlabel_3
 
 	## TAC_PRINT: STRING
 	movl $.LC21, %edi
@@ -636,10 +604,10 @@ main:
 	movl %eax, a(%rip)
 
 	## TAC_JUMP
-	jmp .ttlabel_10
+	jmp .ttlabel_2
 
 	## TAC_LABEL
-.ttlabel_11:
+.ttlabel_3:
 
 	## TAC_MOVE
 	movl $250, %eax
@@ -651,12 +619,12 @@ main:
 	cmpl %eax, %edx
 	setg %al
 	movzbl %al, %eax
-	movl %eax, tttemporary_26(%rip)
+	movl %eax, tttemporary_10(%rip)
 
 	## TAC_IFZ
-	movl tttemporary_26(%rip), %eax
+	movl tttemporary_10(%rip), %eax
 	testl %eax, %eax
-	je .ttlabel_12
+	je .ttlabel_4
 
 	## TAC_PRINT: STRING
 	movl $.LC23, %edi
@@ -664,10 +632,10 @@ main:
 	call printf
 
 	## TAC_JUMP
-	jmp .ttlabel_13
+	jmp .ttlabel_5
 
 	## TAC_LABEL
-.ttlabel_12:
+.ttlabel_4:
 
 	## TAC_PRINT: STRING
 	movl $.LC24, %edi
@@ -675,7 +643,7 @@ main:
 	call printf
 
 	## TAC_LABEL
-.ttlabel_13:
+.ttlabel_5:
 
 	## TAC_EQ
 	movl a(%rip), %edx
@@ -683,53 +651,53 @@ main:
 	cmpl %eax, %edx
 	sete %al
 	movzbl %al, %eax
-	movl %eax, tttemporary_27(%rip)
+	movl %eax, tttemporary_11(%rip)
 
 	## TAC_NOT
-	cmpl $0, tttemporary_27(%rip)
+	cmpl $0, tttemporary_11(%rip)
 	sete %al
 	movzbl %al, %eax
-	movl %eax, tttemporary_28(%rip)
+	movl %eax, tttemporary_12(%rip)
 
 	## TAC_NOT
-	cmpl $0, tttemporary_28(%rip)
+	cmpl $0, tttemporary_12(%rip)
 	sete %al
 	movzbl %al, %eax
-	movl %eax, tttemporary_29(%rip)
+	movl %eax, tttemporary_13(%rip)
 
 	## TAC_IFZ
-	movl tttemporary_29(%rip), %eax
+	movl tttemporary_13(%rip), %eax
 	testl %eax, %eax
-	je .ttlabel_14
+	je .ttlabel_6
 
 	## TAC_DIV
 	movl a(%rip), %eax
 	cltd
 	idivl a(%rip)
-	movl %eax, tttemporary_30(%rip)
+	movl %eax, tttemporary_14(%rip)
 
 	## TAC_MOVE
-	movl tttemporary_30(%rip), %eax
+	movl tttemporary_14(%rip), %eax
 	movl %eax, a(%rip)
 
 	## TAC_JUMP
-	jmp .ttlabel_15
+	jmp .ttlabel_7
 
 	## TAC_LABEL
-.ttlabel_14:
+.ttlabel_6:
 
 	## TAC_DIV
 	movl $8, %eax
 	cltd
 	idivl lit4(%rip)
-	movl %eax, tttemporary_31(%rip)
+	movl %eax, tttemporary_15(%rip)
 
 	## TAC_MOVE
-	movl tttemporary_31(%rip), %eax
+	movl tttemporary_15(%rip), %eax
 	movl %eax, a(%rip)
 
 	## TAC_LABEL
-.ttlabel_15:
+.ttlabel_7:
 
 	## TAC_PRINT: VAR
 	movl a(%rip), %eax

@@ -47,27 +47,27 @@ int main(int argc, char *argv[]) {
 	//astreePrint(ast,0);
 	//hash_print();
 
-	FILE* output = fopen(argv[2], "w+");
+	//FILE* output = fopen(argv[2], "w+");
 
-	if(output == NULL){
+	/*if(output == NULL){
 		fprintf(stderr, "%s", "Can't open output file. \n");
 		exit(2);
-	}
+	}*/
 
-	astreeProgram(ast,output); 
+	//astreeProgram(ast,output); 
 
-	fprintf(stderr,"<<TAC_SYMBOL's omitidas para facilitar a leitura.>>\n");
-	tacPrintForward(tacReverse(tacGenerate(ast)));
+	//fprintf(stderr,"<<TAC_SYMBOL's omitidas para facilitar a leitura.>>\n");
+	//tacPrintForward(tacReverse(tacGenerate(ast)));
 
-	FILE* asmFile = fopen("asmFile.s", "w+");
-	if(output == NULL){
+	FILE* asmFile = fopen(argv[2], "w+");
+	if(asmFile == NULL){
 		fprintf(stderr, "%s", "Can't create asm file. \n");
 		exit(2);
 	}
 	
 	asmGen(tacReverse(tacGenerate(ast)), asmFile);
 
-	fclose(output);
+	//fclose(output);
 	fclose(asmFile);	
 	exit(0);
 }
